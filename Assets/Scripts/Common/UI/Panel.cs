@@ -23,12 +23,12 @@ public class Panel : MonoBehaviour, IPanel
     // Use this for initialization
     void Awake()
     {
-        //UITool.Instance.AddPanel(this);
+        WorldManager.Instance.GetUITool().AddPanel(this);
         gameObject.SetActive(false);
     }
 
     void OnDestroy()
     {
-        //UITool.Instance.RemovePanel(this);
+        WorldManager.Instance.GetUITool().RemovePanel(this);
     }
 }
