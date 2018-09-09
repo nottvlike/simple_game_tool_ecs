@@ -26,6 +26,8 @@ public partial class WorldManager : Singleton<WorldManager>
     List<BaseObject> _objectList = new List<BaseObject>();
     List<Module> _moduleList = new List<Module>();
 
+    GameConfig _gameConfig;
+
     public Player Player
     {
         get { return _player; }
@@ -36,6 +38,11 @@ public partial class WorldManager : Singleton<WorldManager>
         get { return _item; }
     }
 
+    public List<ObjectData> ObjectDataList
+    {
+        get { return _objectDataList; }
+    }
+
     public List<BaseObject> ObjectList
     {
         get { return _objectList; }
@@ -44,6 +51,11 @@ public partial class WorldManager : Singleton<WorldManager>
     public List<Module> ModuleList
     {
         get { return _moduleList; }
+    }
+
+    public GameConfig GameConfig
+    {
+        get { return _gameConfig; }
     }
 
     public ObjectData GetObjectData(int objId)
@@ -81,5 +93,16 @@ public partial class WorldManager : Singleton<WorldManager>
         }
 
         return null;
+    }
+
+    public void LaunchGame()
+    {
+        ResourceTool.Instance.Init("Assets/Resources/");
+
+        RegisterAllModule();
+
+        _gameConfig = ResourceTool.Instance.LoadAssetFile("Prefab/GameConfig") as GameConfig;
+
+        GetLevelLoader().DoDrama();
     }
 }

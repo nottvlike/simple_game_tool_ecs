@@ -67,7 +67,7 @@ public class ResourceRequest
         bundle = www.assetBundle;
 
         //载入prefab
-#if UNITY_5
+#if UNITY_5 || UNITY_2018
         request = bundle.LoadAssetAsync<GameObject>(_resourceInfo.ResourceName);
 #else
 		request = bundle.LoadAsync(_prefabName, typeof(GameObject));
@@ -116,7 +116,7 @@ public class ResourceRequest
         FileUtil.LoadFileWithBytes(assetbundlePath, out assetBundleContent);
 
         var bundle = AssetBundle.LoadFromMemory(assetBundleContent);
-#if UNITY_5
+#if UNITY_5 || UNITY_2018
         _resource = bundle.LoadAsset<GameObject>(_resourceInfo.ResourceName);
 #else
         _resource = bundle.Load<GameObject>(_resourceInfo.ResourceName);

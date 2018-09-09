@@ -14,7 +14,7 @@ public class ObjectData
 
     int _objId = 0;
     List<Type> _moduleTypeList = new List<Type>();
-    List<ValueType> _dataList = new List<ValueType>();
+    List<IData> _dataList = new List<IData>();
 
     public int ObjectId
     {
@@ -26,7 +26,7 @@ public class ObjectData
         get { return _moduleTypeList; }
     }
 
-    public List<ValueType> DataList
+    public List<IData> DataList
     {
         get { return _dataList; }
     }
@@ -36,86 +36,65 @@ public class ObjectData
         _objId = objId;
     }
 
-    public void UpdateModuleAddedObjectDict(ModuleChangeType dealType, Type moduleType)
+    public void RefreshModuleAddedObjectIdList()
     {
-        switch (dealType)
+        var moduleList = WorldManager.Instance.ModuleList;
+        for (var i = 0; i < moduleList.Count; i++)
         {
-            case ModuleChangeType.Add:
-                {
-                    if (_moduleTypeList.IndexOf(moduleType) != -1)
-                    {
-                        LogUtil.W("Module {0} has been added on Object {1}!", moduleType.ToString(), _objId.ToString());
-                    }
-                    else
-                    {
-                        _moduleTypeList.Add(moduleType);
+            var module = moduleList[i];
+            List<int> objectIdList;
+            if (!moduleAddedObjectIdList.TryGetValue(module.GetType(), out objectIdList))
+            {
+                objectIdList = new List<int>();
+                moduleAddedObjectIdList.Add(module.GetType(), objectIdList);
+            }
 
-                        List<int> objectIdList;
-                        if (!moduleAddedObjectIdList.TryGetValue(moduleType, out objectIdList))
-                        {
-                            objectIdList = new List<int>();
-                            moduleAddedObjectIdList.Add(moduleType, objectIdList);
-                        }
-
-                        if (!objectIdList.Contains(_objId))
-                        {
-                            objectIdList.Add(_objId);
-                        }
-                        else
-                        {
-                            LogUtil.W("Module {0} has been added on Object {1}!", moduleType.ToString(), _objId.ToString());
-                        }
-                    }
-                }
-                break;
-            case ModuleChangeType.Remove:
-                {
-                    if (_moduleTypeList.IndexOf(moduleType) == -1)
-                    {
-                        LogUtil.W("Could not find module {0} on Object {1}!", moduleType.ToString(), _objId.ToString());
-                    }
-                    else
-                    {
-                        _moduleTypeList.Remove(moduleType);
-
-                        List<int> objectIdList;
-                        moduleAddedObjectIdList.TryGetValue(moduleType, out objectIdList);
-                        if (objectIdList != null && objectIdList.Contains(_objId))
-                        {
-                            objectIdList.Remove(_objId);
-                        }
-                        else
-                        {
-                            LogUtil.W("Could not find module {0} on Object {1}!", moduleType.ToString(), _objId.ToString());
-                        }
-                    }
-                }
-                break;
-            case ModuleChangeType.Clear:
-                {
-                    List<int> objectIdList;
-                    for (var i = 0; i < _moduleTypeList.Count; i++)
-                    {
-                        if (moduleAddedObjectIdList.TryGetValue(moduleType, out objectIdList)
-                            && objectIdList.Contains(_objId))
-                        {
-                            objectIdList.Remove(_objId);
-                        }
-                        else
-                        {
-                            LogUtil.W("Could not find module {0} on Object {1}!", moduleType.ToString(), _objId.ToString());
-                        }
-                    }
-
-                    _moduleTypeList.Clear();
-                }
-                break;
+            var isBelong = module.IsBelong(_dataList);
+            var isContains = objectIdList.Contains(_objId);
+            if (!isContains && isBelong)
+            {
+                objectIdList.Add(_objId);
+                module.OnIdListChanged();
+            }
+            else if (isContains && !isBelong)
+            {
+                objectIdList.Remove(_objId);
+                module.OnIdListChanged();
+            }
         }
+    }
+    
+    public void AddData(IData data)
+    {
+        _dataList.Add(data);
+    }
+
+    public void RemoveData(IData data)
+    {
+        _dataList.Remove(data);
+    }
+
+    public IData GetData<T>()  where T : IData
+    {
+        for (var i = 0; i < _dataList.Count; i++)
+        {
+            var data = _dataList[i];
+            if (data.GetType() == typeof(T))
+            {
+                return data;
+            }
+        }
+
+        return null;
     }
 
     public static List<int> GetModuleAddedObjectList<T>()
     {
-        var moduleType = typeof(T);
+        return GetModuleAddedObjectList(typeof(T));
+    }
+
+    public static List<int> GetModuleAddedObjectList(Type moduleType)
+    {
         List<int> objectList;
         moduleAddedObjectIdList.TryGetValue(moduleType, out objectList);
         return objectList;

@@ -1,6 +1,6 @@
 ﻿using UnityEngine;
 
-public class BaseObject : IObject
+public abstract class BaseObject
 {
     protected int _id = 0;
     protected string _name = "Object";
@@ -11,7 +11,7 @@ public class BaseObject : IObject
 
     protected GameObject _resource = null;
 
-    bool _isInit = false;
+    protected bool _isInit = false;
 
     public int Id
     {
@@ -33,16 +33,9 @@ public class BaseObject : IObject
         get { return _subGroup; }
     }
 
-    public string ResourceName
+    public GameObject Resource
     {
-        set
-        {
-            if (_resourceName == value)
-                return;
-
-            _resourceName = value;
-            LoadResource();
-        }
+        get { return _resource; }
     }
 
     public void Destroy()
@@ -94,8 +87,5 @@ public class BaseObject : IObject
         return _isInit;
     }
 
-    public virtual void Init()
-    {
-        _isInit = true;
-    }
+    public abstract void Init();
 }

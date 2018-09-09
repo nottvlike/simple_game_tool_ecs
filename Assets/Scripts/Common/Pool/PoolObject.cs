@@ -1,4 +1,4 @@
-﻿class PoolObject : BaseObject, IPoolObject
+﻿public abstract class PoolObject : BaseObject
 {
     bool _isInUse = false;
 
@@ -41,8 +41,6 @@
 
     public override void Init()
     {
-        base.Init();
-
         if (_resource)
         {
             _resource.gameObject.SetActive(_isInUse);

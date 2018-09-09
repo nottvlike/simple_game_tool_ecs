@@ -1,6 +1,6 @@
 ﻿using System;
 
-public class ValueTypeNotification : BaseNotification
+public abstract class ValueTypeNotification : BaseNotification
 {
     public ValueTypeNotification()
         : base()
@@ -8,8 +8,5 @@ public class ValueTypeNotification : BaseNotification
         _mode = NotificationMode.ValueType;
     }
 
-    public virtual void OnReceive(ValueType notificationData)
-    {
-        LogUtil.E("You should rewrite the OnValueTypeReceive method!");
-    }
+    public abstract void OnReceive(ValueType notificationData);
 }

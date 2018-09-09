@@ -1,6 +1,6 @@
 ﻿using System;
 
-public struct BasicData : IEquatable<BasicData>
+public struct BasicPlayerData : IEquatable<BasicPlayerData>
 {
     public long accountId;
     public string name;
@@ -9,7 +9,7 @@ public struct BasicData : IEquatable<BasicData>
     public int vip;
     public long createTime;
 
-    public bool Equals(BasicData other)
+    public bool Equals(BasicPlayerData other)
     {
         return accountId == other.accountId;
     }
@@ -25,5 +25,5 @@ public enum PlayerNotificationType
 
 public class Player
 {
-    BasicData _basicData;
+    BasicPlayerData _basicData;
 }

@@ -1,6 +1,6 @@
 ﻿using System;
 
-public class ObjectNotification : BaseNotification
+public abstract class ObjectNotification : BaseNotification
 {
     public ObjectNotification()
         : base()
@@ -8,8 +8,5 @@ public class ObjectNotification : BaseNotification
         _mode = NotificationMode.Object;
     }
 
-    public virtual void OnReceive(object notificationData)
-    {
-        LogUtil.E("You should rewrite the OnObjectReceive method!");
-    }
+    public abstract void OnReceive(object notificationData);
 }

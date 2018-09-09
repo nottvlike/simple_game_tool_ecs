@@ -119,11 +119,6 @@ public class ResourceTool : MonoSingleton<ResourceTool> , IResourceTool
     }
 #endif
 
-    public static ResourceTool GetInstance()
-    {
-        return Instance;
-    }
-
     public void Init(string prefixPath)
     {
         if (!_isInit)
@@ -156,7 +151,7 @@ public class ResourceTool : MonoSingleton<ResourceTool> , IResourceTool
     {
 		_configInfoDict.Clear ();
         var config = LoadConfigFileImmediatly(_prefixPath + ConfigurationConfig);
-#if UNITY_5_3 || UNITY_5_4
+#if UNITY_5_3 || UNITY_5_4 || UNITY_2018
         var configInfoList = JsonUtility.FromJson<ConfigInfoList>(config);
 
 #else
@@ -176,7 +171,7 @@ public class ResourceTool : MonoSingleton<ResourceTool> , IResourceTool
 		var txt = LoadConfigFile(AssetBundleConfig);
 		if (txt.Length <= 0)
 			return;
-#if UNITY_5_3 || UNITY_5_4
+#if UNITY_5_3 || UNITY_5_4 || UNITY_2018
         var resourceRequestInfoList = JsonUtility.FromJson<ResourceInfoList>(txt);
 #else
         var resourceRequestInfoList = JsonMapper.ToObject<ResourceInfoList>(txt);
@@ -202,6 +197,16 @@ public class ResourceTool : MonoSingleton<ResourceTool> , IResourceTool
         }
 
         return LoadConfigFileImmediatly(_prefixPath + configReq.ConfigPath);
+    }
+
+    /// <summary>
+    /// 通过配置名字读取配置
+    /// </summary>
+    /// <param name="configName">配置名</param>
+    /// <returns></returns>
+    public UnityEngine.Object LoadAssetFile(string configName)
+    {
+        return Resources.Load(configName);
     }
 
     /// <summary>

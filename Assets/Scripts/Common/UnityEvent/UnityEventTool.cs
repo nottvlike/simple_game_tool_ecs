@@ -32,6 +32,11 @@ public class UnityEventTool : MonoSingleton<UnityEventTool>, IUnityEventTool
         _updateEventList.Remove(updateEvent);
     }
 
+    void Awake()
+    {
+        WorldManager.Instance.LaunchGame();
+    }
+
     void Update()
     {
         for (var i = 0; i < _updateEventList.Count; i++)

@@ -3,16 +3,16 @@ using System.Collections.Generic;
 
 public class Pool : IPool
 {
-	Dictionary<string, List<IPoolObject>> _poolObjectDict = new Dictionary<string, List<IPoolObject>>();
+	Dictionary<string, List<PoolObject>> _poolObjectDict = new Dictionary<string, List<PoolObject>>();
 
-    public T Get<T>() where T : IPoolObject, new()
+    public T Get<T>() where T : PoolObject, new()
 	{
         var name = typeof(T).ToString();
-        IPoolObject poolObject = null;
-        List<IPoolObject> poolObjectList = null;
+        PoolObject poolObject = null;
+        List<PoolObject> poolObjectList = null;
 		if (!_poolObjectDict.TryGetValue(name, out poolObjectList))
 		{
-            poolObjectList = new List<IPoolObject>();
+            poolObjectList = new List<PoolObject>();
 			_poolObjectDict.Add(name, poolObjectList);
         }
         else
@@ -38,9 +38,9 @@ public class Pool : IPool
         return (T)poolObject;
 	}
 	
-	public void Release(IPoolObject poolObject)
+	public void Release(PoolObject poolObject)
 	{
-        List<IPoolObject> poolObjectList = null;
+        List<PoolObject> poolObjectList = null;
 		if (_poolObjectDict.TryGetValue(poolObject.PoolName, out poolObjectList))
 		{   
             if (poolObjectList.IndexOf(poolObject) != -1)
