@@ -9,7 +9,7 @@ public abstract class BaseObject
 
     protected string _resourceName = "";
 
-    protected GameObject _resource = null;
+    protected Object _resource = null;
 
     protected bool _isInit = false;
 
@@ -33,7 +33,7 @@ public abstract class BaseObject
         get { return _subGroup; }
     }
 
-    public GameObject Resource
+    public Object Resource
     {
         get { return _resource; }
     }
@@ -43,7 +43,7 @@ public abstract class BaseObject
         if (!_resource)
             return;
 
-        GameObject.Destroy(_resource);
+        Object.Destroy(_resource);
     }
 
     public BaseObject()
@@ -74,7 +74,7 @@ public abstract class BaseObject
 
     void OnResourceLoadFinished(Object resource)
     {
-        _resource = GameObject.Instantiate(resource, Vector3.zero, Quaternion.identity) as GameObject;
+        _resource = Object.Instantiate(resource, Vector3.zero, Quaternion.identity);
 
         Init();
     }

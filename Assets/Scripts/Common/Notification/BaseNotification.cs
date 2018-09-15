@@ -1,6 +1,6 @@
 ﻿using System;
 
-public class BaseNotification
+public abstract class BaseNotification
 {
     protected int _type;
     protected int _subType;

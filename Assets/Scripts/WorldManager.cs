@@ -26,8 +26,6 @@ public partial class WorldManager : Singleton<WorldManager>
     List<BaseObject> _objectList = new List<BaseObject>();
     List<Module> _moduleList = new List<Module>();
 
-    GameConfig _gameConfig;
-
     public Player Player
     {
         get { return _player; }
@@ -97,11 +95,11 @@ public partial class WorldManager : Singleton<WorldManager>
 
     public void LaunchGame()
     {
-        ResourceTool.Instance.Init("Assets/Resources/");
+        ResourceTool.Instance.Init();
 
         RegisterAllModule();
 
-        _gameConfig = ResourceTool.Instance.LoadAssetFile("Prefab/GameConfig") as GameConfig;
+        LoadConfig();
 
         GetLevelLoader().DoDrama();
     }

@@ -1,33 +1,23 @@
 ﻿using System;
 
 [Serializable]
-public class PositionData : IData
+public class PositionData : Data
 {
     public int x;
     public int y;
     public int z;
-
-    public PositionData Clone()
-    {
-        return (PositionData)this.MemberwiseClone();
-    }
 }
 
 [Serializable]
-public class DirectionData : IData
+public class DirectionData : Data
 {
     public int x;
     public int y;
     public int z;
-
-    public DirectionData Clone()
-    {
-        return (DirectionData)this.MemberwiseClone();
-    }
 }
 
 [Serializable]
-public class SpeedData : IData
+public class SpeedData : Data
 {
     public int noraml;
     public int max;
@@ -35,9 +25,4 @@ public class SpeedData : IData
     public int lastAcceleration;
     public int acceleration;
     public int accelerationDelta;
-
-    public SpeedData Clone()
-    {
-        return (SpeedData)this.MemberwiseClone();
-    }
 }

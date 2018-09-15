@@ -4,8 +4,10 @@ using UnityEngine;
 
 public partial class WorldManager : Singleton<WorldManager>
 {
-    void RegisterAllModule()
+    GameConfig _gameConfig;
+
+    void LoadConfig()
     {
-        _moduleList.Add(new MoveModule());
+        _gameConfig = ResourceTool.Instance.Load("GameConfig") as GameConfig;
     }
 }

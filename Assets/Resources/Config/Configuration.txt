@@ -1,9 +1,0 @@
-{
-	"Configs" : [
-		{
-			"ConfigName" : "AssetBundleConfig",
-			"ConfigPath" : "Config/AssetBundleConfig",
-			"Version" : "1.0.0"
-		}
-	]
-}

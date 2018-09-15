@@ -6,7 +6,7 @@ public abstract class Module
 {
     protected List<int> _objectIdList = new List<int>();
 
-    public abstract bool IsBelong(List<IData> dataList);
+    public abstract bool IsBelong(List<Data> dataList);
 
     public void OnIdListChanged()
     {

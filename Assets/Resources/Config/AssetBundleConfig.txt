@@ -1,8 +1,0 @@
-{
-	"Resources" : [
-		{
-			"ResourceName" : "Cube",
-			"ResourcePath" : "Cube"
-		}
-	]
-}

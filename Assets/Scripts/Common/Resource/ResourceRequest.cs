@@ -3,12 +3,12 @@ using System.Collections;
 
 public class ResourceRequest
 {
-    ResourceInfo _resourceInfo;
+    ResourceData _resourceInfo;
 
     OnResourceLoadFinished _callBack = null;
-    GameObject _resource = null;
+    Object _resource = null;
 
-    public ResourceInfo ResourceInfo
+    public ResourceData ResourceInfo
     {
         get
         {
@@ -16,7 +16,7 @@ public class ResourceRequest
         }
     }
 
-    public GameObject Resource
+    public Object Resource
     {
         get
         {
@@ -24,27 +24,30 @@ public class ResourceRequest
         }
     }
 
-    public void Init(ResourceInfo resourceInfo)
+    public void Init(ResourceData resourceInfo)
     {
         _resourceInfo = resourceInfo;
     }
 
-    public void Init(string resourceName, string resourcePath, bool isFromAssetBundle)
+    public void Init(string resourceName, string resourcePath, string assetbundlePath, bool isFromAssetBundle)
     {
-        _resourceInfo.ResourceName = resourceName;
-        _resourceInfo.ResourcePath = resourcePath;
-        _resourceInfo.IsFromAssetBundle = isFromAssetBundle;
+        _resourceInfo.resourceName = resourceName;
+        _resourceInfo.resourcePath = resourcePath;
+        _resourceInfo.assetbundlePath = assetbundlePath;
+        _resourceInfo.isFromAssetBundle = isFromAssetBundle;
     }
 
     public void LoadAsync(OnResourceLoadFinished func)
     {
+        ResourceTool.Instance.ResourceLoadState = ResourceLoadStateType.Loading;
+
         _callBack = func;
         if (_resource != null)
         {
             LoadFinished();
         }
 
-        if (_resourceInfo.IsFromAssetBundle)
+        if (_resourceInfo.isFromAssetBundle)
         {
             ResourceTool.Instance.StartCoroutine(LoadAssetBundleAsync());
         }
@@ -61,20 +64,20 @@ public class ResourceRequest
 
         //载入assetbundle
         var assetbundlePath = string.Format("{0}{1}/{2}{3}", Application.streamingAssetsPath, ResourceTool.PREFIX_ASSETBUNDLE_PATH
-                , _resourceInfo.ResourcePath, ResourceTool.SUFFIX_ASSETBUNDLE_PATH);
+                , _resourceInfo.assetbundlePath, ResourceTool.SUFFIX_ASSETBUNDLE_PATH);
         WWW www = new WWW(assetbundlePath);
         yield return www;
         bundle = www.assetBundle;
 
         //载入prefab
 #if UNITY_5 || UNITY_2018
-        request = bundle.LoadAssetAsync<GameObject>(_resourceInfo.ResourceName);
+        request = bundle.LoadAssetAsync<GameObject>(_resourceInfo.resourceName);
 #else
-		request = bundle.LoadAsync(_prefabName, typeof(GameObject));
+		request = bundle.LoadAsync(_resourceInfo.resourceName, typeof(GameObject));
 #endif
 
         yield return request;
-        _resource = request.asset as GameObject;
+        _resource = request.asset;
         bundle.Unload(false);
 
         LoadFinished();
@@ -82,23 +85,24 @@ public class ResourceRequest
 
     IEnumerator LoadResourceAsync()
     {
-        var resourcePath = string.Format("{0}/{1}", ResourceTool.PREFIX_RESOURCE_PATH, _resourceInfo.ResourcePath);
-        var resourceRequest = Resources.LoadAsync<GameObject>(resourcePath);
+        var resourceRequest = Resources.LoadAsync<GameObject>(_resourceInfo.resourcePath);
         yield return resourceRequest;
-        _resource = resourceRequest.asset as GameObject;
+        _resource = resourceRequest.asset;
 
         LoadFinished();
     }
 
     public void Load()
     {
+        ResourceTool.Instance.ResourceLoadState = ResourceLoadStateType.Loading;
+
         _callBack = null;
         if (_resource != null)
         {
             LoadFinished();
         }
 
-        if (_resourceInfo.IsFromAssetBundle)
+        if (_resourceInfo.isFromAssetBundle)
         {
             LoadFromAssetBundle();
         }
@@ -108,18 +112,18 @@ public class ResourceRequest
         }
     }
 
-    public void LoadFromAssetBundle()
+    void LoadFromAssetBundle()
     {
         var assetbundlePath = string.Format("{0}{1}/{2}{3}", Application.streamingAssetsPath, ResourceTool.PREFIX_ASSETBUNDLE_PATH
-        , _resourceInfo.ResourcePath, ResourceTool.SUFFIX_ASSETBUNDLE_PATH);
+        , _resourceInfo.assetbundlePath, ResourceTool.SUFFIX_ASSETBUNDLE_PATH);
         byte[] assetBundleContent = null;
         FileUtil.LoadFileWithBytes(assetbundlePath, out assetBundleContent);
 
         var bundle = AssetBundle.LoadFromMemory(assetBundleContent);
 #if UNITY_5 || UNITY_2018
-        _resource = bundle.LoadAsset<GameObject>(_resourceInfo.ResourceName);
+        _resource = bundle.LoadAsset<GameObject>(_resourceInfo.resourceName);
 #else
-        _resource = bundle.Load<GameObject>(_resourceInfo.ResourceName);
+        _resource = bundle.Load<GameObject>(_resourceInfo.resourceName);
 #endif
         bundle.Unload(true);
 
@@ -128,7 +132,7 @@ public class ResourceRequest
 
     public void LoadFromResource()
     {
-        _resource = Resources.Load<GameObject>(_resourceInfo.ResourceName);
+        _resource = Resources.Load(_resourceInfo.resourcePath);
 
         LoadFinished();
     }
@@ -137,7 +141,7 @@ public class ResourceRequest
     {
         if (_resource == null)
         {
-            Debug.LogWarning(string.Format("Warning : Failed to load prefab {0}", _resourceInfo.ResourceName));
+            Debug.LogWarning(string.Format("Warning : Failed to load prefab {0}", _resourceInfo.resourceName));
             ResourceTool.Instance.ResourceLoadState = ResourceLoadStateType.Finished;
             return;
         }

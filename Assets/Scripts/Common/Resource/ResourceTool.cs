@@ -37,45 +37,6 @@ public struct AsyncResourceRequest : IEquatable<AsyncResourceRequest>
     }
 }
 
-[Serializable]
-public struct ConfigInfoList
-{
-    public ConfigInfo[] Configs;
-}
-
-/// <summary>
-/// Configuration里的配置信息
-/// </summary>
-[Serializable]
-public struct ConfigInfo
-{
-    public string ConfigName;
-    public string ConfigPath;
-    public string Version;
-}
-
-[Serializable]
-public struct ResourceInfoList
-{
-    public List<ResourceInfo> Resources;
-}
-
-/// <summary>
-/// AssetBundleConfig里的配置信息
-/// </summary>
-[Serializable]
-public struct ResourceInfo : IEquatable<ResourceInfo>
-{
-    public string ResourceName;
-    public string ResourcePath;
-    public bool IsFromAssetBundle;
-
-    public bool Equals(ResourceInfo other)
-    {
-        return ResourceName == other.ResourceName && ResourcePath == other.ResourcePath;
-    }
-}
-
 public class ResourceTool : MonoSingleton<ResourceTool> , IResourceTool
 {
 	public string ConfigurationConfig = "Config/ConfigurationTest";
@@ -85,8 +46,7 @@ public class ResourceTool : MonoSingleton<ResourceTool> , IResourceTool
 	public const string PREFIX_ASSETBUNDLE_PATH = "AssetBundle";
 	public const string SUFFIX_ASSETBUNDLE_PATH = ".assetbundle";
 
-    Dictionary<string, ConfigInfo> _configInfoDict = new Dictionary<string, ConfigInfo>();
-    Dictionary<string, ResourceInfo> _resourceInfoDict = new Dictionary<string, ResourceInfo>();
+    Dictionary<string, ResourceData> _resourceDict;
 
     Dictionary<string, ResourceRequest> _resourceRequestDict = new Dictionary<string, ResourceRequest>();
 
@@ -94,8 +54,6 @@ public class ResourceTool : MonoSingleton<ResourceTool> , IResourceTool
 
     ResourceLoadStateType _resourceLoadState = ResourceLoadStateType.None;
     bool _isInit = false;
-
-    string _prefixPath = "";
 
     public ResourceLoadStateType ResourceLoadState 
     {
@@ -109,25 +67,13 @@ public class ResourceTool : MonoSingleton<ResourceTool> , IResourceTool
         get { return _resourceLoadState; }
     }
 
-#if UNITY_EDITOR
-    public Dictionary<string, ResourceInfo> ResourceInfoDict
-    {
-        get
-        {
-            return _resourceInfoDict;
-        }
-    }
-#endif
-
-    public void Init(string prefixPath)
+    public void Init()
     {
         if (!_isInit)
         {
             _isInit = true;
-            _prefixPath = prefixPath;
-
-            LoadConfigurationConfig();
-            LoadAssetBundleConfig();
+            var resourceConfig = Load("ResourceConfig", "Config/ResourceConfig", "", false) as ResourceConfig;
+            _resourceDict = resourceConfig.ResourceDict;
         }
     }
 
@@ -147,76 +93,23 @@ public class ResourceTool : MonoSingleton<ResourceTool> , IResourceTool
         return true;
     }
 
-    void LoadConfigurationConfig()
+    UnityEngine.Object Load(string resourceName, string resourcePath, string assetbundlePath, bool isFromAssetbundle)
     {
-		_configInfoDict.Clear ();
-        var config = LoadConfigFileImmediatly(_prefixPath + ConfigurationConfig);
-#if UNITY_5_3 || UNITY_5_4 || UNITY_2018
-        var configInfoList = JsonUtility.FromJson<ConfigInfoList>(config);
-
-#else
-        var configInfoList = JsonMapper.ToObject<ConfigInfoList>(config);
-#endif
-        for (var i = 0; i < configInfoList.Configs.Length; i++)
+        ResourceRequest resourceRequest = null;
+        if (_resourceRequestDict.TryGetValue(resourceName, out resourceRequest))
         {
-            var configRequest = configInfoList.Configs[i];
-            _configInfoDict.Add(configRequest.ConfigName, configRequest);
+            resourceRequest.Load();
         }
-    }
-
-    void LoadAssetBundleConfig()
-    {
-		_resourceInfoDict.Clear ();
-
-		var txt = LoadConfigFile(AssetBundleConfig);
-		if (txt.Length <= 0)
-			return;
-#if UNITY_5_3 || UNITY_5_4 || UNITY_2018
-        var resourceRequestInfoList = JsonUtility.FromJson<ResourceInfoList>(txt);
-#else
-        var resourceRequestInfoList = JsonMapper.ToObject<ResourceInfoList>(txt);
-#endif
-        for (var i = 0; i < resourceRequestInfoList.Resources.Count; i++)
+        else
         {
-            var resourceInfo = resourceRequestInfoList.Resources[i];
-            _resourceInfoDict.Add(resourceInfo.ResourceName, resourceInfo);
-        }
-    }
+            resourceRequest = new ResourceRequest();
+            resourceRequest.Init(resourceName, resourcePath, assetbundlePath, isFromAssetbundle);
+            resourceRequest.Load();
 
-    /// <summary>
-    /// 通过配置名字读取配置
-    /// </summary>
-    /// <param name="configName">配置名</param>
-    /// <returns></returns>
-    public string LoadConfigFile(string configName)
-    {
-        ConfigInfo configReq;
-        if (!_configInfoDict.TryGetValue(configName, out configReq))
-        {
-            return "";
+            _resourceRequestDict.Add(resourceName, resourceRequest);
         }
 
-        return LoadConfigFileImmediatly(_prefixPath + configReq.ConfigPath);
-    }
-
-    /// <summary>
-    /// 通过配置名字读取配置
-    /// </summary>
-    /// <param name="configName">配置名</param>
-    /// <returns></returns>
-    public UnityEngine.Object LoadAssetFile(string configName)
-    {
-        return Resources.Load(configName);
-    }
-
-    /// <summary>
-    /// 直接读取文件
-    /// </summary>
-    /// <param name="configPath">配置的全路径</param>
-    /// <returns></returns>
-    string LoadConfigFileImmediatly(string configPath)
-    {
-        return FileUtil.LoadFileWithString(configPath + ".txt");
+        return resourceRequest.Resource;
     }
 
     /// <summary>
@@ -224,7 +117,7 @@ public class ResourceTool : MonoSingleton<ResourceTool> , IResourceTool
     /// </summary>
     /// <param name="resourceName"></param>
     /// <returns></returns>
-    public GameObject Load(string resourceName)
+    public UnityEngine.Object Load(string resourceName)
     {
         if (_resourceLoadState == ResourceLoadStateType.Loading)
         {
@@ -235,18 +128,19 @@ public class ResourceTool : MonoSingleton<ResourceTool> , IResourceTool
         ResourceRequest resourceRequest = null;
         if (_resourceRequestDict.TryGetValue(resourceName, out resourceRequest))
         {
-            _resourceLoadState = ResourceLoadStateType.Loading;
             resourceRequest.Load();
         }
         else
         {
-            ResourceInfo resourceInfo;
-            if (_resourceInfoDict.TryGetValue(resourceName, out resourceInfo))
+            ResourceData resourceInfo;
+            if (_resourceDict.TryGetValue(resourceName, out resourceInfo))
             {
                 resourceRequest = new ResourceRequest();
                 resourceRequest.Init(resourceInfo);
 
                 resourceRequest.Load();
+
+                _resourceRequestDict.Add(resourceName, resourceRequest);
             }
             else
             {
@@ -293,19 +187,19 @@ public class ResourceTool : MonoSingleton<ResourceTool> , IResourceTool
         ResourceRequest resourceRequest = null;
         if (_resourceRequestDict.TryGetValue(resourceName, out resourceRequest))
         {
-            _resourceLoadState = ResourceLoadStateType.Loading;
             resourceRequest.LoadAsync(callBack);
         }
         else
         {
-            ResourceInfo resourceInfo;
-            if (_resourceInfoDict.TryGetValue(resourceName, out resourceInfo))
+            ResourceData resourceInfo;
+            if (_resourceDict.TryGetValue(resourceName, out resourceInfo))
             {
                 resourceRequest = new ResourceRequest();
                 resourceRequest.Init(resourceInfo);
 
-                _resourceLoadState = ResourceLoadStateType.Loading;
                 resourceRequest.LoadAsync(callBack);
+
+                _resourceRequestDict.Add(resourceName, resourceRequest);
             }
             else
             {

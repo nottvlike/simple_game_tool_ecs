@@ -14,7 +14,7 @@ public class ObjectData
 
     int _objId = 0;
     List<Type> _moduleTypeList = new List<Type>();
-    List<IData> _dataList = new List<IData>();
+    List<Data> _dataList = new List<Data>();
 
     public int ObjectId
     {
@@ -26,7 +26,7 @@ public class ObjectData
         get { return _moduleTypeList; }
     }
 
-    public List<IData> DataList
+    public List<Data> DataList
     {
         get { return _dataList; }
     }
@@ -64,17 +64,17 @@ public class ObjectData
         }
     }
     
-    public void AddData(IData data)
+    public void AddData(Data data)
     {
         _dataList.Add(data);
     }
 
-    public void RemoveData(IData data)
+    public void RemoveData(Data data)
     {
         _dataList.Remove(data);
     }
 
-    public IData GetData<T>()  where T : IData
+    public Data GetData<T>()  where T : Data
     {
         for (var i = 0; i < _dataList.Count; i++)
         {

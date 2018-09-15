@@ -1,4 +1,6 @@
-﻿public abstract class PoolObject : BaseObject
+﻿using UnityEngine;
+
+public abstract class PoolObject : BaseObject
 {
     bool _isInUse = false;
 
@@ -19,7 +21,7 @@
 
             if (_resource)
             {
-                _resource.gameObject.SetActive(_isInUse);
+                ((GameObject)_resource).SetActive(_isInUse);
             }
         }
     }
@@ -43,7 +45,7 @@
     {
         if (_resource)
         {
-            _resource.gameObject.SetActive(_isInUse);
+            ((GameObject)_resource).SetActive(_isInUse);
         }
     }
 }

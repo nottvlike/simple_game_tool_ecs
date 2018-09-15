@@ -10,7 +10,7 @@ public class MoveModule : Module, IUpdateEvent
         WorldManager.Instance.GetUnityEventTool().Add(this);
     }
 
-    public override bool IsBelong(List<IData> dataList)
+    public override bool IsBelong(List<Data> dataList)
     {
         var index = 0;
         for (var i = 0; i < dataList.Count; ++i)
@@ -62,7 +62,7 @@ public class MoveModule : Module, IUpdateEvent
             positionData.y += deltaY;
             positionData.z += deltaZ;
 
-            var transform = obj.Resource.transform;
+            var transform = ((GameObject)obj.Resource).transform;
             var deltaSpeed = Time.deltaTime / Constant.SPEED;
             transform.Translate(deltaX * Time.deltaTime / Constant.SPEED, deltaY * Time.deltaTime / Constant.SPEED, deltaZ * Time.deltaTime / Constant.SPEED);
         }
