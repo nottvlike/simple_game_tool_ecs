@@ -24,7 +24,6 @@ public class TalkingData
     public bool last;
 }
 
-[Serializable]
 public enum DramaItemType
 {
     CreatePlayer,
@@ -76,64 +75,3 @@ public class GameConfig : ScriptableObject
         return null;
     }
 }
-
-[Serializable]
-public struct ResourceData
-{
-    public string resourceName;
-    public string resourcePath;
-    public string assetbundlePath;
-    public bool isFromAssetBundle;
-
-    public bool Equals(ResourceData other)
-    {
-        return resourceName == other.resourceName && resourcePath == other.resourcePath;
-    }
-}
-
-public class ResourceConfig : ScriptableObject
-{
-    public ResourceData[] resourceDataList;
-
-    Dictionary<string, ResourceData> _resourceDict = null;
-    public Dictionary<string, ResourceData> ResourceDict
-    {
-        get
-        {
-            if (_resourceDict == null)
-            {
-                _resourceDict = new Dictionary<string, ResourceData>();
-                for (var i = 0; i < resourceDataList.Length; i++)
-                {
-                    var resourceData = resourceDataList[i];
-                    _resourceDict.Add(resourceData.resourceName, resourceData);
-                }
-            }
-
-            return _resourceDict;
-        }
-    }
-}
-
-[Serializable]
-public enum KeyStateType
-{
-    None = 0,
-    Down,
-    Up
-}
-
-[Serializable]
-public struct JoyStickMapData
-{
-    public KeyCode[] keyCode;
-    public KeyStateType keyStateType;
-    public JoyStickActionType joyStickActionType;
-    public JoyStickActionFaceType joyStickActionFaceType;
-}
-
-public class JoyStickConfig : ScriptableObject
-{
-    public JoyStickMapData[] joyStickMapDataList;
-}
-

@@ -6,7 +6,11 @@ public partial class WorldManager : Singleton<WorldManager>
 {
     void RegisterAllModule()
     {
-        _moduleList.Add(new Module.JoyStick());
-        _moduleList.Add(new Module.Move());
+        _moduleList.Add(new Module.GameSystem());
+        _moduleList.Add(new Module.ActorJoyStick());
+        _moduleList.Add(new Module.ActorSyncClient());
+        _moduleList.Add(new Module.GameServer());
+        _moduleList.Add(new Module.ActorController());
+        _moduleList.Add(new Module.ActorMove());
     }
 }

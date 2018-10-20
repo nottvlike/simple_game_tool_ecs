@@ -33,6 +33,8 @@ public class LevelLoader
                     objData.AddData(playerData.directionData.Clone());
                     objData.AddData(playerData.speedData.Clone());
 
+                    objData.AddData(new Data.JoyStickData());
+                    objData.AddData(new Data.ActorSyncData());
                     objData.RefreshModuleAddedObjectIdList();
                 }
                 break;

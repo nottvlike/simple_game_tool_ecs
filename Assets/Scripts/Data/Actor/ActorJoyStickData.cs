@@ -4,7 +4,6 @@ using UnityEngine;
 
 namespace Data
 {
-    [Serializable]
     public enum JoyStickActionType
     {
         Run = 0,
@@ -14,7 +13,6 @@ namespace Data
         SkillCustom
     }
 
-    [Serializable]
     public enum JoyStickActionFaceType
     {
         None = 0,
@@ -31,7 +29,7 @@ namespace Data
 
     public class JoyStickData : Data
     {
-        public List<JoyStickActionData> clientActionList;
-        public List<JoyStickActionData> serverActionList;
+        public List<JoyStickActionData> clientActionList = new List<JoyStickActionData>();
+        public List<JoyStickActionData> serverActionList = new List<JoyStickActionData>();
     }
 }

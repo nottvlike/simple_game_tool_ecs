@@ -13,7 +13,7 @@ public class GameConfigEditor {
         AssetDatabase.SaveAssets();
     }
 
-    [MenuItem("Config/Create JoyStick Config")]
+    [MenuItem("Config/Create ActorJoyStick Config")]
     static void CreateJoyStickConfig()
     {
         JoyStickConfig gameConfig = ScriptableObject.CreateInstance<JoyStickConfig>();
