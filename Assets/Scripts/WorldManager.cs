@@ -24,7 +24,7 @@ public partial class WorldManager : Singleton<WorldManager>
 
     List<ObjectData> _objectDataList = new List<ObjectData>();
     List<BaseObject> _objectList = new List<BaseObject>();
-    List<Module> _moduleList = new List<Module>();
+    List<Module.Module> _moduleList = new List<Module.Module>();
 
     public Player Player
     {
@@ -46,14 +46,9 @@ public partial class WorldManager : Singleton<WorldManager>
         get { return _objectList; }
     }
 
-    public List<Module> ModuleList
+    public List<Module.Module> ModuleList
     {
         get { return _moduleList; }
-    }
-
-    public GameConfig GameConfig
-    {
-        get { return _gameConfig; }
     }
 
     public ObjectData GetObjectData(int objId)
@@ -80,7 +75,7 @@ public partial class WorldManager : Singleton<WorldManager>
         return null;
     }
 
-    public Module GetModule<T>()
+    public Module.Module GetModule<T>()
     {
         var moduleType = typeof(T);
         for (var i = 0; i < _moduleList.Count; i++)

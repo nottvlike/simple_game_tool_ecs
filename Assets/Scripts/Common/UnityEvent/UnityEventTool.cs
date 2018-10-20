@@ -5,6 +5,19 @@ public class UnityEventTool : MonoSingleton<UnityEventTool>, IUnityEventTool
 {
 	List<IUpdateEvent> _updateEventList = new List<IUpdateEvent>();
 
+    void Awake()
+    {
+        WorldManager.Instance.LaunchGame();
+    }
+
+    void Update()
+    {
+        for (var i = 0; i < _updateEventList.Count; i++)
+        {
+            _updateEventList[i].Update();
+        }
+    }
+
     public bool IsAdded(IUpdateEvent updateEvent)
     {
         return _updateEventList.IndexOf(updateEvent) != -1;
@@ -30,19 +43,6 @@ public class UnityEventTool : MonoSingleton<UnityEventTool>, IUnityEventTool
         }
 
         _updateEventList.Remove(updateEvent);
-    }
-
-    void Awake()
-    {
-        WorldManager.Instance.LaunchGame();
-    }
-
-    void Update()
-    {
-        for (var i = 0; i < _updateEventList.Count; i++)
-        {
-            _updateEventList[i].Update();
-        }
     }
 
     public void Destroy()

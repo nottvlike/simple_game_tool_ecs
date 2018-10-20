@@ -2,10 +2,13 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public abstract class Data
+namespace Data
 {
-    public Data Clone()
+    public abstract class Data
     {
-        return (Data)MemberwiseClone();
+        public Data Clone()
+        {
+            return (Data)MemberwiseClone();
+        }
     }
 }

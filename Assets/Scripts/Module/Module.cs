@@ -2,20 +2,22 @@
 using System.Collections.Generic;
 using System;
 
-public abstract class Module
-{
-    protected List<int> _objectIdList = new List<int>();
-
-    public abstract bool IsBelong(List<Data> dataList);
-
-    public void OnIdListChanged()
+namespace Module{
+    public abstract class Module
     {
-        _objectIdList.Clear();
+        protected List<int> _objectIdList = new List<int>();
 
-        var objectIdList = ObjectData.GetModuleAddedObjectList(GetType());
-        if (objectIdList != null)
+        public abstract bool IsBelong(List<Data.Data> dataList);
+
+        public void OnIdListChanged()
         {
-            _objectIdList.AddRange(objectIdList);
+            _objectIdList.Clear();
+
+            var objectIdList = ObjectData.GetModuleAddedObjectList(GetType());
+            if (objectIdList != null)
+            {
+                _objectIdList.AddRange(objectIdList);
+            }
         }
     }
 }

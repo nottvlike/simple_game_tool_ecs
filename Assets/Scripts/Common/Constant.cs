@@ -1,4 +1,5 @@
 ﻿using System;
+
 public class Constant
 {
     public const int NOTIFICATION_TYPE_ITEM      = 1;

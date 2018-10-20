@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using UnityEngine;
+using Data;
 
 [Serializable]
 public class PlayerData
@@ -112,5 +113,27 @@ public class ResourceConfig : ScriptableObject
             return _resourceDict;
         }
     }
+}
+
+[Serializable]
+public enum KeyStateType
+{
+    None = 0,
+    Down,
+    Up
+}
+
+[Serializable]
+public struct JoyStickMapData
+{
+    public KeyCode[] keyCode;
+    public KeyStateType keyStateType;
+    public JoyStickActionType joyStickActionType;
+    public JoyStickActionFaceType joyStickActionFaceType;
+}
+
+public class JoyStickConfig : ScriptableObject
+{
+    public JoyStickMapData[] joyStickMapDataList;
 }
 
