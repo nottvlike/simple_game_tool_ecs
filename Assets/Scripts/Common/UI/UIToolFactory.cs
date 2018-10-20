@@ -7,7 +7,10 @@ public partial class WorldManager : Singleton<WorldManager>
     public IUITool GetUITool()
     {
         if (_uiTool == null)
+        {
             _uiTool = new UITool();
+            _uiTool.Init();
+        }
 
         return _uiTool;
     }

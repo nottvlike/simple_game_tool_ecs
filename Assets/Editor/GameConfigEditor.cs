@@ -30,4 +30,13 @@ public class GameConfigEditor {
         AssetDatabase.CreateAsset(resourceConfig, path);
         AssetDatabase.SaveAssets();
     }
+
+    [MenuItem("Config/Create Panel Config")]
+    static void CreatePanelConfig()
+    {
+        PanelConfig resourceConfig = ScriptableObject.CreateInstance<PanelConfig>();
+        string path = "Assets/Resources/Config/PanelConfig.asset";
+        AssetDatabase.CreateAsset(resourceConfig, path);
+        AssetDatabase.SaveAssets();
+    }
 }

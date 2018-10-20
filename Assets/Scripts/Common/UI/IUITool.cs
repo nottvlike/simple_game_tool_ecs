@@ -22,6 +22,7 @@ public enum PanelType
     None,
     UpdatePanel,
     LoginPanel,
+    ServerPanel,
     CreateRolePanel,
     HomePanel,
     FightPanel
