@@ -4,7 +4,7 @@ using System.Collections;
 
 public enum PanelMode
 {
-    None,
+    None = 0,
     Alone,          //独占的独立面板
     Child,          //独立子面板
     Popover         //确认框等面板
@@ -12,14 +12,15 @@ public enum PanelMode
 
 public enum PanelGroup
 {
-    None,
-    Alone,
-    Popover
+    None = 0,
+    Login,
+    Main,
+    Fight
 }
 
 public enum PanelType
 {
-    None,
+    None = 0,
     UpdatePanel,
     LoginPanel,
     ServerPanel,
@@ -38,6 +39,7 @@ public interface IUITool
     IPanel GetPanel(PanelType panelType);
     void ShowPanel(PanelType panelType);
     void HidePanel(PanelType panelType);
+    void ShowLastShowedPanel();
 
     void Destroy();
 }
