@@ -16,7 +16,7 @@ public class CreateRolePanel : MonoBehaviour
 
     void OnOkClick()
     {
-
+        WorldManager.Instance.GetUITool().ShowPanel(PanelType.MainPanel);
     }
 
     void OnBackClick()

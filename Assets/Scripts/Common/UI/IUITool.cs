@@ -21,11 +21,11 @@ public enum PanelGroup
 public enum PanelType
 {
     None = 0,
-    UpdatePanel,
+    GameUpdatePanel,
     LoginPanel,
     ServerPanel,
     CreateRolePanel,
-    HomePanel,
+    MainPanel,
     FightPanel
 }
 

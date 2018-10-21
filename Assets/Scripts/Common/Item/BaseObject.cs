@@ -68,15 +68,14 @@ public abstract class BaseObject
     {
         if (!string.IsNullOrEmpty(_resourceName))
         {
-            WorldManager.Instance.GetResourceTool().LoadAsync(_resourceName, OnResourceLoadFinished);
+            OnResourceLoadFinished onFinished = delegate (Object resource) {
+                _resource = Object.Instantiate(resource, Vector3.zero, Quaternion.identity);
+
+                Init();
+            };
+
+            WorldManager.Instance.GetResourceTool().LoadAsync(_resourceName, onFinished);
         }
-    }
-
-    void OnResourceLoadFinished(Object resource)
-    {
-        _resource = Object.Instantiate(resource, Vector3.zero, Quaternion.identity);
-
-        Init();
     }
 
     public bool IsInit()

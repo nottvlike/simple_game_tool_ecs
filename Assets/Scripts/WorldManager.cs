@@ -96,7 +96,7 @@ public partial class WorldManager : Singleton<WorldManager>
 
         LoadConfig();
 
-        GetUITool().ShowPanel(PanelType.UpdatePanel);
+        GetUITool().ShowPanel(PanelType.GameUpdatePanel);
         GetLevelLoader().DoDrama();
     }
 }
