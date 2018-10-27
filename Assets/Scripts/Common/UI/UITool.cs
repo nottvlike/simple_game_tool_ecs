@@ -1,4 +1,5 @@
-﻿using System;
+﻿using UnityEngine;
+using System;
 using System.Collections.Generic;
 
 public enum PanelNotificationType
@@ -8,27 +9,16 @@ public enum PanelNotificationType
     ClosePanel
 }
 
-public struct PanelConfig : IEquatable<PanelConfig>
-{
-    public PanelType panelType;
-    public PanelMode panelMode;
-    public PanelGroup panelGroup;
-    public PanelType rootPanelType;
-    public string resourceName;
-
-    public bool Equals(PanelConfig other)
-    {
-        return panelType == other.panelType;
-    }
-}
+public delegate void OnRootLoadedFinished(PanelType panelType);
 
 public class UITool : IUITool
 {
-    Dictionary<int, PanelConfig> _panelConfigDict = new Dictionary<int, PanelConfig>();
-    Dictionary<int, IPanel> _panelDataDict = new Dictionary<int, IPanel>();
-    List<int> _showedPanelList = new List<int>();
+    Dictionary<PanelType, IPanel> _panelDataDict = new Dictionary<PanelType, IPanel>();
+    List<PanelType> _showedPanelList = new List<PanelType>();
 
-    PanelConfig _defaultPanelConfig;
+    PanelData _defaultPanelConfig;
+
+    GameObject _uiRoot;
 
     PanelType _lastShowedPanelType = PanelType.None;
 
@@ -36,10 +26,22 @@ public class UITool : IUITool
     {
     }
 
-    public PanelConfig GetPanelConfig(PanelType panelType)
+    void LoadUIRoot(PanelType panelType, OnRootLoadedFinished onLoaded)
     {
-        PanelConfig config;
-        if (_panelConfigDict.TryGetValue((int)panelType, out config))
+        OnResourceLoadFinished onFinished = delegate (UnityEngine.Object obj) {
+            _uiRoot = UnityEngine.Object.Instantiate(obj, Vector3.zero, Quaternion.identity) as GameObject;
+            onLoaded(panelType);
+        };
+
+        // 异步加载 UI
+        WorldManager.Instance.GetResourceTool().LoadAsync("UI Root", onFinished);
+    }
+
+    public PanelData GetPanelConfig(PanelType panelType)
+    {
+        PanelData config;
+        var panelConfigDict = WorldManager.Instance.PanelConfig.PanelConfigDict;
+        if (panelConfigDict.TryGetValue(panelType, out config))
         {
             return config;
         }
@@ -53,7 +55,15 @@ public class UITool : IUITool
 
     public void AddPanel(IPanel data)
     {
-        int panelType = (int)data.PanelType;
+        if (_uiRoot == null)
+        {
+            LoadUIRoot(data.PanelType, delegate {
+                AddPanel(data);
+            });
+            return;
+        }
+
+        var panelType = data.PanelType;
         if (!_panelDataDict.ContainsKey(panelType))
         {
             _panelDataDict.Add(panelType, data);
@@ -66,7 +76,15 @@ public class UITool : IUITool
 
     public void RemovePanel(IPanel data)
     {
-        int panelType = (int)data.PanelType;
+        if (_uiRoot == null)
+        {
+            LoadUIRoot(data.PanelType, delegate {
+                RemovePanel(data);
+            });
+            return;
+        }
+
+        var panelType = data.PanelType;
         if (_panelDataDict.ContainsKey(panelType))
         {
             _panelDataDict.Remove(panelType);
@@ -80,7 +98,7 @@ public class UITool : IUITool
     public IPanel GetPanel(PanelType panelType)
     {
         IPanel panel;
-        if (!_panelDataDict.TryGetValue((int)panelType, out panel))
+        if (!_panelDataDict.TryGetValue(panelType, out panel))
         {
             return null;
         }
@@ -90,6 +108,14 @@ public class UITool : IUITool
 
     public void ShowPanel(PanelType panelType)
     {
+        if (_uiRoot == null)
+        {
+            LoadUIRoot(panelType, delegate {
+                ShowPanel(panelType);
+            });
+            return;
+        }
+
         var panelConfig = GetPanelConfig(panelType);
         if (panelConfig.panelMode == PanelMode.Popover)
         {
@@ -97,7 +123,7 @@ public class UITool : IUITool
             return;
         }
 
-        if (_showedPanelList.IndexOf((int)panelType) != -1)
+        if (_showedPanelList.IndexOf(panelType) != -1)
         {
             LogUtil.W("PanelData {0} has been showed!", panelType.ToString());
             return;
@@ -106,17 +132,17 @@ public class UITool : IUITool
         UpdateLastShowedPanel();
 
         var rootPanelType = panelConfig.rootPanelType;
-        if (_showedPanelList.IndexOf((int)rootPanelType) != -1)
+        if (_showedPanelList.IndexOf(rootPanelType) != -1)
         {
             for (var i = _showedPanelList.Count - 1; i >= 0; i--)
             {
                 var showedPanelType = _showedPanelList[i];
-                if (showedPanelType == (int)rootPanelType)
+                if (showedPanelType == rootPanelType)
                 {
                     continue;
                 }
 
-                HidePanel((PanelType)showedPanelType);
+                HidePanel(showedPanelType);
                 _showedPanelList.RemoveAt(i);
             }
         }
@@ -124,7 +150,7 @@ public class UITool : IUITool
         {
             for (var i = 0; i < _showedPanelList.Count; i++)
             {
-                HidePanel((PanelType)_showedPanelList[i]);
+                HidePanel(_showedPanelList[i]);
             }
 
             _showedPanelList.Clear();
@@ -140,6 +166,14 @@ public class UITool : IUITool
 
     public void HidePanel(PanelType panelType)
     {
+        if (_uiRoot == null)
+        {
+            LoadUIRoot(panelType, delegate {
+                HidePanel(panelType);
+            });
+            return;
+        }
+
         var panelConfig = GetPanelConfig(panelType);
         if (panelConfig.panelMode == PanelMode.Popover)
         {
@@ -147,7 +181,7 @@ public class UITool : IUITool
             return;
         }
 
-        if (_showedPanelList.IndexOf((int)panelType) == -1)
+        if (_showedPanelList.IndexOf(panelType) == -1)
         {
             LogUtil.W("PanelData {0} is not showed!", panelType.ToString());
             return;
@@ -158,6 +192,14 @@ public class UITool : IUITool
 
     public void ShowLastShowedPanel()
     {
+        if (_uiRoot == null)
+        {
+            LoadUIRoot(_lastShowedPanelType, delegate {
+                ShowLastShowedPanel();
+            });
+            return;
+        }
+
         if (_lastShowedPanelType == PanelType.None)
             return;
 
@@ -167,11 +209,13 @@ public class UITool : IUITool
 
     void UpdateLastShowedPanel()
     {
+        _lastShowedPanelType = PanelType.None;
+
         var rootPanelType = PanelType.None;
         for (var i = 0; i < _showedPanelList.Count; i++)
         {
             var showedPanelType = _showedPanelList[i];
-            var panelConfig = GetPanelConfig((PanelType)showedPanelType);
+            var panelConfig = GetPanelConfig(showedPanelType);
             if (panelConfig.panelMode == PanelMode.Alone)
             {
                 rootPanelType = panelConfig.panelType;
@@ -191,11 +235,10 @@ public class UITool : IUITool
 
     void ShowPanelImpl(PanelType panelType)
     {
-        _showedPanelList.Add((int)panelType);
-
         IPanel data;
-        if (_panelDataDict.TryGetValue((int)panelType, out data))
+        if (_panelDataDict.TryGetValue(panelType, out data))
         {
+            _showedPanelList.Add(panelType);
             data.Resource.SetActive(true);
 
             var notificationData = new NotificationData();
@@ -208,15 +251,32 @@ public class UITool : IUITool
         }
         else
         {
-            // 异步加载 UI
+            var panelConfig = GetPanelConfig(panelType);
+            if (panelConfig.panelType != PanelType.None)
+            {
+                OnResourceLoadFinished onFinished = delegate (UnityEngine.Object obj) {
+                    var panel = UnityEngine.Object.Instantiate(obj, Vector3.zero, Quaternion.identity) as GameObject;
+                    var rectTransform = panel.GetComponent<RectTransform>();
+                    rectTransform.SetParent(_uiRoot.transform);
+                    rectTransform.offsetMax = Vector2.zero;
+                    rectTransform.offsetMin = Vector2.zero;
+
+                    ShowPanelImpl(panelType);
+                };
+
+                // 异步加载 UI
+                WorldManager.Instance.GetResourceTool().LoadAsync(panelConfig.resourceName, onFinished);
+            }
         }
     }
 
     void HidePanelImpl(PanelType panelType)
     {
         IPanel data;
-        if (_panelDataDict.TryGetValue((int)panelType, out data))
+        if (_panelDataDict.TryGetValue(panelType, out data))
         {
+            _showedPanelList.Remove(panelType);
+
             data.Resource.SetActive(false);
 
             var notificationData = new NotificationData();

@@ -6,6 +6,7 @@ public partial class WorldManager : Singleton<WorldManager>
 {
     GameConfig _gameConfig;
     JoyStickConfig _joyStickConfig;
+    PanelConfig _panelConfig;
 
     public GameConfig GameConfig
     {
@@ -17,9 +18,15 @@ public partial class WorldManager : Singleton<WorldManager>
         get { return _joyStickConfig; }
     }
 
+    public PanelConfig PanelConfig
+    {
+        get { return _panelConfig; }
+    }
+
     void LoadConfig()
     {
         _gameConfig = ResourceTool.Instance.Load("GameConfig") as GameConfig;
         _joyStickConfig = ResourceTool.Instance.Load("JoyStickConfig") as JoyStickConfig;
+        _panelConfig = ResourceTool.Instance.Load("PanelConfig") as PanelConfig;
     }
 }

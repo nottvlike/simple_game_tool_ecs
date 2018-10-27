@@ -77,12 +77,13 @@ public partial class WorldManager : Singleton<WorldManager>
 
     public void LaunchGame()
     {
-        ResourceTool.Instance.Init();
+        GetResourceTool().Init();
 
         RegisterAllModule();
 
         LoadConfig();
 
+        GetUITool().ShowPanel(PanelType.GameUpdatePanel);
         GetLevelLoader().DoDrama();
     }
 }
