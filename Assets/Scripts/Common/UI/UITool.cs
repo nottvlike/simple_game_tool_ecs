@@ -34,11 +34,6 @@ public class UITool : IUITool
 
     public void Init()
     {
-#if UNITOR_EDITOR
-        var notificationCenter = WorldManager.Instance.GetNotificationCenter();
-        notificationCenter.Register(Constant.NOTIFICATION_TYPE_UI, (int)PanelNotificationType.OpenPanel, NotificationMode.Object);
-        notificationCenter.Register(Constant.NOTIFICATION_TYPE_UI, (int)PanelNotificationType.ClosePanel, NotificationMode.Object);
-#endif
     }
 
     public PanelConfig GetPanelConfig(PanelType panelType)
@@ -203,9 +198,9 @@ public class UITool : IUITool
         {
             data.Resource.SetActive(true);
 
-            var notificationData = Constant.defaultNotificationData;
-            notificationData.type = Constant.NOTIFICATION_TYPE_UI;
-            notificationData.subType = (int)PanelNotificationType.OpenPanel;
+            var notificationData = new NotificationData();
+            notificationData.id = Constant.NOTIFICATION_TYPE_UI;
+            notificationData.type = (int)PanelNotificationType.OpenPanel;
             notificationData.mode = NotificationMode.Object;
             notificationData.state = NotificationStateType.None;
             notificationData.data1 = data;
@@ -224,9 +219,9 @@ public class UITool : IUITool
         {
             data.Resource.SetActive(false);
 
-            var notificationData = Constant.defaultNotificationData;
-            notificationData.type = Constant.NOTIFICATION_TYPE_UI;
-            notificationData.subType = (int)PanelNotificationType.ClosePanel;
+            var notificationData = new NotificationData();
+            notificationData.id = Constant.NOTIFICATION_TYPE_UI;
+            notificationData.type = (int)PanelNotificationType.ClosePanel;
             notificationData.mode = NotificationMode.Object;
             notificationData.state = NotificationStateType.None;
             notificationData.data1 = data;

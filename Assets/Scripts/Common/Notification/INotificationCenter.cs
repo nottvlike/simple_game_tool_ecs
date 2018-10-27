@@ -19,8 +19,8 @@ public enum NotificationMode
 
 public struct NotificationData : IEquatable<NotificationData>
 {
+    public int id;
     public int type;
-    public int subType;
     public NotificationStateType state;
     public NotificationMode mode;
     public object data1;
@@ -28,13 +28,12 @@ public struct NotificationData : IEquatable<NotificationData>
 
     public bool Equals(NotificationData other)
     {
-        return type == other.type && subType == other.subType;
+        return id == other.id && type == other.type;
     }
 }
 
 public interface INotificationCenter
 {
-    void Register(int type, int subType, NotificationMode mode);
     void Add(BaseNotification notification);
     void Remove(BaseNotification notification);
     void Notificate(NotificationData notificationData);

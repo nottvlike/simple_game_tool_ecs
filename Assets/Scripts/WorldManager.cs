@@ -19,22 +19,9 @@ public struct SystemInfo : IEquatable<SystemInfo>
 
 public partial class WorldManager : Singleton<WorldManager>
 {
-    Player _player = new Player();
-    ItemManager _item = new ItemManager();
-
     List<ObjectData> _objectDataList = new List<ObjectData>();
     List<BaseObject> _objectList = new List<BaseObject>();
     List<Module.Module> _moduleList = new List<Module.Module>();
-
-    public Player Player
-    {
-        get { return _player; }
-    }
-
-    public ItemManager Item
-    {
-        get { return _item; }
-    }
 
     public List<ObjectData> ObjectDataList
     {
