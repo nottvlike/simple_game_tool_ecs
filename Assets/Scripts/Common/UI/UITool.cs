@@ -22,8 +22,12 @@ public class UITool : IUITool
 
     PanelType _lastShowedPanelType = PanelType.None;
 
+    NotificationData _notificationData;
+
     public void Init()
     {
+        _notificationData = new NotificationData();
+        _notificationData.id = Constant.NOTIFICATION_TYPE_UI;
     }
 
     void LoadUIRoot(PanelType panelType, OnRootLoadedFinished onLoaded)
@@ -241,13 +245,10 @@ public class UITool : IUITool
             _showedPanelList.Add(panelType);
             data.Resource.SetActive(true);
 
-            var notificationData = new NotificationData();
-            notificationData.id = Constant.NOTIFICATION_TYPE_UI;
-            notificationData.type = (int)PanelNotificationType.OpenPanel;
-            notificationData.mode = NotificationMode.Object;
-            notificationData.state = NotificationStateType.None;
-            notificationData.data1 = data;
-            WorldManager.Instance.GetNotificationCenter().Notificate(notificationData);
+            _notificationData.type = (int)PanelNotificationType.OpenPanel;
+            _notificationData.mode = NotificationMode.Object;
+            _notificationData.data1 = data;
+            WorldManager.Instance.GetNotificationCenter().Notificate(_notificationData);
         }
         else
         {
@@ -279,13 +280,10 @@ public class UITool : IUITool
 
             data.Resource.SetActive(false);
 
-            var notificationData = new NotificationData();
-            notificationData.id = Constant.NOTIFICATION_TYPE_UI;
-            notificationData.type = (int)PanelNotificationType.ClosePanel;
-            notificationData.mode = NotificationMode.Object;
-            notificationData.state = NotificationStateType.None;
-            notificationData.data1 = data;
-            WorldManager.Instance.GetNotificationCenter().Notificate(notificationData);
+            _notificationData.type = (int)PanelNotificationType.ClosePanel;
+            _notificationData.mode = NotificationMode.Object;
+            _notificationData.data1 = data;
+            WorldManager.Instance.GetNotificationCenter().Notificate(_notificationData);
         }
         else
         {
