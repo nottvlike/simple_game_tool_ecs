@@ -2,7 +2,7 @@
 
 public abstract class BaseNotification
 {
-    protected int _id;
+    static int _id;
     protected int[] _typeList;
 
     protected NotificationMode _mode = NotificationMode.None;
@@ -26,6 +26,11 @@ public abstract class BaseNotification
     public NotificationMode Mode
     {
         get { return _mode; }
+    }
+
+    public BaseNotification()
+    {
+        _id++;
     }
 
     public void Start()
