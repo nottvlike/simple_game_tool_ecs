@@ -28,6 +28,7 @@ namespace Module
 
         public void Update()
         {
+            WorldManager.Instance.GetSocketTool().StartSend();
         }
     }
 }

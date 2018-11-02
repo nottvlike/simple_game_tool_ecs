@@ -10,7 +10,7 @@ public enum LogState
 
 public class LogUtil
 {
-    static int _logState = (int)LogState.Warning;
+    static int _logState = (int)LogState.Info;
 
     public static void I(string format, params object[] args)
     {

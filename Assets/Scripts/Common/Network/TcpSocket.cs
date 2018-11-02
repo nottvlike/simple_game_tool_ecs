@@ -1,0 +1,355 @@
+﻿using UnityEngine;
+using System;
+using System.Collections;
+using System.Collections.Generic;
+using System.Net;
+using System.Text;
+using System.Threading;
+using System.Net.Sockets;
+
+public class TcpSocket : ISocketTool
+{
+    const ushort CACHE_SIZE = 65535;
+    const int WAIT_OUT_TIME = 5000;
+
+    const int PACKAGE_LENGTH_WIDTH = 2;
+    const int _ID_WIDTH = 4;
+    const int MESSAGE_LENGTH_WIDTH = 4;
+    const int CUSTOM_WIDTH = 2;
+
+    byte[] _headerPackage = new byte[PACKAGE_LENGTH_WIDTH];
+    byte[] _headerAll = new byte[_ID_WIDTH + MESSAGE_LENGTH_WIDTH + CUSTOM_WIDTH];
+
+    List<byte> _threadSendByteList = new List<byte>();
+    List<byte> _sendByteList = new List<byte>();
+    List<Message> _sendMessageList = new List<Message>();
+    List<Message> _cachedSendMessageList = new List<Message>();     // to use callback when receive the res message
+
+    List<byte> _recvByteList = new List<byte>();
+    List<Message> _recvMessageList = new List<Message>();
+    byte[] _recvBytes = new byte[CACHE_SIZE];
+
+    Thread _recvThread;
+    Thread _sendThread;
+    object _lockRecvMessageListObj = new object();
+    object _lockSendMessageListObj = new object();
+    object _lockCachedSendMessageListObj = new object();
+
+    Socket _socket;
+
+    public void Init(string ip, int port)
+    {
+        if (_socket != null)
+        {
+            Close();
+            _socket = null;
+        }
+
+        _socket = new Socket(AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.Tcp);
+
+        try
+        {
+            var address = IPAddress.Parse(ip);
+            _socket.BeginConnect(ip, port, new AsyncCallback(delegate (IAsyncResult ar) {
+                Socket socket = (Socket)ar.AsyncState;
+                try
+                {
+                    socket.EndConnect(ar);
+
+                    if (_recvThread == null)
+                    {
+                        _recvThread = new Thread(new ThreadStart(Receive));
+                        _recvThread.IsBackground = true;
+                    }
+
+                    if (!_recvThread.IsAlive)
+                    {
+                        _recvThread.Start();
+                    }
+                }
+                catch
+                {
+                    Close();
+                }
+            }), _socket);
+        }
+        catch
+        {
+            Close();
+        }
+    }
+
+    public void Destroy()
+    {
+        Close();
+    }
+
+    void Send()
+    {
+        while (true)
+        {
+            if (!_socket.Connected)
+            {
+                break;
+            }
+
+            _threadSendByteList.Clear();
+
+            lock (_sendMessageList)
+            {
+                if (_sendMessageList.Count == 0)
+                {
+                    break;
+                }
+
+                for (var i = 0; i < _sendMessageList.Count;)
+                {
+                    var message = _sendMessageList[i];
+                    if (_threadSendByteList.Count + message.data.Length + PACKAGE_LENGTH_WIDTH <= CACHE_SIZE)
+                    {
+                        _threadSendByteList.AddRange(message.data);
+                        _sendMessageList.Remove(message);
+                    }
+                    else
+                    {
+                        break;
+                    }
+                }
+            }
+
+            var buf = _threadSendByteList.ToArray();
+            var packageBytes = BitConverter.GetBytes((ushort)buf.Length);
+            Array.Reverse(packageBytes);
+
+            _threadSendByteList.Clear();
+            _threadSendByteList.AddRange(packageBytes);
+            _threadSendByteList.AddRange(buf);
+
+            SocketError error;
+            _socket.Send(_threadSendByteList.ToArray(), 0, _threadSendByteList.Count, SocketFlags.None, out error);
+            if (error != SocketError.Success)
+            {
+                Debug.LogError(string.Format("Send byts error {0}!", error));
+                Close();
+                break;
+            }
+        }
+    }
+
+    void Receive()
+    {
+        while (true)
+        {
+            if (!_socket.Connected)
+            {
+                continue;
+            }
+
+            Array.Clear(_recvBytes, 0, _recvBytes.Length);
+
+            SocketError error;
+            int length = _socket.Receive(_recvBytes, 0, _recvBytes.Length, SocketFlags.None, out error);
+            if (error == SocketError.Success)
+            {
+                var headLength = PACKAGE_LENGTH_WIDTH + _ID_WIDTH + MESSAGE_LENGTH_WIDTH + CUSTOM_WIDTH;
+                if (length >= headLength)
+                {
+                    UpackMessage(_recvBytes);
+                }
+                else
+                {
+                    Debug.LogError(string.Format("Receive byts should large than {0}!", headLength));
+                }
+            }
+            else
+            {
+                Debug.LogError(string.Format("Receive byts error {0}!", error));
+                Close();
+                break;
+            }
+        }
+    }
+
+    void UpackMessage(byte[] bytes, bool hasPackageHead = true)
+    {
+        var offset = 0;
+        var packageLength = 0;
+        if (hasPackageHead)
+        {
+            // header是大端，特殊处理下
+            Array.Clear(_headerPackage, 0, _headerPackage.Length);
+            _headerPackage[0] = bytes[1];
+            _headerPackage[1] = bytes[0];
+            packageLength = BitConverter.ToUInt16(_headerPackage, 0);
+
+            offset += PACKAGE_LENGTH_WIDTH;
+        }
+
+        var Id = BitConverter.ToUInt32(bytes, offset);
+        offset += _ID_WIDTH;
+
+        var messageLength = BitConverter.ToInt32(bytes, offset);
+        offset += MESSAGE_LENGTH_WIDTH + CUSTOM_WIDTH;
+
+        if (messageLength > bytes.Length - offset)
+        {
+            //message to long
+            return;
+        }
+
+        _recvByteList.Clear();
+        _recvByteList.AddRange(bytes);
+        _recvByteList.RemoveRange(0, offset);
+
+        var leftLength = bytes.Length - offset - messageLength;
+        if (leftLength > 0)
+        {
+            offset = _recvByteList.Count - leftLength;
+            _recvByteList.RemoveRange(offset, leftLength);
+        }
+
+        var message = new Message();
+        message.data = bytes;
+        message.resId = Id;
+
+        lock (_lockCachedSendMessageListObj)
+        {
+            for (var i = 0; i < _cachedSendMessageList.Count; i++)
+            {
+                var cachedSendMessage = _cachedSendMessageList[i];
+                if (cachedSendMessage.resId == Id)
+                {
+                    message.reqId = cachedSendMessage.reqId;
+                    message.callback = cachedSendMessage.callback;
+                    _cachedSendMessageList.Remove(cachedSendMessage);
+                    break;
+                }
+            }
+        }
+
+        lock (_lockRecvMessageListObj)
+        {
+            _recvMessageList.Add(message);
+        }
+
+        if (leftLength > 0)
+        {
+            _recvByteList.Clear();
+            _recvByteList.AddRange(bytes);
+            _recvByteList.RemoveRange(0, offset + messageLength);
+
+            UpackMessage(_recvByteList.ToArray(), false);
+        }
+    }
+
+    public void SendMessage(byte[] buf, uint reqId, uint resId = 0, ReceiveMessageDelegate callback = null)
+    {
+        var length = buf.Length + _ID_WIDTH + MESSAGE_LENGTH_WIDTH + CUSTOM_WIDTH;
+        if (length > CACHE_SIZE)
+        {
+            return;
+        }
+
+        Array.Clear(_headerAll, 0, _headerAll.Length);
+
+        var Bytes = BitConverter.GetBytes(reqId);
+        Buffer.BlockCopy(Bytes, 0, _headerAll, 0, Bytes.Length);
+
+        var bufLengthBytes = BitConverter.GetBytes(buf.Length);
+        Buffer.BlockCopy(bufLengthBytes, 0, _headerAll, _ID_WIDTH, bufLengthBytes.Length);
+
+        _sendByteList.Clear();
+        _sendByteList.AddRange(_headerAll);
+        _sendByteList.AddRange(buf);
+
+        var message = new Message();
+        message.data = _sendByteList.ToArray();
+        message.reqId = reqId;
+        message.resId = resId;
+        message.callback = callback;
+
+        lock (_lockSendMessageListObj)
+        {
+            _sendMessageList.Add(message);
+        }
+
+        if (resId != 0 && callback != null)
+        {
+            lock (_lockCachedSendMessageListObj)
+            {
+                _cachedSendMessageList.Add(message);
+            }
+        }
+    }
+
+    public void StartSend()
+    {
+        if (_sendThread == null)
+        {
+            _sendThread = new Thread(new ThreadStart(Send));
+            _sendThread.IsBackground = true;
+        }
+
+        if (!_sendThread.IsAlive && _sendThread.ThreadState != ThreadState.Stopped)
+        {
+            _sendThread.Start();
+        }
+    }
+
+    void Tick()
+    {
+        Message[] messageList;
+        lock (_lockRecvMessageListObj)
+        {
+            messageList = _recvMessageList.ToArray();
+            _recvMessageList.Clear();
+        }
+
+        if (messageList.Length == 0)
+        {
+            return;
+        }
+
+        for (var i = 0; i < messageList.Length; i++)
+        {
+            var message = messageList[i];
+
+            if (message.callback != null)
+            {
+                message.callback(message);
+            }
+        }
+    }
+
+    void CleanThread()
+    {
+        _recvByteList.Clear();
+        _recvMessageList.Clear();
+        if (_recvThread != null)
+        {
+            _recvThread.Abort();
+            _recvThread = null;
+        }
+
+        _threadSendByteList.Clear();
+        _sendByteList.Clear();
+        _cachedSendMessageList.Clear();
+        _sendMessageList.Clear();
+        if (_sendThread != null)
+        {
+            _sendThread.Abort();
+            _sendThread = null;
+        }
+    }
+
+    public void Close()
+    {
+        CleanThread();
+
+        if (_socket != null)
+        {
+            _socket.Close();
+            _socket = null;
+        }
+    }
+}
