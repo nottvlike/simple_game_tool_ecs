@@ -26,9 +26,8 @@ namespace Module
             return index == 4;
         }
 
-        protected override void UpdateObject(int objId, BaseObject obj)
+        protected override void UpdateObject(int objId, ObjectData objData)
         {
-            var objData = WorldManager.Instance.GetObjectData(objId);
             var joyStickData = objData.GetData<JoyStickData>() as JoyStickData;
 
             var gameSystemData = WorldManager.Instance.GameCore.GetData<GameSystemData>() as GameSystemData;

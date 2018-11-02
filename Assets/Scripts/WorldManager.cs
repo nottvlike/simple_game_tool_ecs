@@ -20,17 +20,11 @@ public struct SystemInfo : IEquatable<SystemInfo>
 public partial class WorldManager : Singleton<WorldManager>
 {
     List<ObjectData> _objectDataList = new List<ObjectData>();
-    List<BaseObject> _objectList = new List<BaseObject>();
     List<Module.Module> _moduleList = new List<Module.Module>();
 
     public List<ObjectData> ObjectDataList
     {
         get { return _objectDataList; }
-    }
-
-    public List<BaseObject> ObjectList
-    {
-        get { return _objectList; }
     }
 
     public List<Module.Module> ModuleList
@@ -45,18 +39,6 @@ public partial class WorldManager : Singleton<WorldManager>
             var objectData = _objectDataList[i];
             if (objId == objectData.ObjectId)
                 return objectData;
-        }
-
-        return null;
-    }
-
-    public BaseObject GetObject(int objId)
-    {
-        for (var i = 0; i < _objectList.Count; i++)
-        {
-            var obj = _objectList[i];
-            if (objId == obj.Id)
-                return obj;
         }
 
         return null;

@@ -6,12 +6,11 @@ using Data;
 [Serializable]
 public class PlayerData
 {
-    public int id;
-    public string resource;
-
     public PositionData positionData;
     public DirectionData directionData;
     public SpeedData speedData;
+    public Data.ResourceData resourceData;
+    public ResourceStateData resourceStateData;
 }
 
 [Serializable]

@@ -6,7 +6,7 @@ namespace Data
 {
     public abstract class Data
     {
-        public Data Clone()
+        public virtual Data Clone()
         {
             return (Data)MemberwiseClone();
         }

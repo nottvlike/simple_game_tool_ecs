@@ -12,6 +12,8 @@ public class ObjectData
 {
     static Dictionary<Type, List<int>> moduleAddedObjectIdList = new Dictionary<Type, List<int>>();
 
+    static int _idGenerate = 0;
+
     int _objId = 0;
     List<Type> _moduleTypeList = new List<Type>();
     List<Data.Data> _dataList = new List<Data.Data>();
@@ -31,9 +33,9 @@ public class ObjectData
         get { return _dataList; }
     }
 
-    public ObjectData(int objId)
+    public ObjectData()
     {
-        _objId = objId;
+        _objId = ++_idGenerate;
     }
 
     public void RefreshModuleAddedObjectIdList()
@@ -54,12 +56,16 @@ public class ObjectData
             if (!isContains && isBelong)
             {
                 objectIdList.Add(_objId);
+
                 module.OnIdListChanged();
+                module.OnAdd(_objId);
             }
             else if (isContains && !isBelong)
             {
                 objectIdList.Remove(_objId);
+
                 module.OnIdListChanged();
+                module.OnRemove(_objId);
             }
         }
     }

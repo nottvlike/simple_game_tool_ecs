@@ -28,16 +28,17 @@ namespace Module
             {
                 var objId = _objectIdList[i];
 
-                var obj = WorldManager.Instance.GetObject(objId);
-                if (!obj.IsInit())
+                var objData = WorldManager.Instance.GetObjectData(objId);
+                var resourceStateData = objData.GetData<Data.ResourceStateData>() as Data.ResourceStateData;
+                if (!resourceStateData.isInstantiated)
                 {
                     continue;
                 }
 
-                UpdateObject(objId, obj);
+                UpdateObject(objId, objData);
             }
         }
 
-        protected abstract void UpdateObject(int objId, BaseObject obj);
+        protected abstract void UpdateObject(int objId, ObjectData obj);
     }
 }

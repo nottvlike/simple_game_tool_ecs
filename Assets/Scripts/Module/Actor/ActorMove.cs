@@ -27,9 +27,8 @@ namespace Module
             return index == 3;
         }
 
-        protected override void UpdateObject(int objId, BaseObject obj)
+        protected override void UpdateObject(int objId, ObjectData objData)
         {
-            var objData = WorldManager.Instance.GetObjectData(objId);
             var speedData = objData.GetData<SpeedData>() as SpeedData;
             if (speedData.acceleration == 0)
             {
@@ -50,7 +49,8 @@ namespace Module
             positionData.y += deltaY;
             positionData.z += deltaZ;
 
-            var transform = ((GameObject)obj.Resource).transform;
+            var resourceData = objData.GetData<Data.ResourceData>() as Data.ResourceData;
+            var transform = resourceData.gameObject.transform;
             var deltaSpeed = Time.deltaTime / Constant.SPEED;
             transform.Translate(deltaX * Time.deltaTime / Constant.SPEED, deltaY * Time.deltaTime / Constant.SPEED, deltaZ * Time.deltaTime / Constant.SPEED);
         }

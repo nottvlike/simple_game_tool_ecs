@@ -9,8 +9,5 @@ public class Constant
 
     public const int SPEED = 100;
 
-    public const int GAME_CORE_OBJECT_ID = -100;
-    public const int GAME_SERVER_OBJECT_ID = -101;
-
     public const int JOYSTICK_DELAY_FRAME_COUNT = 5;
 }

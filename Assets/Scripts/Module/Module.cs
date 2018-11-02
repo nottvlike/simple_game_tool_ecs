@@ -9,6 +9,9 @@ namespace Module{
 
         public abstract bool IsBelong(List<Data.Data> dataList);
 
+        public virtual void OnAdd(int objId) { }
+        public virtual void OnRemove(int objId) { }
+
         public void OnIdListChanged()
         {
             _objectIdList.Clear();

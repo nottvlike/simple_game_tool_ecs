@@ -24,14 +24,15 @@ public class LevelLoader
             case DramaItemType.CreatePlayer:
                 {
                     var playerData = levelConfig.playerData;
-                    var obj = new TestObject(playerData.id, playerData.resource);
-                    var objData = new ObjectData(playerData.id);
-                    WorldManager.Instance.ObjectList.Add(obj);
+                    var objData = new ObjectData();
                     WorldManager.Instance.ObjectDataList.Add(objData);
 
                     objData.AddData(playerData.positionData.Clone());
                     objData.AddData(playerData.directionData.Clone());
                     objData.AddData(playerData.speedData.Clone());
+
+                    objData.AddData(playerData.resourceData.Clone());
+                    objData.AddData(playerData.resourceStateData.Clone());
 
                     objData.AddData(new Data.JoyStickData());
                     objData.AddData(new Data.ActorSyncData());

@@ -2,6 +2,7 @@
 using UnityEngine;
 using Data;
 
+#if UNITY_EDITOR
 namespace Module
 {
     public class ActorJoyStick : UpdateModule
@@ -25,9 +26,8 @@ namespace Module
             return false;
         }
 
-        protected override void UpdateObject(int objId, BaseObject obj)
+        protected override void UpdateObject(int objId, ObjectData objData)
         {
-            var objData = WorldManager.Instance.GetObjectData(objId);
             var joyStickData = objData.GetData<JoyStickData>() as JoyStickData;
 
             var joyStickMapDataList = WorldManager.Instance.JoyStickConfig.joyStickMapDataList;
@@ -72,3 +72,4 @@ namespace Module
         }
     }
 }
+#endif
