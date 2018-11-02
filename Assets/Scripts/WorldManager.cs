@@ -61,7 +61,32 @@ public partial class WorldManager : Singleton<WorldManager>
     {
         GetResourceTool().Init();
 
+        GetSocketTool().Init("127.0.0.1", 8888);
+
         RegisterAllModule();
+
+        var builder = new FlatBuffers.FlatBufferBuilder(1024);
+        var name = builder.CreateString("Test123");
+        var password = builder.CreateString("123");
+        var channelName = builder.CreateString("unity");
+
+        Protocol.ReqLoginGame.StartReqLoginGame(builder);
+        Protocol.ReqLoginGame.AddName(builder, name);
+        Protocol.ReqLoginGame.AddPassword(builder, password);
+        Protocol.ReqLoginGame.AddChannel(builder, 0);
+        Protocol.ReqLoginGame.AddSubChannel(builder, 1);
+        Protocol.ReqLoginGame.AddChannelName(builder, channelName);
+        var orc = Protocol.ReqLoginGame.EndReqLoginGame(builder);
+        builder.Finish(orc.Value);
+
+        var buf = builder.SizedByteArray();
+
+        GetSocketTool().SendMessage(buf, 10000, 10001, delegate (Message msg)
+        {
+            
+        });
+
+        LogUtil.I("buf " + buf.Length);
 
         LoadConfig();
 
