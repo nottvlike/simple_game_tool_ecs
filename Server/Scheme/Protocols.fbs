@@ -1,0 +1,5 @@
+enum Protocols : uint 
+{ 
+	ReqLoginGame = 10000, 
+	ResLoginGame
+}

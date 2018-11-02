@@ -1,0 +1,11 @@
+namespace Protocol;
+
+table ReqLoginGame {
+	name:string;
+	password:string;
+	channel:int;
+	subChannel:int;
+	channelName:string;
+}
+
+root_type ReqLoginGame;

@@ -1,0 +1,15 @@
+namespace Protocol;
+
+table RoleInfoLite {
+	roleId:string;
+	roleName:string;
+	roleLevel:int;
+}
+
+table ResLoginGame {
+	result:bool;
+	accountId:string;
+	roleInfoLites:[RoleInfoLite];
+}
+
+root_type ResLoginGame;

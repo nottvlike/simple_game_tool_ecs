@@ -1,0 +1,1 @@
+./flatc --csharp ./ReqLoginGame.fbs ./ResLoginGame.fbs ./Protocols.fbs
