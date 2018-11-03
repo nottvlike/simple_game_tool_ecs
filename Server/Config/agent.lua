@@ -45,6 +45,54 @@ function REQUEST:ReqLoginGame(content)
 	print('Channel ' .. message:Channel())
 	print('SubChannel ' .. message:SubChannel())
 	print('ChannelName ' .. message:ChannelName())
+
+
+	local builder = flatbuffers.Builder(1024)
+
+	local accountId = builder:CreateString("11111111")
+
+	local roleId1 = builder:CreateString("roleId1")
+	local roleName1 = builder:CreateString("roleName1")
+
+	roleInfoLite.Start(builder)
+	roleInfoLite.AddRoleId(builder, roleId1)
+	roleInfoLite.AddRoleName(builder, roleName1)
+	roleInfoLite.AddRoleLevel(builder, 3)
+	local role1 = roleInfoLite.End(builder)
+
+	local roleId2 = builder:CreateString("roleId2")
+	local roleName2 = builder:CreateString("roleName2")
+
+	roleInfoLite.Start(builder)
+	roleInfoLite.AddRoleId(builder, roleId2)
+	roleInfoLite.AddRoleName(builder, roleName2)
+	roleInfoLite.AddRoleLevel(builder, 3)
+	local role2 = roleInfoLite.End(builder)
+
+	local roleId3 = builder:CreateString("roleId3")
+	local roleName3 = builder:CreateString("roleName3")
+
+	roleInfoLite.Start(builder)
+	roleInfoLite.AddRoleId(builder, roleId3)
+	roleInfoLite.AddRoleName(builder, roleName3)
+	roleInfoLite.AddRoleLevel(builder, 3)
+	local role3 = roleInfoLite.End(builder)
+
+	reslogingame.StartRoleInfoLitesVector(builder, 3)
+	builder:PrependUOffsetTRelative(role1)
+	builder:PrependUOffsetTRelative(role2)
+	builder:PrependUOffsetTRelative(role3)
+	local roleInfoLites = builder:EndVector(3)
+
+	reslogingame.Start(builder)
+	reslogingame.AddResult(builder, 1)
+	reslogingame.AddAccountId(builder, accountId)
+	reslogingame.AddRoleInfoLites(builder, roleInfoLites)
+	local orc = reslogingame.End(builder)
+	
+	builder:Finish(orc)
+
+	return { id = proto.getId("ResLoginGame"), data = builder:Output()}
 end
 
 local function request(name, args, response)
@@ -53,6 +101,12 @@ local function request(name, args, response)
 	if response then
 		return response(r)
 	end
+end
+
+local function get_response(args)
+	local protocolId = args.id
+	local bufAsStr = args.data
+	return string.pack("<I4i4c2c" .. string.len(bufAsStr), protocolId, string.len(bufAsStr), "00", bufAsStr)
 end
 
 local function send_package(pack)
@@ -78,7 +132,7 @@ skynet.register_protocol {
 			print('messageLength ' .. messageLength)
 			print('protocol ' .. protocolName)
 
-			return "REQUEST", protocolName, result, nil
+			return "REQUEST", protocolName, result, get_response
 		end
 	end,
 	dispatch = function (_, _, type, ...)
@@ -102,13 +156,6 @@ function CMD.start(conf)
 	local fd = conf.client
 	local gate = conf.gate
 	WATCHDOG = conf.watchdog
-	-- slot 1,2 set at main.lua
-	skynet.fork(function()
-		while true do
-			send_package("heartbeat")
-			skynet.sleep(500)
-		end
-	end)
 
 	client_fd = fd
 	skynet.call(gate, "lua", "forward", fd)

@@ -7,7 +7,7 @@ table RoleInfoLite {
 }
 
 table ResLoginGame {
-	result:bool;
+	result:int;
 	accountId:string;
 	roleInfoLites:[RoleInfoLite];
 }

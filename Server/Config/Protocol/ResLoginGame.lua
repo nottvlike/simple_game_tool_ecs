@@ -24,9 +24,9 @@ end
 function ResLoginGame_mt:Result()
     local o = self.view:Offset(4)
     if o ~= 0 then
-        return (self.view:Get(flatbuffers.N.Bool, o + self.view.pos) ~= 0)
+        return self.view:Get(flatbuffers.N.Int32, o + self.view.pos)
     end
-    return false
+    return 0
 end
 function ResLoginGame_mt:AccountId()
     local o = self.view:Offset(6)
@@ -53,7 +53,7 @@ function ResLoginGame_mt:RoleInfoLitesLength()
     return 0
 end
 function ResLoginGame.Start(builder) builder:StartObject(3) end
-function ResLoginGame.AddResult(builder, result) builder:PrependBoolSlot(0, result, 0) end
+function ResLoginGame.AddResult(builder, result) builder:PrependInt32Slot(0, result, 0) end
 function ResLoginGame.AddAccountId(builder, accountId) builder:PrependUOffsetTRelativeSlot(1, accountId, 0) end
 function ResLoginGame.AddRoleInfoLites(builder, roleInfoLites) builder:PrependUOffsetTRelativeSlot(2, roleInfoLites, 0) end
 function ResLoginGame.StartRoleInfoLitesVector(builder, numElems) return builder:StartVector(4, numElems, 4) end

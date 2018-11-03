@@ -19,7 +19,7 @@ function proto.getName(protocolId)
 end
 
 function proto.getId(protocolName)
-	return protocolsNames[protocolId] 
+	return protocolsNames[protocolName] 
 end
 
 load()
