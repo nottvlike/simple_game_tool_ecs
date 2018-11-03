@@ -17,7 +17,7 @@ public struct ResLoginGame : IFlatbufferObject
   public void __init(int _i, ByteBuffer _bb) { __p.bb_pos = _i; __p.bb = _bb; }
   public ResLoginGame __assign(int _i, ByteBuffer _bb) { __init(_i, _bb); return this; }
 
-  public bool Result { get { int o = __p.__offset(4); return o != 0 ? 0!=__p.bb.Get(o + __p.bb_pos) : (bool)false; } }
+  public int Result { get { int o = __p.__offset(4); return o != 0 ? __p.bb.GetInt(o + __p.bb_pos) : (int)0; } }
   public string AccountId { get { int o = __p.__offset(6); return o != 0 ? __p.__string(o + __p.bb_pos) : null; } }
 #if ENABLE_SPAN_T
   public Span<byte> GetAccountIdBytes() { return __p.__vector_as_span(6); }
@@ -29,7 +29,7 @@ public struct ResLoginGame : IFlatbufferObject
   public int RoleInfoLitesLength { get { int o = __p.__offset(8); return o != 0 ? __p.__vector_len(o) : 0; } }
 
   public static Offset<ResLoginGame> CreateResLoginGame(FlatBufferBuilder builder,
-      bool result = false,
+      int result = 0,
       StringOffset accountIdOffset = default(StringOffset),
       VectorOffset roleInfoLitesOffset = default(VectorOffset)) {
     builder.StartObject(3);
@@ -40,7 +40,7 @@ public struct ResLoginGame : IFlatbufferObject
   }
 
   public static void StartResLoginGame(FlatBufferBuilder builder) { builder.StartObject(3); }
-  public static void AddResult(FlatBufferBuilder builder, bool result) { builder.AddBool(0, result, false); }
+  public static void AddResult(FlatBufferBuilder builder, int result) { builder.AddInt(0, result, 0); }
   public static void AddAccountId(FlatBufferBuilder builder, StringOffset accountIdOffset) { builder.AddOffset(1, accountIdOffset.Value, 0); }
   public static void AddRoleInfoLites(FlatBufferBuilder builder, VectorOffset roleInfoLitesOffset) { builder.AddOffset(2, roleInfoLitesOffset.Value, 0); }
   public static VectorOffset CreateRoleInfoLitesVector(FlatBufferBuilder builder, Offset<RoleInfoLite>[] data) { builder.StartVector(4, data.Length, 4); for (int i = data.Length - 1; i >= 0; i--) builder.AddOffset(data[i].Value); return builder.EndVector(); }

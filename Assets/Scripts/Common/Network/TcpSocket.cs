@@ -7,7 +7,7 @@ using System.Text;
 using System.Threading;
 using System.Net.Sockets;
 
-public class TcpSocket : ISocketTool
+public class TcpSocket : ISocketTool, IUpdateEvent
 {
     const ushort CACHE_SIZE = 65535;
     const int WAIT_OUT_TIME = 5000;
@@ -36,6 +36,11 @@ public class TcpSocket : ISocketTool
     object _lockCachedSendMessageListObj = new object();
 
     Socket _socket;
+
+    public TcpSocket()
+    {
+        WorldManager.Instance.GetUnityEventTool().Add(this);
+    }
 
     public void Init(string ip, int port)
     {
@@ -191,7 +196,8 @@ public class TcpSocket : ISocketTool
         var messageLength = BitConverter.ToInt32(bytes, offset);
         offset += MESSAGE_LENGTH_WIDTH + CUSTOM_WIDTH;
 
-        if (messageLength > bytes.Length - offset)
+        var messageHeaderWidth = _ID_WIDTH + MESSAGE_LENGTH_WIDTH + CUSTOM_WIDTH;
+        if (messageLength > packageLength - messageHeaderWidth)
         {
             //message to long
             return;
@@ -199,9 +205,10 @@ public class TcpSocket : ISocketTool
 
         _recvByteList.Clear();
         _recvByteList.AddRange(bytes);
+        _recvByteList.RemoveRange(packageLength, bytes.Length - packageLength);
         _recvByteList.RemoveRange(0, offset);
 
-        var leftLength = bytes.Length - offset - messageLength;
+        var leftLength = packageLength - messageHeaderWidth - messageLength;
         if (leftLength > 0)
         {
             offset = _recvByteList.Count - leftLength;
@@ -209,7 +216,7 @@ public class TcpSocket : ISocketTool
         }
 
         var message = new Message();
-        message.data = bytes;
+        message.data = _recvByteList.ToArray();
         message.resId = Id;
 
         lock (_lockCachedSendMessageListObj)
@@ -294,6 +301,11 @@ public class TcpSocket : ISocketTool
         {
             _sendThread.Start();
         }
+    }
+
+    public void Update()
+    {
+        Tick();
     }
 
     void Tick()
