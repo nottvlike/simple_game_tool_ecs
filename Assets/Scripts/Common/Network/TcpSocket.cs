@@ -13,12 +13,12 @@ public class TcpSocket : ISocketTool, IUpdateEvent
     const int WAIT_OUT_TIME = 5000;
 
     const int PACKAGE_LENGTH_WIDTH = 2;
-    const int _ID_WIDTH = 4;
+    const int PROTOCOL_ID_WIDTH = 4;
     const int MESSAGE_LENGTH_WIDTH = 4;
     const int CUSTOM_WIDTH = 2;
 
     byte[] _headerPackage = new byte[PACKAGE_LENGTH_WIDTH];
-    byte[] _headerAll = new byte[_ID_WIDTH + MESSAGE_LENGTH_WIDTH + CUSTOM_WIDTH];
+    byte[] _headerAll = new byte[PROTOCOL_ID_WIDTH + MESSAGE_LENGTH_WIDTH + CUSTOM_WIDTH];
 
     List<byte> _threadSendByteList = new List<byte>();
     List<byte> _sendByteList = new List<byte>();
@@ -31,15 +31,21 @@ public class TcpSocket : ISocketTool, IUpdateEvent
 
     Thread _recvThread;
     Thread _sendThread;
-    object _lockRecvMessageListObj = new object();
-    object _lockSendMessageListObj = new object();
-    object _lockCachedSendMessageListObj = new object();
+    readonly object _lockRecvMessageListObj = new object();
+    readonly object _lockSendMessageListObj = new object();
+    readonly object _lockCachedSendMessageListObj = new object();
 
     Socket _socket;
+
+    NotificationData _networkNotification = new NotificationData();
 
     public TcpSocket()
     {
         WorldManager.Instance.GetUnityEventTool().Add(this);
+
+        _networkNotification.id = Constant.NOTIFICATION_TYPE_NETWORK;
+        _networkNotification.mode = NotificationMode.ValueType;
+        _networkNotification.state = NotificationStateType.None;
     }
 
     public void Init(string ip, int port)
@@ -156,7 +162,7 @@ public class TcpSocket : ISocketTool, IUpdateEvent
             int length = _socket.Receive(_recvBytes, 0, _recvBytes.Length, SocketFlags.None, out error);
             if (error == SocketError.Success)
             {
-                var headLength = PACKAGE_LENGTH_WIDTH + _ID_WIDTH + MESSAGE_LENGTH_WIDTH + CUSTOM_WIDTH;
+                var headLength = PACKAGE_LENGTH_WIDTH + PROTOCOL_ID_WIDTH + MESSAGE_LENGTH_WIDTH + CUSTOM_WIDTH;
                 if (length >= headLength)
                 {
                     UpackMessage(_recvBytes);
@@ -178,7 +184,7 @@ public class TcpSocket : ISocketTool, IUpdateEvent
     void UpackMessage(byte[] bytes, bool hasPackageHead = true)
     {
         var offset = 0;
-        var packageLength = 0;
+        var packageLength = bytes.Length;
         if (hasPackageHead)
         {
             // header是大端，特殊处理下
@@ -190,13 +196,13 @@ public class TcpSocket : ISocketTool, IUpdateEvent
             offset += PACKAGE_LENGTH_WIDTH;
         }
 
-        var Id = BitConverter.ToUInt32(bytes, offset);
-        offset += _ID_WIDTH;
+        var protocolId = BitConverter.ToUInt32(bytes, offset);
+        offset += PROTOCOL_ID_WIDTH;
 
         var messageLength = BitConverter.ToInt32(bytes, offset);
         offset += MESSAGE_LENGTH_WIDTH + CUSTOM_WIDTH;
 
-        var messageHeaderWidth = _ID_WIDTH + MESSAGE_LENGTH_WIDTH + CUSTOM_WIDTH;
+        var messageHeaderWidth = PROTOCOL_ID_WIDTH + MESSAGE_LENGTH_WIDTH + CUSTOM_WIDTH;
         if (messageLength > packageLength - messageHeaderWidth)
         {
             //message to long
@@ -211,20 +217,19 @@ public class TcpSocket : ISocketTool, IUpdateEvent
         var leftLength = packageLength - messageHeaderWidth - messageLength;
         if (leftLength > 0)
         {
-            offset = _recvByteList.Count - leftLength;
-            _recvByteList.RemoveRange(offset, leftLength);
+            _recvByteList.RemoveRange(_recvByteList.Count - leftLength, leftLength);
         }
 
         var message = new Message();
         message.data = _recvByteList.ToArray();
-        message.resId = Id;
+        message.resId = protocolId;
 
         lock (_lockCachedSendMessageListObj)
         {
             for (var i = 0; i < _cachedSendMessageList.Count; i++)
             {
                 var cachedSendMessage = _cachedSendMessageList[i];
-                if (cachedSendMessage.resId == Id)
+                if (cachedSendMessage.resId == protocolId)
                 {
                     message.reqId = cachedSendMessage.reqId;
                     message.callback = cachedSendMessage.callback;
@@ -243,6 +248,7 @@ public class TcpSocket : ISocketTool, IUpdateEvent
         {
             _recvByteList.Clear();
             _recvByteList.AddRange(bytes);
+            _recvByteList.RemoveRange(packageLength, bytes.Length - packageLength);
             _recvByteList.RemoveRange(0, offset + messageLength);
 
             UpackMessage(_recvByteList.ToArray(), false);
@@ -251,7 +257,7 @@ public class TcpSocket : ISocketTool, IUpdateEvent
 
     public void SendMessage(byte[] buf, uint reqId, uint resId = 0, ReceiveMessageDelegate callback = null)
     {
-        var length = buf.Length + _ID_WIDTH + MESSAGE_LENGTH_WIDTH + CUSTOM_WIDTH;
+        var length = buf.Length + PROTOCOL_ID_WIDTH + MESSAGE_LENGTH_WIDTH + CUSTOM_WIDTH;
         if (length > CACHE_SIZE)
         {
             return;
@@ -263,7 +269,7 @@ public class TcpSocket : ISocketTool, IUpdateEvent
         Buffer.BlockCopy(Bytes, 0, _headerAll, 0, Bytes.Length);
 
         var bufLengthBytes = BitConverter.GetBytes(buf.Length);
-        Buffer.BlockCopy(bufLengthBytes, 0, _headerAll, _ID_WIDTH, bufLengthBytes.Length);
+        Buffer.BlockCopy(bufLengthBytes, 0, _headerAll, PROTOCOL_ID_WIDTH, bufLengthBytes.Length);
 
         _sendByteList.Clear();
         _sendByteList.AddRange(_headerAll);
@@ -330,6 +336,10 @@ public class TcpSocket : ISocketTool, IUpdateEvent
             {
                 message.callback(message);
             }
+
+            _networkNotification.data2 = message;
+            _networkNotification.type = (int)message.resId;
+            WorldManager.Instance.GetNotificationCenter().Notificate(_networkNotification);
         }
     }
 
