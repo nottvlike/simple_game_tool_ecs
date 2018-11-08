@@ -1,0 +1,24 @@
+namespace Protocol;
+
+table RoleInfoLite {
+	roleId:string;
+	roleName:string;
+	roleLevel:int;
+}
+
+table ResLoginGame {
+	result:int;
+	accountId:string;
+	roleInfoLites:[RoleInfoLite];
+}
+
+table ReqLoginGame {
+	name:string;
+	password:string;
+	channel:int;
+	subChannel:int;
+	channelName:string;
+}
+
+root_type ResLoginGame;
+root_type ReqLoginGame;
