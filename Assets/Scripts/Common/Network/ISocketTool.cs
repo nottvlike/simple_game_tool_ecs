@@ -25,5 +25,4 @@ public interface ISocketTool
     void Destroy();
 
     void SendMessage(byte[] buf, uint reqId, uint resId = 0, ReceiveMessageDelegate callback = null);
-    void StartSend();
 }

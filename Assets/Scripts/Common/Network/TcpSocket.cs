@@ -101,7 +101,8 @@ public class TcpSocket : ISocketTool, IUpdateEvent
         {
             if (!_socket.Connected)
             {
-                break;
+                Thread.Sleep(2000);
+                continue;
             }
 
             _threadSendByteList.Clear();
@@ -110,7 +111,8 @@ public class TcpSocket : ISocketTool, IUpdateEvent
             {
                 if (_sendMessageList.Count == 0)
                 {
-                    break;
+                    Thread.Sleep(200);
+                    continue;
                 }
 
                 for (var i = 0; i < _sendMessageList.Count;)
@@ -293,18 +295,11 @@ public class TcpSocket : ISocketTool, IUpdateEvent
                 _cachedSendMessageList.Add(message);
             }
         }
-    }
 
-    public void StartSend()
-    {
-        if (_sendThread == null)
+        if (_sendThread == null || !_sendThread.IsAlive)
         {
             _sendThread = new Thread(new ThreadStart(Send));
             _sendThread.IsBackground = true;
-        }
-
-        if (!_sendThread.IsAlive && _sendThread.ThreadState != ThreadState.Stopped)
-        {
             _sendThread.Start();
         }
     }
