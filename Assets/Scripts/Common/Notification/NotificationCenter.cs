@@ -52,7 +52,7 @@ public class NotificationCenter : INotificationCenter
         for (var i = 0; i < notificationList.Count; i++)
         {
             var notification = notificationList[i];
-            if (notification.CanNotificate(notificationData.type, notificationData.state))
+            if (notification.CanNotificate(notificationData.type))
             {
                 if (notificationData.mode == NotificationMode.Object)
                 {

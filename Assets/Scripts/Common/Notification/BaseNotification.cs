@@ -6,12 +6,6 @@ public abstract class BaseNotification
     protected int[] _typeList;
 
     protected NotificationMode _mode = NotificationMode.None;
-    protected NotificationStateType _state = NotificationStateType.None;
-
-    public NotificationStateType State
-    {
-        get { return _state; }
-    }
 
     public int Id
     {
@@ -44,13 +38,8 @@ public abstract class BaseNotification
         }
     }
 
-    public virtual bool CanNotificate(int type, NotificationStateType notificationState)
+    public virtual bool CanNotificate(int type)
     {
-        if (_state != notificationState)
-        {
-            return false;
-        }
-
         if (type == 0)
         {
             return true;

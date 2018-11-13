@@ -45,7 +45,6 @@ public class TcpSocket : ISocketTool, IUpdateEvent
 
         _networkNotification.id = Constant.NOTIFICATION_TYPE_NETWORK;
         _networkNotification.mode = NotificationMode.ValueType;
-        _networkNotification.state = NotificationStateType.None;
     }
 
     public void Init(string ip, int port)

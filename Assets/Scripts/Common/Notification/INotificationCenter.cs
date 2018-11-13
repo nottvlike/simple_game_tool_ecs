@@ -1,15 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 
-public enum NotificationStateType
-{
-    None,
-    Prepare,
-    Run,
-    Success,
-    Failed,
-}
-
 public enum NotificationMode
 {
     None,
@@ -21,7 +12,6 @@ public struct NotificationData : IEquatable<NotificationData>
 {
     public int id;
     public int type;
-    public NotificationStateType state;
     public NotificationMode mode;
     public object data1;
     public ValueType data2;
