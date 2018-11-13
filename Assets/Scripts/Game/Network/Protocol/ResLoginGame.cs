@@ -50,8 +50,6 @@ public struct ResLoginGame : IFlatbufferObject
     int o = builder.EndObject();
     return new Offset<ResLoginGame>(o);
   }
-  public static void FinishResLoginGameBuffer(FlatBufferBuilder builder, Offset<ResLoginGame> offset) { builder.Finish(offset.Value); }
-  public static void FinishSizePrefixedResLoginGameBuffer(FlatBufferBuilder builder, Offset<ResLoginGame> offset) { builder.FinishSizePrefixed(offset.Value); }
 };
 
 

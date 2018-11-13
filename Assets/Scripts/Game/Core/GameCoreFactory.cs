@@ -37,4 +37,25 @@ public partial class WorldManager : Singleton<WorldManager>
             return _gameServer;
         }
     }
+
+    ObjectData _item;
+    public ObjectData Item
+    {
+        get
+        {
+            if (_item == null)
+            {
+                var itemInfoData = new ItemInfoData();
+                itemInfoData.notification = new ItemNotification();
+
+                _item = new ObjectData();
+                _item.AddData(itemInfoData);
+                _objectDataList.Add(_item);
+
+                _item.RefreshModuleAddedObjectIdList();
+            }
+
+            return _item;
+        }
+    }
 }

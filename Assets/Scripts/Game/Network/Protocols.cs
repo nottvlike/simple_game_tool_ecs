@@ -6,5 +6,7 @@ public enum Protocols : uint
 {
  ReqLoginGame = 10000,
  ResLoginGame = 10001,
+ ResAllItemInfo = 20000,
+ ResUpdateItemInfo = 20001,
 };
 

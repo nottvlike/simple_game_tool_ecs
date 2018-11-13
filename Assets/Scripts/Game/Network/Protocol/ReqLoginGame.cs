@@ -66,8 +66,6 @@ public struct ReqLoginGame : IFlatbufferObject
     int o = builder.EndObject();
     return new Offset<ReqLoginGame>(o);
   }
-  public static void FinishReqLoginGameBuffer(FlatBufferBuilder builder, Offset<ReqLoginGame> offset) { builder.Finish(offset.Value); }
-  public static void FinishSizePrefixedReqLoginGameBuffer(FlatBufferBuilder builder, Offset<ReqLoginGame> offset) { builder.FinishSizePrefixed(offset.Value); }
 };
 
 

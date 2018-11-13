@@ -22,5 +22,33 @@ namespace Module{
                 _objectIdList.AddRange(objectIdList);
             }
         }
+
+        bool _enabled;
+        public bool enabled
+        {
+            get
+            {
+                return _enabled;
+            }
+            set
+            {
+                if (_enabled == value)
+                {
+                    return;
+                }
+
+                if (_enabled)
+                {
+                    OnEnable();
+                }
+                else
+                {
+                    OnDisable();
+                }
+            }
+        }
+        
+        protected virtual void OnEnable() { }
+        protected virtual void OnDisable() { }
     }
 }
