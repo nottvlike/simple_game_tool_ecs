@@ -1,0 +1,16 @@
+namespace Protocol.Item;
+
+table ItemInfo {
+	itemId:int;
+	itemType:int;
+	itemCount:int;
+}
+
+table ResAllItemInfo {
+	result:int;
+	itemInfoList:[ItemInfo];
+}
+
+table ResUpdateItemInfo {
+	itemInfoList:[ItemInfo];
+}

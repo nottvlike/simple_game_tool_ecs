@@ -1,5 +1,7 @@
 enum Protocols : uint 
 { 
 	ReqLoginGame = 10000, 
-	ResLoginGame
+	ResLoginGame,
+	ResAllItemInfo = 20000,
+	ResUpdateItemInfo,
 }

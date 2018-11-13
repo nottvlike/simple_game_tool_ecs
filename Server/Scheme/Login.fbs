@@ -19,6 +19,3 @@ table ReqLoginGame {
 	subChannel:int;
 	channelName:string;
 }
-
-root_type ResLoginGame;
-root_type ReqLoginGame;
