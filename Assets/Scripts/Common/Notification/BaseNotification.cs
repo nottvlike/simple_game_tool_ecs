@@ -4,8 +4,10 @@ public abstract class BaseNotification
 {
     protected int _id;
     protected int[] _typeList;
-
+    
     protected NotificationMode _mode = NotificationMode.None;
+
+    bool _enabled;
 
     public int Id
     {
@@ -22,19 +24,31 @@ public abstract class BaseNotification
         get { return _mode; }
     }
 
-    public void Start()
+    public bool Enabled
     {
-        if (_id != 0)
+        get { return _enabled; }
+        set
         {
-            WorldManager.Instance.GetNotificationCenter().Add(this);
-        }
-    }
+            if (_id == 0)
+            {
+                LogUtil.E("Notification Id is 0, could not enable notification!");
+                return;
+            }
 
-    public void Stop()
-    {
-        if (_id != 0)
-        {
-            WorldManager.Instance.GetNotificationCenter().Remove(this);
+            if (_enabled == value)
+            {
+                return;
+            }
+
+            _enabled = value;
+            if (_enabled)
+            {
+                WorldManager.Instance.GetNotificationCenter().Add(this);
+            }
+            else
+            {
+                WorldManager.Instance.GetNotificationCenter().Remove(this);
+            }
         }
     }
 

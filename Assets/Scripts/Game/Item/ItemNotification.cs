@@ -19,7 +19,7 @@ public class ItemNotification : ValueTypeNotification
         _notificationData.id = Constant.NOTIFICATION_TYPE_ITEM;
         _notificationData.mode = NotificationMode.ValueType;
 
-        Start();
+        Enabled = true;
     }
 
     public override void OnReceive(int type, ValueType notificationData)

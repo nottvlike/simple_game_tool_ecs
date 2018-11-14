@@ -25,11 +25,11 @@ namespace Module{
 
         public Module()
         {
-            enabled = true;
+            Enabled = true;
         }
 
         bool _enabled;
-        public bool enabled
+        public bool Enabled
         {
             get
             {
