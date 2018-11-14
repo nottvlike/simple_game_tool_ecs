@@ -12,11 +12,14 @@ public class ItemNotification : ValueTypeNotification
 
     public ItemNotification()
     {
+        _id = Constant.NOTIFICATION_TYPE_ITEM;
         _typeList = new int[2] { (int)Protocols.ResAllItemInfo, (int)Protocols.ResUpdateItemInfo };
 
         _notificationData = new NotificationData();
         _notificationData.id = Constant.NOTIFICATION_TYPE_ITEM;
         _notificationData.mode = NotificationMode.ValueType;
+
+        Start();
     }
 
     public override void OnReceive(int type, ValueType notificationData)

@@ -23,6 +23,11 @@ namespace Module{
             }
         }
 
+        public Module()
+        {
+            enabled = true;
+        }
+
         bool _enabled;
         public bool enabled
         {
