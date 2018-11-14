@@ -7,9 +7,14 @@ namespace Module
 {
     public abstract class UpdateModule : Module, IUpdateEvent
     {
-        public UpdateModule()
+        protected override void OnEnable()
         {
             WorldManager.Instance.GetUnityEventTool().Add(this);
+        }
+
+        protected override void OnDisable()
+        {
+            WorldManager.Instance.GetUnityEventTool().Remove(this);
         }
 
         public override bool IsBelong(List<Data.Data> dataList)

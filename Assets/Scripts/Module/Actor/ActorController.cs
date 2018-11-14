@@ -7,11 +7,6 @@ namespace Module
 {
     public class ActorController : UpdateModule
     {
-        public ActorController()
-            : base()
-        {
-        }
-
         public override bool IsBelong(List<Data.Data> dataList)
         {
             var index = 0;

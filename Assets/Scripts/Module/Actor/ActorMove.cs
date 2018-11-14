@@ -8,11 +8,6 @@ namespace Module
 {
     public class ActorMove : UpdateModule
     {
-        public ActorMove()
-            : base()
-        {
-        }
-
         public override bool IsBelong(List<Data.Data> dataList)
         {
             var index = 0;

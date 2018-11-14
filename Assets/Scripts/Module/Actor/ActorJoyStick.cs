@@ -7,11 +7,6 @@ namespace Module
 {
     public class ActorJoyStick : UpdateModule
     {
-        public ActorJoyStick()
-            : base()
-        {
-        }
-
         public override bool IsBelong(List<Data.Data> dataList)
         {
             for (var i = 0; i < dataList.Count; ++i)
