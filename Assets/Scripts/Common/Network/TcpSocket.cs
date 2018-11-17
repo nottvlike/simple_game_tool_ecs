@@ -9,7 +9,6 @@ using System.Net.Sockets;
 
 public class TcpSocket : ISocketTool, IUpdateEvent
 {
-    const ushort CACHE_SIZE = 65535;
     const int WAIT_OUT_TIME = 5000;
 
     const int PACKAGE_LENGTH_WIDTH = 2;
@@ -27,7 +26,7 @@ public class TcpSocket : ISocketTool, IUpdateEvent
 
     List<byte> _recvByteList = new List<byte>();
     List<Message> _recvMessageList = new List<Message>();
-    byte[] _recvBytes = new byte[CACHE_SIZE];
+    byte[] _recvBytes = new byte[Constant.NETWORK_CACHE_SIZE];
 
     Thread _recvThread;
     Thread _sendThread;
@@ -59,7 +58,6 @@ public class TcpSocket : ISocketTool, IUpdateEvent
 
         try
         {
-            var address = IPAddress.Parse(ip);
             _socket.BeginConnect(ip, port, new AsyncCallback(delegate (IAsyncResult ar) {
                 Socket socket = (Socket)ar.AsyncState;
                 try
@@ -117,7 +115,7 @@ public class TcpSocket : ISocketTool, IUpdateEvent
                 for (var i = 0; i < _sendMessageList.Count;)
                 {
                     var message = _sendMessageList[i];
-                    if (_threadSendByteList.Count + message.data.Length + PACKAGE_LENGTH_WIDTH <= CACHE_SIZE)
+                    if (_threadSendByteList.Count + message.data.Length + PACKAGE_LENGTH_WIDTH <= Constant.NETWORK_CACHE_SIZE)
                     {
                         _threadSendByteList.AddRange(message.data);
                         _sendMessageList.Remove(message);
@@ -259,7 +257,7 @@ public class TcpSocket : ISocketTool, IUpdateEvent
     public void SendMessage(byte[] buf, uint reqId, uint resId = 0, ReceiveMessageDelegate callback = null)
     {
         var length = buf.Length + PROTOCOL_ID_WIDTH + MESSAGE_LENGTH_WIDTH + CUSTOM_WIDTH;
-        if (length > CACHE_SIZE)
+        if (length > Constant.NETWORK_CACHE_SIZE)
         {
             return;
         }

@@ -8,5 +8,6 @@ public enum Protocols : uint
  ResLoginGame = 10001,
  ResAllItemInfo = 20000,
  ResUpdateItemInfo = 20001,
+ ResHeartBeat = 90000,
 };
 

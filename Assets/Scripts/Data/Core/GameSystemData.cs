@@ -1,4 +1,5 @@
 ﻿using System;
+using FlatBuffers;
 
 namespace Data
 {
@@ -9,5 +10,9 @@ namespace Data
 
     public class GameServerData : Data
     {
+        public FlatBufferBuilder builder = new FlatBufferBuilder(Constant.NETWORK_CACHE_SIZE);
+        public GameCoeNotification notification = new GameCoeNotification();
+        public int lastHeartBeatTime;
+        public int serverTime;
     }
 }

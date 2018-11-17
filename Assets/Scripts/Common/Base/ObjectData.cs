@@ -80,14 +80,14 @@ public class ObjectData
         _dataList.Remove(data);
     }
 
-    public Data.Data GetData<T>()  where T : Data.Data
+    public T GetData<T>()  where T : Data.Data
     {
         for (var i = 0; i < _dataList.Count; i++)
         {
             var data = _dataList[i];
             if (data.GetType() == typeof(T))
             {
-                return data;
+                return data as T;
             }
         }
 

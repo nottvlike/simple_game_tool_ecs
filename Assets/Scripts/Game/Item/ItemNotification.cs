@@ -43,7 +43,7 @@ public class ItemNotification : ValueTypeNotification
         var byteBuffer = new ByteBuffer(msg.data);
         var allItemInfo = Protocol.Item.ResAllItemInfo.GetRootAsResAllItemInfo(byteBuffer);
 
-        var itemInfoData = WorldManager.Instance.Item.GetData<Data.ItemInfoData>() as Data.ItemInfoData;
+        var itemInfoData = WorldManager.Instance.Item.GetData<Data.ItemInfoData>();
         var itemInfoList = itemInfoData.itemInfoList;
 
         itemInfoList.Clear();
@@ -66,43 +66,38 @@ public class ItemNotification : ValueTypeNotification
 
         var worldMgr = WorldManager.Instance;
         var notificationCenter = worldMgr.NotificationCenter;
-        var itemInfoData = worldMgr.Item.GetData<Data.ItemInfoData>() as Data.ItemInfoData;
+        var itemInfoData = worldMgr.Item.GetData<Data.ItemInfoData>();
         var itemInfoList = itemInfoData.itemInfoList;
 
-        for (var i = 0; i < updateItemInfoMsg.ItemInfoListLength; i++)
+        var updateItemInfo = updateItemInfoMsg.ItemInfo;
+
+        var i = 0;
+        for (; i < itemInfoList.Count; i++)
         {
-            var updateItemInfo = updateItemInfoMsg.ItemInfoList(i);
-
-            var j = 0;
-            for (; j < itemInfoList.Count; j++)
+            var itemInfo = itemInfoList[i];
+            if (updateItemInfo.Value.ItemId == itemInfo.uniqueId)
             {
-                var itemInfo = itemInfoList[i];
-                if (updateItemInfo.Value.ItemId == itemInfo.uniqueId)
-                {
-                    itemInfo.typeId = updateItemInfo.Value.ItemType;
-                    itemInfo.count = updateItemInfo.Value.ItemCount;
+                itemInfo.typeId = updateItemInfo.Value.ItemType;
+                itemInfo.count = updateItemInfo.Value.ItemCount;
 
-                    _notificationData.data2 = itemInfo;
-                    _notificationData.type = (int)ItemNotificationType.CountChanged;
-                    notificationCenter.Notificate(_notificationData);
-                    break;
-                }
-
-
-            }
-
-            if (j == itemInfoList.Count)
-            {
-                var item = new Data.ItemInfo();
-                item.uniqueId = updateItemInfo.Value.ItemId;
-                item.typeId = updateItemInfo.Value.ItemType;
-                item.count = updateItemInfo.Value.ItemCount;
-                itemInfoList.Add(item);
-
-                _notificationData.data2 = item;
+                _notificationData.data2 = itemInfo;
                 _notificationData.type = (int)ItemNotificationType.CountChanged;
                 notificationCenter.Notificate(_notificationData);
+                break;
             }
+        }
+
+        if (i == itemInfoList.Count)
+        {
+            var item = new Data.ItemInfo();
+            item.uniqueId = updateItemInfo.Value.ItemId;
+            item.typeId = updateItemInfo.Value.ItemType;
+            item.count = updateItemInfo.Value.ItemCount;
+            itemInfoList.Add(item);
+
+            _notificationData.data2 = item;
+            _notificationData.type = (int)ItemNotificationType.CountChanged;
+            notificationCenter.Notificate(_notificationData);
         }
     }
 }

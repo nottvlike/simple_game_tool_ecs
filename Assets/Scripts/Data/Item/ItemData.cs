@@ -13,6 +13,6 @@ namespace Data
     public class ItemInfoData : Data
     {
         public List<ItemInfo> itemInfoList = new List<ItemInfo>();
-        public BaseNotification notification;
+        public ItemNotification notification = new ItemNotification();
     }
 }
