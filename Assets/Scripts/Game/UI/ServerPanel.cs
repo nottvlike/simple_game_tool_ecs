@@ -14,6 +14,6 @@ public class ServerPanel : MonoBehaviour
 
     void OnCloseClick()
     {
-        WorldManager.Instance.GetUITool().HidePanel(PanelType.ServerPanel);
+        WorldManager.Instance.UIMgr.HidePanel(PanelType.ServerPanel);
     }
 }

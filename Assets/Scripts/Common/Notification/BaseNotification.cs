@@ -43,11 +43,11 @@ public abstract class BaseNotification
             _enabled = value;
             if (_enabled)
             {
-                WorldManager.Instance.GetNotificationCenter().Add(this);
+                WorldManager.Instance.NotificationCenter.Add(this);
             }
             else
             {
-                WorldManager.Instance.GetNotificationCenter().Remove(this);
+                WorldManager.Instance.NotificationCenter.Remove(this);
             }
         }
     }

@@ -18,12 +18,12 @@ public class LoginPanel : MonoBehaviour
 
     void OnLoginClick()
     {
-        WorldManager.Instance.GetUITool().ShowPanel(PanelType.CreateRolePanel);
+        WorldManager.Instance.UIMgr.ShowPanel(PanelType.CreateRolePanel);
     }
 
     void OnShowServerPanelClick()
     {
-        WorldManager.Instance.GetUITool().ShowPanel(PanelType.ServerPanel);
+        WorldManager.Instance.UIMgr.ShowPanel(PanelType.ServerPanel);
     }
 
     void OnExitClick()

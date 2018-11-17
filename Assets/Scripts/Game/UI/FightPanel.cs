@@ -51,6 +51,6 @@ public class FightPanel : MonoBehaviour
 
     void OnExitClick()
     {
-        WorldManager.Instance.GetUITool().ShowPanel(PanelType.MainPanel);
+        WorldManager.Instance.UIMgr.ShowPanel(PanelType.MainPanel);
     }
 }

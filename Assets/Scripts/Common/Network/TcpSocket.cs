@@ -41,7 +41,7 @@ public class TcpSocket : ISocketTool, IUpdateEvent
 
     public TcpSocket()
     {
-        WorldManager.Instance.GetUnityEventTool().Add(this);
+        WorldManager.Instance.UnityEventMgr.Add(this);
 
         _networkNotification.id = Constant.NOTIFICATION_TYPE_NETWORK;
         _networkNotification.mode = NotificationMode.ValueType;
@@ -333,7 +333,7 @@ public class TcpSocket : ISocketTool, IUpdateEvent
 
             _networkNotification.data2 = message;
             _networkNotification.type = (int)message.resId;
-            WorldManager.Instance.GetNotificationCenter().Notificate(_networkNotification);
+            WorldManager.Instance.NotificationCenter.Notificate(_networkNotification);
         }
     }
 

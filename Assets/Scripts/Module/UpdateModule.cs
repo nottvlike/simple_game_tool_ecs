@@ -9,12 +9,12 @@ namespace Module
     {
         protected override void OnEnable()
         {
-            WorldManager.Instance.GetUnityEventTool().Add(this);
+            WorldManager.Instance.UnityEventMgr.Add(this);
         }
 
         protected override void OnDisable()
         {
-            WorldManager.Instance.GetUnityEventTool().Remove(this);
+            WorldManager.Instance.UnityEventMgr.Remove(this);
         }
 
         public override bool IsBelong(List<Data.Data> dataList)

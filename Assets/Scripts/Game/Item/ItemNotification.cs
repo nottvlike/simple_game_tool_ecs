@@ -65,6 +65,7 @@ public class ItemNotification : ValueTypeNotification
         var updateItemInfoMsg = Protocol.Item.ResUpdateItemInfo.GetRootAsResUpdateItemInfo(byteBuffer);
 
         var worldMgr = WorldManager.Instance;
+        var notificationCenter = worldMgr.NotificationCenter;
         var itemInfoData = worldMgr.Item.GetData<Data.ItemInfoData>() as Data.ItemInfoData;
         var itemInfoList = itemInfoData.itemInfoList;
 
@@ -83,7 +84,7 @@ public class ItemNotification : ValueTypeNotification
 
                     _notificationData.data2 = itemInfo;
                     _notificationData.type = (int)ItemNotificationType.CountChanged;
-                    worldMgr.GetNotificationCenter().Notificate(_notificationData);
+                    notificationCenter.Notificate(_notificationData);
                     break;
                 }
 
@@ -100,7 +101,7 @@ public class ItemNotification : ValueTypeNotification
 
                 _notificationData.data2 = item;
                 _notificationData.type = (int)ItemNotificationType.CountChanged;
-                worldMgr.GetNotificationCenter().Notificate(_notificationData);
+                notificationCenter.Notificate(_notificationData);
             }
         }
     }

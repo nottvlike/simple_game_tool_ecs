@@ -13,6 +13,6 @@ public class HomePanel : MonoBehaviour {
 
     void OnFightClick()
     {
-        WorldManager.Instance.GetUITool().ShowPanel(PanelType.FightPanel);
+        WorldManager.Instance.UIMgr.ShowPanel(PanelType.FightPanel);
     }
 }

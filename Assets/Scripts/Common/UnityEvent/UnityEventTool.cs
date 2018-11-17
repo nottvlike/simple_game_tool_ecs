@@ -51,6 +51,6 @@ public class UnityEventTool : MonoSingleton<UnityEventTool>, IUnityEventTool
 
     void OnApplicationQuit()
     {
-        WorldManager.Instance.GetSocketTool().Destroy();
+        WorldManager.Instance.SocketMgr.Destroy();
     }
 }

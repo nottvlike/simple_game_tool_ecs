@@ -26,16 +26,17 @@ namespace Module
             base.OnAdd(objId);
 
             var worldMgr = WorldManager.Instance;
+            var resourceMgr = worldMgr.ResourceMgr;
             var objData = worldMgr.GetObjectData(objId);
             var resourceStateData = objData.GetData<Data.ResourceStateData>() as Data.ResourceStateData;
             var resourceData = objData.GetData<Data.ResourceData>() as Data.ResourceData;
-            resourceStateData.isLoaded = worldMgr.GetResourceTool().IsResourceLoaded(resourceData.resource);
+            resourceStateData.isLoaded = resourceMgr.IsResourceLoaded(resourceData.resource);
             if (!resourceStateData.isGameObject || (resourceStateData.isLoaded && resourceStateData.isInstantiated) )
             {
                 return;
             }
 
-            worldMgr.GetResourceTool().LoadAsync(resourceData.resource, delegate (Object obj)
+            resourceMgr.LoadAsync(resourceData.resource, delegate (Object obj)
             {
                 resourceStateData.isInstantiated = true;
                 resourceData.gameObject = Object.Instantiate(obj, Vector3.zero, Quaternion.identity) as GameObject;

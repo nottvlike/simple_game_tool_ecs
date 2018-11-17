@@ -9,7 +9,7 @@ namespace Module
     {
         public GameSystem()
         {
-            WorldManager.Instance.GetUnityEventTool().Add(this);
+            WorldManager.Instance.UnityEventMgr.Add(this);
         }
 
         public override bool IsBelong(List<Data.Data> dataList)

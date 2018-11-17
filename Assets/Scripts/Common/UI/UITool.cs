@@ -38,7 +38,7 @@ public class UITool : IUITool
         };
 
         // 异步加载 UI
-        WorldManager.Instance.GetResourceTool().LoadAsync("UI Root", onFinished);
+        WorldManager.Instance.ResourceMgr.LoadAsync("UI Root", onFinished);
     }
 
     public PanelData GetPanelConfig(PanelType panelType)
@@ -248,7 +248,7 @@ public class UITool : IUITool
             _notificationData.type = (int)PanelNotificationType.OpenPanel;
             _notificationData.mode = NotificationMode.Object;
             _notificationData.data1 = data;
-            WorldManager.Instance.GetNotificationCenter().Notificate(_notificationData);
+            WorldManager.Instance.NotificationCenter.Notificate(_notificationData);
         }
         else
         {
@@ -266,7 +266,7 @@ public class UITool : IUITool
                 };
 
                 // 异步加载 UI
-                WorldManager.Instance.GetResourceTool().LoadAsync(panelConfig.resourceName, onFinished);
+                WorldManager.Instance.ResourceMgr.LoadAsync(panelConfig.resourceName, onFinished);
             }
         }
     }
@@ -283,7 +283,7 @@ public class UITool : IUITool
             _notificationData.type = (int)PanelNotificationType.ClosePanel;
             _notificationData.mode = NotificationMode.Object;
             _notificationData.data1 = data;
-            WorldManager.Instance.GetNotificationCenter().Notificate(_notificationData);
+            WorldManager.Instance.NotificationCenter.Notificate(_notificationData);
         }
         else
         {

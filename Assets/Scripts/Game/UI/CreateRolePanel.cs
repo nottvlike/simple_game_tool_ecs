@@ -16,11 +16,11 @@ public class CreateRolePanel : MonoBehaviour
 
     void OnOkClick()
     {
-        WorldManager.Instance.GetUITool().ShowPanel(PanelType.MainPanel);
+        WorldManager.Instance.UIMgr.ShowPanel(PanelType.MainPanel);
     }
 
     void OnBackClick()
     {
-        WorldManager.Instance.GetUITool().ShowLastShowedPanel();
+        WorldManager.Instance.UIMgr.ShowLastShowedPanel();
     }
 }

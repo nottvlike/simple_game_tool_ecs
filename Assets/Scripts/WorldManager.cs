@@ -1,22 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 
-public enum SystemType
-{
-    None,
-}
-
-public struct SystemInfo : IEquatable<SystemInfo>
-{
-    SystemType systemType;
-    PanelType panelType;
-
-    public bool Equals(SystemInfo other)
-    {
-        return systemType == other.systemType;
-    }
-}
-
 public partial class WorldManager : Singleton<WorldManager>
 {
     List<ObjectData> _objectDataList = new List<ObjectData>();
@@ -40,9 +24,9 @@ public partial class WorldManager : Singleton<WorldManager>
 
     public void LaunchGame()
     {
-        GetResourceTool().Init();
+        ResourceMgr.Init();
 
-        GetSocketTool().Init("127.0.0.1", 8888);
+        SocketMgr.Init("127.0.0.1", 8888);
 
         RegisterAllModule();
 
@@ -62,7 +46,7 @@ public partial class WorldManager : Singleton<WorldManager>
 
         var buf = builder.SizedByteArray();
 
-        GetSocketTool().SendMessage(buf, (int)Protocols.ReqLoginGame, (int)Protocols.ResLoginGame, delegate (Message msg)
+        SocketMgr.SendMessage(buf, (int)Protocols.ReqLoginGame, (int)Protocols.ResLoginGame, delegate (Message msg)
         {
             var byteBuffer = new FlatBuffers.ByteBuffer(msg.data);
             var resLoginGame = Protocol.ResLoginGame.GetRootAsResLoginGame(byteBuffer);
@@ -88,7 +72,18 @@ public partial class WorldManager : Singleton<WorldManager>
 
         LoadConfig();
 
-        GetUITool().ShowPanel(PanelType.GameUpdatePanel);
-        GetLevelLoader().DoDrama();
+        UIMgr.ShowPanel(PanelType.GameUpdatePanel);
+        LevelLoader.DoDrama();
+    }
+
+    public void Destroy()
+    {
+        DestroySocketMgr();
+        DestroyNotificationCenter();
+        DestroyPoolMgr();
+        DestroyResourceMgr();
+        DestroyUIMgr();
+        DestroyUnityEventMgr();
+        DestroyLevelLoader();
     }
 }

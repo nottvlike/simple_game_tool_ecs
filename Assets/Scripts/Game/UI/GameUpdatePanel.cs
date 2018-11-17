@@ -13,6 +13,6 @@ public class GameUpdatePanel : MonoBehaviour
 
     void OnSkipClick()
     {
-        WorldManager.Instance.GetUITool().ShowPanel(PanelType.LoginPanel);
+        WorldManager.Instance.UIMgr.ShowPanel(PanelType.LoginPanel);
     }
 }
