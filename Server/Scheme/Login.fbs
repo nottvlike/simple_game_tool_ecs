@@ -1,4 +1,4 @@
-namespace Protocol;
+namespace Protocol.Login;
 
 table RoleInfoLite {
 	roleId:string;
@@ -15,7 +15,4 @@ table ResLoginGame {
 table ReqLoginGame {
 	name:string;
 	password:string;
-	channel:int;
-	subChannel:int;
-	channelName:string;
 }

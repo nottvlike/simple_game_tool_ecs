@@ -12,5 +12,5 @@ table ResAllItemInfo {
 }
 
 table ResUpdateItemInfo {
-	itemInfoList:[ItemInfo];
+	itemInfo:ItemInfo;
 }

@@ -1,0 +1,4 @@
+namespace Protocol.System;
+
+table ResHeartBeat {
+}
