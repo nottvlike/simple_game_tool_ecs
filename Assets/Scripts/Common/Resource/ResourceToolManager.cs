@@ -17,7 +17,10 @@ public partial class WorldManager : Singleton<WorldManager>
 
     void DestroyResourceMgr()
     {
-        _resourceMgr.Destroy();
-        _resourceMgr = null;
+        if (_resourceMgr != null)
+        {
+            _resourceMgr.Destroy();
+            _resourceMgr = null;
+        }
     }
 }

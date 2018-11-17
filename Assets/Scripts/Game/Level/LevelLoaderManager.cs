@@ -21,8 +21,11 @@ public partial class WorldManager : Singleton<WorldManager>
 
     void DestroyLevelLoader()
     {
-        _levelLoader.Save();
-        _levelLoader = null;
+        if (_levelLoader != null)
+        {
+            _levelLoader.Save();
+            _levelLoader = null;
+        }
     }
 }
 

@@ -45,9 +45,8 @@ public partial class WorldManager : Singleton<WorldManager>
         {
             if (_item == null)
             {
-                var itemInfoData = new ItemInfoData();
                 _item = new ObjectData();
-                _item.AddData(itemInfoData);
+                _item.AddData(new ItemInfoData());
                 _objectDataList.Add(_item);
 
                 _item.RefreshModuleAddedObjectIdList();
@@ -64,9 +63,8 @@ public partial class WorldManager : Singleton<WorldManager>
         {
             if (_player == null)
             {
-                var playerData = new PlayerBaseData();
                 _player = new ObjectData();
-                _player.AddData(playerData);
+                _player.AddData(new PlayerBaseData());
                 _objectDataList.Add(_player);
 
                 _player.RefreshModuleAddedObjectIdList();

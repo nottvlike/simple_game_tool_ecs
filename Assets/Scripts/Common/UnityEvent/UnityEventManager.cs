@@ -17,7 +17,10 @@ public partial class WorldManager : Singleton<WorldManager>
 
     void DestroyUnityEventMgr()
     {
-        _unityEventMgr.Destroy();
-        _unityEventMgr = null;
+        if (_unityEventMgr != null)
+        {
+            _unityEventMgr.Destroy();
+            _unityEventMgr = null;
+        }
     }
 }

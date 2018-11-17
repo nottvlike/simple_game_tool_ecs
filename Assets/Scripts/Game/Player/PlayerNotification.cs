@@ -7,6 +7,8 @@ public class PlayerNotification : ValueTypeNotification
     {
         _id = Constant.NOTIFICATION_TYPE_PLAYER;
         _typeList = new int[] { (int)Protocols.ResLoginGame };
+
+        Enabled = true;
     }
 
     public override void OnReceive(int type, ValueType notificationData)

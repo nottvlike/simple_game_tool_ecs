@@ -26,9 +26,4 @@ public class Panel : MonoBehaviour, IPanel
         WorldManager.Instance.UIMgr.AddPanel(this);
         gameObject.SetActive(false);
     }
-
-    void OnDestroy()
-    {
-        WorldManager.Instance.UIMgr.RemovePanel(this);
-    }
 }

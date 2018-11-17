@@ -17,7 +17,10 @@ public partial class WorldManager : Singleton<WorldManager>
 
     void DestroyPoolMgr()
     {
-        _poolMgr.Destroy();
-        _poolMgr = null;
+        if (_poolMgr != null)
+        {
+            _poolMgr.Destroy();
+            _poolMgr = null;
+        }
     }
 }

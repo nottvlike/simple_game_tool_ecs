@@ -20,7 +20,10 @@ public partial class WorldManager : Singleton<WorldManager>
 
     void DestroyUIMgr()
     {
-        _uiMgr.Destroy();
-        _uiMgr = null;
+        if (_uiMgr != null)
+        {
+            _uiMgr.Destroy();
+            _uiMgr = null;
+        }
     }
 }

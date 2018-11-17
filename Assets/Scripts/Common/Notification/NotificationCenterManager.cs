@@ -17,7 +17,10 @@ public partial class WorldManager : Singleton<WorldManager>
 
     void DestroyNotificationCenter()
     {
-        _notificationCenter.Destroy();
-        _notificationCenter = null;
+        if (_notificationCenter != null)
+        {
+            _notificationCenter.Destroy();
+            _notificationCenter = null;
+        }
     }
 }
