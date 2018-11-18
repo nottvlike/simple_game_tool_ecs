@@ -4,9 +4,9 @@ local socket = require "skynet.socket"
 local netpack = require "skynet.netpack"
 
 local flatbuffers = require 'FlatBuffers'
-local reqlogingame = require 'ReqLoginGame'
-local reslogingame = require 'ResLoginGame'
-local roleInfoLite = require 'RoleInfoLite'
+local reqlogingame = require 'Login.ReqLoginGame'
+local reslogingame = require 'Login.ResLoginGame'
+local roleInfoLite = require 'Login.RoleInfoLite'
 local proto = require 'protoloader'
 
 local WATCHDOG
@@ -42,10 +42,6 @@ function REQUEST:ReqLoginGame(content)
 
 	print('Name ' .. message:Name())
 	print('Password ' .. message:Password())
-	print('Channel ' .. message:Channel())
-	print('SubChannel ' .. message:SubChannel())
-	print('ChannelName ' .. message:ChannelName())
-
 
 	local builder = flatbuffers.Builder(1024)
 
