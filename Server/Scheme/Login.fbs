@@ -4,6 +4,7 @@ table RoleInfoLite {
 	roleId:string;
 	roleName:string;
 	roleLevel:int;
+	serverId:int;
 }
 
 table ResLoginGame {
@@ -15,4 +16,29 @@ table ResLoginGame {
 table ReqLoginGame {
 	name:string;
 	password:string;
+}
+
+table RoleInfo {
+	roleId:string;
+	roleName:string;
+	roleLevel:int;
+	serverId:int;
+}
+
+table ReqCreateRole {
+	roleName:string;
+}
+
+table ResCreateRole {
+	result:int;
+	roleInfo:RoleInfo;
+}
+
+table ReqRoleInfo {
+	roleId:string;
+}
+
+table ResRoleInfo {
+	result:int;
+	roleInfo:RoleInfo;
 }

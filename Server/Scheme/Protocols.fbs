@@ -2,6 +2,10 @@ enum Protocols : uint
 { 
 	ReqLoginGame = 10000, 
 	ResLoginGame,
+	ReqCreateRole,
+	ResCreateRole,
+	ReqRoleInfo,
+	ResRoleInfo,
 	
 	ResAllItemInfo = 20000,
 	ResUpdateItemInfo,
