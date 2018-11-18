@@ -23,6 +23,7 @@ public enum PanelType
     None = 0,
     GameUpdatePanel,
     LoginPanel,
+    RoleSelectPanel,
     ServerPanel,
     CreateRolePanel,
     MainPanel,

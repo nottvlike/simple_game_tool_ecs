@@ -1,12 +1,23 @@
 ﻿using FlatBuffers;
 using System;
 
+public enum PlayerNotificationType
+{
+    OnLoginSuccess,
+}
+
 public class PlayerNotification : ValueTypeNotification
 {
+    NotificationData notification;
+
     public PlayerNotification()
     {
-        _id = Constant.NOTIFICATION_TYPE_PLAYER;
+        _id = Constant.NOTIFICATION_TYPE_NETWORK;
         _typeList = new int[] { (int)Protocols.ResLoginGame };
+
+        notification = new NotificationData();
+        notification.id = Constant.NOTIFICATION_TYPE_PLAYER;
+        notification.mode = NotificationMode.Object;
 
         Enabled = true;
     }
@@ -18,7 +29,8 @@ public class PlayerNotification : ValueTypeNotification
         var byteBuffer = new ByteBuffer(msg.data);
         var resLoginGame = Protocol.Login.ResLoginGame.GetRootAsResLoginGame(byteBuffer);
 
-        var playerBaseData = WorldManager.Instance.Player.GetData<Data.PlayerBaseData>();
+        var worldMgr = WorldManager.Instance;
+        var playerBaseData = worldMgr.Player.GetData<Data.PlayerBaseData>();
         playerBaseData.accountId = resLoginGame.AccountId;
 
         playerBaseData.roleInfoLiteList.Clear();
@@ -33,5 +45,9 @@ public class PlayerNotification : ValueTypeNotification
 
             playerBaseData.roleInfoLiteList.Add(roleInfoLite);
         }
+
+        notification.type = (int)PlayerNotificationType.OnLoginSuccess;
+        notification.data1 = playerBaseData;
+        worldMgr.NotificationCenter.Notificate(notification);
     }
 }

@@ -12,7 +12,7 @@ public class ItemNotification : ValueTypeNotification
 
     public ItemNotification()
     {
-        _id = Constant.NOTIFICATION_TYPE_ITEM;
+        _id = Constant.NOTIFICATION_TYPE_NETWORK;
         _typeList = new int[2] { (int)Protocols.ResAllItemInfo, (int)Protocols.ResUpdateItemInfo };
 
         _notificationData = new NotificationData();

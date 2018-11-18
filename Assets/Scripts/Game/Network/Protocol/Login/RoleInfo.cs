@@ -8,14 +8,14 @@ namespace Protocol.Login
 using global::System;
 using global::FlatBuffers;
 
-public struct RoleInfoLite : IFlatbufferObject
+public struct RoleInfo : IFlatbufferObject
 {
   private Table __p;
   public ByteBuffer ByteBuffer { get { return __p.bb; } }
-  public static RoleInfoLite GetRootAsRoleInfoLite(ByteBuffer _bb) { return GetRootAsRoleInfoLite(_bb, new RoleInfoLite()); }
-  public static RoleInfoLite GetRootAsRoleInfoLite(ByteBuffer _bb, RoleInfoLite obj) { return (obj.__assign(_bb.GetInt(_bb.Position) + _bb.Position, _bb)); }
+  public static RoleInfo GetRootAsRoleInfo(ByteBuffer _bb) { return GetRootAsRoleInfo(_bb, new RoleInfo()); }
+  public static RoleInfo GetRootAsRoleInfo(ByteBuffer _bb, RoleInfo obj) { return (obj.__assign(_bb.GetInt(_bb.Position) + _bb.Position, _bb)); }
   public void __init(int _i, ByteBuffer _bb) { __p.bb_pos = _i; __p.bb = _bb; }
-  public RoleInfoLite __assign(int _i, ByteBuffer _bb) { __init(_i, _bb); return this; }
+  public RoleInfo __assign(int _i, ByteBuffer _bb) { __init(_i, _bb); return this; }
 
   public string RoleId { get { int o = __p.__offset(4); return o != 0 ? __p.__string(o + __p.bb_pos) : null; } }
 #if ENABLE_SPAN_T
@@ -34,27 +34,27 @@ public struct RoleInfoLite : IFlatbufferObject
   public int RoleLevel { get { int o = __p.__offset(8); return o != 0 ? __p.bb.GetInt(o + __p.bb_pos) : (int)0; } }
   public int ServerId { get { int o = __p.__offset(10); return o != 0 ? __p.bb.GetInt(o + __p.bb_pos) : (int)0; } }
 
-  public static Offset<RoleInfoLite> CreateRoleInfoLite(FlatBufferBuilder builder,
+  public static Offset<RoleInfo> CreateRoleInfo(FlatBufferBuilder builder,
       StringOffset roleIdOffset = default(StringOffset),
       StringOffset roleNameOffset = default(StringOffset),
       int roleLevel = 0,
       int serverId = 0) {
     builder.StartObject(4);
-    RoleInfoLite.AddServerId(builder, serverId);
-    RoleInfoLite.AddRoleLevel(builder, roleLevel);
-    RoleInfoLite.AddRoleName(builder, roleNameOffset);
-    RoleInfoLite.AddRoleId(builder, roleIdOffset);
-    return RoleInfoLite.EndRoleInfoLite(builder);
+    RoleInfo.AddServerId(builder, serverId);
+    RoleInfo.AddRoleLevel(builder, roleLevel);
+    RoleInfo.AddRoleName(builder, roleNameOffset);
+    RoleInfo.AddRoleId(builder, roleIdOffset);
+    return RoleInfo.EndRoleInfo(builder);
   }
 
-  public static void StartRoleInfoLite(FlatBufferBuilder builder) { builder.StartObject(4); }
+  public static void StartRoleInfo(FlatBufferBuilder builder) { builder.StartObject(4); }
   public static void AddRoleId(FlatBufferBuilder builder, StringOffset roleIdOffset) { builder.AddOffset(0, roleIdOffset.Value, 0); }
   public static void AddRoleName(FlatBufferBuilder builder, StringOffset roleNameOffset) { builder.AddOffset(1, roleNameOffset.Value, 0); }
   public static void AddRoleLevel(FlatBufferBuilder builder, int roleLevel) { builder.AddInt(2, roleLevel, 0); }
   public static void AddServerId(FlatBufferBuilder builder, int serverId) { builder.AddInt(3, serverId, 0); }
-  public static Offset<RoleInfoLite> EndRoleInfoLite(FlatBufferBuilder builder) {
+  public static Offset<RoleInfo> EndRoleInfo(FlatBufferBuilder builder) {
     int o = builder.EndObject();
-    return new Offset<RoleInfoLite>(o);
+    return new Offset<RoleInfo>(o);
   }
 };
 

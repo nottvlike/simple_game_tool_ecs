@@ -35,22 +35,6 @@ public partial class WorldManager : Singleton<WorldManager>
         var gameServer = GameServer;
         var gameCore = GameCore;
 
-        var gameServerData = gameServer.GetData<Data.GameServerData>();
-        var builder = gameServerData.builder;
-        var name = builder.CreateString("Test123");
-        var password = builder.CreateString("123");
-
-        Protocol.Login.ReqLoginGame.StartReqLoginGame(builder);
-        Protocol.Login.ReqLoginGame.AddName(builder, name);
-        Protocol.Login.ReqLoginGame.AddPassword(builder, password);
-        var orc = Protocol.Login.ReqLoginGame.EndReqLoginGame(builder);
-        builder.Finish(orc.Value);
-
-        var buf = builder.SizedByteArray();
-        SocketMgr.SendMessage(buf, (int)Protocols.ReqLoginGame);
-
-        LogUtil.I("buf " + buf.Length);
-
         LoadConfig();
 
         UIMgr.ShowPanel(PanelType.GameUpdatePanel);
