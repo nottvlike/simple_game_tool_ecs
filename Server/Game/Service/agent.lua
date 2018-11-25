@@ -3,10 +3,10 @@ local netpack = require "skynet.netpack"
 local socket = require "skynet.socket"
 local netpack = require "skynet.netpack"
 
-local flatbuffers = require 'FlatBuffers'
-local reqlogingame = require 'Login.ReqLoginGame'
-local reslogingame = require 'Login.ResLoginGame'
-local roleInfoLite = require 'Login.RoleInfoLite'
+local flatbuffers = require 'flatbuffers'
+local reqlogingame = require 'Protocol.Login.ReqLoginGame'
+local reslogingame = require 'Protocol.Login.ResLoginGame'
+local roleInfoLite = require 'Protocol.Login.RoleInfoLite'
 local proto = require 'protoloader'
 
 local WATCHDOG

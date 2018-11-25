@@ -1,8 +1,0 @@
-root = "/Users/nottvlike/Documents/github/SimpleGameTool/Server/Skynet/"
-project = "/Users/nottvlike/Documents/github/SimpleGameTool/Server/Config/"
-
-luaservice = root .. "service/?.lua;" .. root .. "test/?.lua;" ..project .. "?.lua;" .. root .. "test/?/init.lua"
-lualoader = root .. "lualib/loader.lua"
-lua_path = root.."lualib/?.lua;"..root.."lualib/?/init.lua;" .. project.."?.lua;" .. project.."/Protocol/?.lua;" .. project.."/../FlatBuffer/?.lua"
-lua_cpath = root .. "luaclib/?.so"
-snax = project.."?.lua;"..root.."test/?.lua"
