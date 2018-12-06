@@ -17,7 +17,7 @@ namespace Module
             for (var i = 0; i < dataList.Count; ++i)
             {
                 var dataType = dataList[i].GetType();
-                if (dataType == typeof(GameServerData))
+                if (dataType == typeof(GameNetworkData))
                 {
                     return true;
                 }

@@ -1,12 +1,8 @@
-﻿public abstract class PoolObject
+﻿public interface IPoolObject
 {
-    public bool IsInUse
-    {
-        set;
-        get;
-    }
-
-    public abstract void Clear();
+    bool GetIsInUse();
+    void SetIsInUse(bool inUse);
+    void Clear();
 }
 
 public interface IPool
@@ -14,8 +10,8 @@ public interface IPool
     ObjectData Get(ObjectData data);
     void Release(ObjectData obj);
 
-    T Get<T>() where T : PoolObject, new();
-    void Release<T>(T obj) where T : PoolObject, new();
+    T Get<T>() where T : IPoolObject, new();
+    void Release<T>(T obj) where T : IPoolObject, new();
 
     void Destroy();
 }

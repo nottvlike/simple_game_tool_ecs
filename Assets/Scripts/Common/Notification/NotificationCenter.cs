@@ -56,13 +56,11 @@ public class NotificationCenter : INotificationCenter
             {
                 if (notificationData.mode == NotificationMode.Object)
                 {
-                    var objectNotification = notification as ObjectNotification;
-                    objectNotification.OnReceive(notificationData.type, notificationData.data1);
+                    notification.OnReceive(notificationData.type, notificationData.data1);
                 }
                 else
                 {
-                    var valueTypeNotification = notification as ValueTypeNotification;
-                    valueTypeNotification.OnReceive(notificationData.type, notificationData.data2);
+                    notification.OnReceive(notificationData.type, notificationData.data2);
                 }
             }
         }

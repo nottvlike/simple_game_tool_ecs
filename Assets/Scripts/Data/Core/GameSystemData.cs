@@ -8,7 +8,7 @@ namespace Data
         public int clientFrame;
     }
 
-    public class GameServerData : Data
+    public class GameNetworkData : Data
     {
         public FlatBufferBuilder builder = new FlatBufferBuilder(Constant.NETWORK_CACHE_SIZE);
         public GameCoeNotification notification = new GameCoeNotification();

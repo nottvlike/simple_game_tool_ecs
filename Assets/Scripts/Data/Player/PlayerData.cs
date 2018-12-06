@@ -27,4 +27,18 @@ namespace Data
         public RoleInfo roleInfo;
         public PlayerNotification notification = new PlayerNotification();
     }
+
+    public struct ServerInfo
+    {
+        public int serverId;
+        public string serverName;
+        public string serverAddress;
+        public int serverPort;
+    }
+
+    public class ServerData : Data
+    {
+        public List<ServerInfo> serverInfoList = new List<ServerInfo>();
+        public ServerInfo serverInfo;
+    }
 }

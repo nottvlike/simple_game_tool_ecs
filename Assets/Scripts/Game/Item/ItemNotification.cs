@@ -6,7 +6,7 @@ public enum ItemNotificationType
     CountChanged = 1,
 }
 
-public class ItemNotification : ValueTypeNotification
+public class ItemNotification : BaseNotification
 {
     NotificationData _notificationData;
 

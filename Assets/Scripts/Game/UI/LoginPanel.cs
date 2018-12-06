@@ -1,9 +1,10 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 
-public class LoginNotification : ObjectNotification
+public class LoginNotification : BaseNotification
 {
     LoginPanel _loginPanel;
 
@@ -12,14 +13,26 @@ public class LoginNotification : ObjectNotification
         _loginPanel = panel;
 
         _id = Constant.NOTIFICATION_TYPE_PLAYER;
-        _typeList = new int[] { (int)PlayerNotificationType.OnLoginSuccess };
+        _typeList = new int[] { (int)PlayerNotificationType.OnLoginSuccess, (int)PlayerNotificationType.OnLoginFailed };
     }
 
     public override void OnReceive(int type, object notificationData)
     {
-        if (_loginPanel != null)
+        switch (type)
         {
-            _loginPanel.OnLoginSuccess((Data.PlayerBaseData)notificationData);
+            case (int)PlayerNotificationType.OnLoginSuccess:
+                _loginPanel.OnLoginSuccess((Data.PlayerBaseData)notificationData);
+                break;
+        }
+    }
+
+    public override void OnReceive(int type, ValueType notificationData)
+    {
+        switch (type)
+        {
+            case (int)PlayerNotificationType.OnLoginFailed:
+                _loginPanel.OnLoginFailed((int)notificationData);
+                break;
         }
     }
 }
@@ -39,11 +52,23 @@ public class LoginPanel : MonoBehaviour
         _notification = new LoginNotification(this);
     }
 
+    void OnEnable()
+    {
+        _notification.Enabled = true;
+    }
+
+    void OnDisable()
+    {
+        _notification.Enabled = false;
+    }
+
     void OnLoginClick()
     {
         var worldMgr = WorldManager.Instance;
-        var gameServerData = worldMgr.GameServer.GetData<Data.GameServerData>();
+        var gameServerData = worldMgr.GameServer.GetData<Data.GameNetworkData>();
         var builder = gameServerData.builder;
+        builder.Clear();
+
         var userName = builder.CreateString(nameInput.text);
         var password = builder.CreateString(passwordInput.text);
 
@@ -70,13 +95,8 @@ public class LoginPanel : MonoBehaviour
         }
     }
 
-    void OnEnable()
+    public void OnLoginFailed(int result)
     {
-        _notification.Enabled = true;
-    }
 
-    void OnDisable()
-    {
-        _notification.Enabled = false;
     }
 }

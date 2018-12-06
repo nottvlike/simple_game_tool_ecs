@@ -5,8 +5,6 @@ public abstract class BaseNotification
     protected int _id;
     protected int[] _typeList;
     
-    protected NotificationMode _mode = NotificationMode.None;
-
     bool _enabled;
 
     public int Id
@@ -17,11 +15,6 @@ public abstract class BaseNotification
     public int[] TypeList
     {
         get { return _typeList; }
-    }
-
-    public NotificationMode Mode
-    {
-        get { return _mode; }
     }
 
     public bool Enabled
@@ -68,5 +61,13 @@ public abstract class BaseNotification
         }
 
         return false;
+    }
+
+    public virtual void OnReceive(int type, object notificationData)
+    {
+    }
+
+    public virtual void OnReceive(int type, ValueType notificationData)
+    {
     }
 }

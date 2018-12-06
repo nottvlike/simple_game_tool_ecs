@@ -4,7 +4,6 @@ using System.Collections.Generic;
 public class Pool : IPool
 {
 	Dictionary<string, List<ObjectData>> _objectDataDict = new Dictionary<string, List<ObjectData>>();
-    Dictionary<Type, List<PoolObject>> _poolObjectDict = new Dictionary<Type, List<PoolObject>>();
 
     public ObjectData Get(ObjectData data)
     {
@@ -118,14 +117,17 @@ public class Pool : IPool
 		}
 	}
 
-    public T Get<T>() where T : PoolObject, new()
+    Dictionary<Type, List<IPoolObject>> _poolObjectDict = new Dictionary<Type, List<IPoolObject>>();
+
+    public T Get<T>() where T : IPoolObject, new()
     {
         var type = typeof(T);
-        T poolObject = null;
-        List<PoolObject> poolObjectList = null;
+
+        IPoolObject poolObject = null;
+        List<IPoolObject> poolObjectList = null;
         if (!_poolObjectDict.TryGetValue(type, out poolObjectList))
         {
-            poolObjectList = new List<PoolObject>();
+            poolObjectList = new List<IPoolObject>();
             _poolObjectDict.Add(type, poolObjectList);
         }
         else
@@ -133,10 +135,10 @@ public class Pool : IPool
             for (var i = 0; i < poolObjectList.Count; i++)
             {
                 var tmp = poolObjectList[i];
-                if (!tmp.IsInUse)
+                if (!tmp.GetIsInUse())
                 {
-                    tmp.IsInUse = true;
-                    poolObject = tmp as T;
+                    tmp.SetIsInUse(true);
+                    poolObject = tmp;
                     break;
                 }
             }
@@ -145,25 +147,25 @@ public class Pool : IPool
         if (poolObject == null)
         {
             poolObject = new T();
-            poolObject.IsInUse = true;
+            poolObject.SetIsInUse(true);
 
             poolObjectList.Add(poolObject);
         }
 
-        return poolObject;
+        return (T)poolObject;
     }
 
-    public void Release<T>(T obj) where T : PoolObject, new()
+    public void Release<T>(T obj) where T : IPoolObject, new()
     {
         var type = typeof(T);
 
-        List<PoolObject> poolObjectList = null;
+        List<IPoolObject> poolObjectList = null;
         if (_poolObjectDict.TryGetValue(type, out poolObjectList))
         {
             if (poolObjectList.IndexOf(obj) != -1)
             {
                 obj.Clear();
-                obj.IsInUse = false;
+                obj.SetIsInUse(false);
             }
             else
             {

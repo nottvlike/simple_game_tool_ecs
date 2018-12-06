@@ -28,7 +28,7 @@ public partial class WorldManager : Singleton<WorldManager>
             if (_gameServer == null)
             {
                 _gameServer = new ObjectData();
-                _gameServer.AddData(new GameServerData());
+                _gameServer.AddData(new GameNetworkData());
                 _objectDataList.Add(_gameServer);
 
                 _gameServer.RefreshModuleAddedObjectIdList();
