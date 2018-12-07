@@ -10,6 +10,15 @@ public class UnityEventTool : MonoSingleton<UnityEventTool>, IUnityEventTool
         WorldManager.Instance.LaunchGame();
     }
 
+    public void Destroy()
+    {
+    }
+
+    void OnApplicationQuit()
+    {
+        WorldManager.Instance.Destroy();
+    }
+
     void Update()
     {
         for (var i = 0; i < _updateEventList.Count; i++)
@@ -43,14 +52,5 @@ public class UnityEventTool : MonoSingleton<UnityEventTool>, IUnityEventTool
         }
 
         _updateEventList.Remove(updateEvent);
-    }
-
-    public void Destroy()
-    {
-    }
-
-    void OnApplicationQuit()
-    {
-        WorldManager.Instance.Destroy();
     }
 }

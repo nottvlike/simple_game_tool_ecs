@@ -32,13 +32,12 @@ public class UITool : IUITool
 
     void LoadUIRoot(PanelType panelType, OnRootLoadedFinished onLoaded)
     {
-        OnResourceLoadFinished onFinished = delegate (UnityEngine.Object obj) {
+        // 异步加载 UI
+        WorldManager.Instance.ResourceMgr.LoadAsync("UI Root", delegate (UnityEngine.Object obj)
+        {
             _uiRoot = UnityEngine.Object.Instantiate(obj, Vector3.zero, Quaternion.identity) as GameObject;
             onLoaded(panelType);
-        };
-
-        // 异步加载 UI
-        WorldManager.Instance.ResourceMgr.LoadAsync("UI Root", onFinished);
+        });
     }
 
     public PanelData GetPanelConfig(PanelType panelType)
@@ -59,14 +58,6 @@ public class UITool : IUITool
 
     public void AddPanel(IPanel data)
     {
-        if (_uiRoot == null)
-        {
-            LoadUIRoot(data.PanelType, delegate {
-                AddPanel(data);
-            });
-            return;
-        }
-
         var panelType = data.PanelType;
         if (!_panelDataDict.ContainsKey(panelType))
         {
@@ -80,14 +71,6 @@ public class UITool : IUITool
 
     public void RemovePanel(IPanel data)
     {
-        if (_uiRoot == null)
-        {
-            LoadUIRoot(data.PanelType, delegate {
-                RemovePanel(data);
-            });
-            return;
-        }
-
         var panelType = data.PanelType;
         if (_panelDataDict.ContainsKey(panelType))
         {
@@ -137,7 +120,6 @@ public class UITool : IUITool
         UpdateLastShowedPanel();
 
         // 关闭即将打开面板的其它子面板
-        var rootPanelType = panelConfig.rootPanelType;
         for (var i = 0; i < _showedPanelList.Count;)
         {
             var showedPanelType = _showedPanelList[i];
@@ -173,7 +155,9 @@ public class UITool : IUITool
             var panelConfig = GetPanelConfig(panelType);
             if (panelConfig.panelType != PanelType.None)
             {
-                OnResourceLoadFinished onFinished = delegate (UnityEngine.Object obj) {
+                // 异步加载 UI
+                WorldManager.Instance.ResourceMgr.LoadAsync(panelConfig.resourceName, delegate (UnityEngine.Object obj)
+                {
                     var panel = UnityEngine.Object.Instantiate(obj, Vector3.zero, Quaternion.identity) as GameObject;
                     var rectTransform = panel.GetComponent<RectTransform>();
                     rectTransform.SetParent(_uiRoot.transform);
@@ -181,10 +165,7 @@ public class UITool : IUITool
                     rectTransform.offsetMin = Vector2.zero;
 
                     ShowPanelImpl(panelType);
-                };
-
-                // 异步加载 UI
-                WorldManager.Instance.ResourceMgr.LoadAsync(panelConfig.resourceName, onFinished);
+                });
             }
         }
     }
