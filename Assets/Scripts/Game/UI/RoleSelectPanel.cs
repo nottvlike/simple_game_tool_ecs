@@ -59,7 +59,8 @@ public class RoleSelectPanel : Panel
 
     protected override void OnShow()
     {
-        var playerBaseData = WorldManager.Instance.Player.GetData<Data.PlayerBaseData>();
+        var player = WorldManager.Instance.Player;
+        var playerBaseData = player.GetData<Data.PlayerBaseData>();
         var roleInfoLiteList = playerBaseData.roleInfoLiteList;
         for (var i = 0; i < roleInfoLiteList.Count; i++)
         {
@@ -87,13 +88,23 @@ public class RoleSelectPanel : Panel
             _roleSelectItemList[i].gameObject.SetActive(false);
         }
 
+        var serverData = player.GetData<Data.ServerData>();
+        var serverInfoList = serverData.serverInfoList;
+        if (serverInfoList.Count > 0)
+        {
+            SelectServer(serverInfoList[0].serverId);
+        }
+
+        if (roleInfoLiteList.Count > 0)
+        {
+            SelectServer(roleInfoLiteList[0].serverId);
+        }
+
         getRoleInfoNotification.Enabled = true;
     }
 
     protected override void OnHide()
     {
-        WorldManager.Instance.UIMgr.HidePanel(PanelType.ServerPanel);
-
         getRoleInfoNotification.Enabled = false;
     }
 
@@ -109,7 +120,7 @@ public class RoleSelectPanel : Panel
         var serverInfo = GetServerInfo(_selectedServer);
         socketMgr.Init(serverInfo.serverAddress, serverInfo.serverPort);
 
-        if (!string.IsNullOrEmpty(_selectedRole.roleId))
+        if (HasRole(_selectedServer))
         {
             var gameServerData = worldMgr.GameServer.GetData<Data.GameNetworkData>();
             var builder = gameServerData.builder;
@@ -127,7 +138,9 @@ public class RoleSelectPanel : Panel
         }
         else
         {
-            WorldManager.Instance.UIMgr.ShowPanel(PanelType.CreateRolePanel);
+            var uiMgr = worldMgr.UIMgr;
+            uiMgr.ShowPanel(PanelType.CreateRolePanel);
+            uiMgr.HidePanel(PanelType);
         }
     }
 
@@ -159,7 +172,7 @@ public class RoleSelectPanel : Panel
         return false;
     }
 
-    Data.ServerInfo GetServerInfo(int serverId)
+    public Data.ServerInfo GetServerInfo(int serverId)
     {
         var serverData = WorldManager.Instance.Player.GetData<Data.ServerData>();
         var serverInfoList = serverData.serverInfoList;
@@ -180,8 +193,20 @@ public class RoleSelectPanel : Panel
     {
         _selectedRole = roleInfoLite;
 
+        SelectServer(roleInfoLite.serverId);
+    }
+
+    public void SelectServer(int serverId)
+    {
+        if (_selectedServer == serverId)
+        {
+            return;
+        }
+
+        _selectedServer = serverId;
+
         var serverData = WorldManager.Instance.Player.GetData<Data.ServerData>();
-        serverData.serverInfo = GetServerInfo(roleInfoLite.serverId);
+        serverData.serverInfo = GetServerInfo(_selectedServer);
         currentServer.text = serverData.serverInfo.serverName;
     }
 }

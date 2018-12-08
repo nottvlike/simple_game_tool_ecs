@@ -65,6 +65,7 @@ public partial class WorldManager : Singleton<WorldManager>
             {
                 _player = new ObjectData();
                 _player.AddData(new PlayerBaseData());
+                _player.AddData(new ServerData());
                 _objectDataList.Add(_player);
 
                 _player.RefreshModuleAddedObjectIdList();
