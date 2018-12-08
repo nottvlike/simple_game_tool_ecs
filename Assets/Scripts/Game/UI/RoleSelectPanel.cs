@@ -13,18 +13,18 @@ public class GetRoleInfoNotification : BaseNotification
         _roleSelectPanel = roleSelectPanel;
 
         _id = Constant.NOTIFICATION_TYPE_PLAYER;
-        _typeList = new int[] { (int)PlayerNotificationType.OnGetRoleInfoSuccess, (int)PlayerNotificationType.OnGetRoleInfoFailed };
+        _typeList = new int[] { (int)PlayerNotificationType.GetRoleInfoSuccess, (int)PlayerNotificationType.GetRoleInfoFailed };
     }
 
     public override void OnReceive(int type, ValueType notificationData)
     {
         switch (type)
         {
-            case (int)PlayerNotificationType.OnGetRoleInfoSuccess:
-                _roleSelectPanel.OnGetRoleInfoSuccess((Data.RoleInfo)notificationData);
+            case (int)PlayerNotificationType.GetRoleInfoSuccess:
+                _roleSelectPanel.GetRoleInfoSuccess((Data.RoleInfo)notificationData);
                 break;
-            case (int)PlayerNotificationType.OnGetRoleInfoFailed:
-                _roleSelectPanel.OnGetRoleInfoFailed((int)notificationData);
+            case (int)PlayerNotificationType.GetRoleInfoFailed:
+                _roleSelectPanel.GetRoleInfoFailed((int)notificationData);
                 break;
         }
     }
@@ -144,14 +144,14 @@ public class RoleSelectPanel : Panel
         }
     }
 
-    public void OnGetRoleInfoSuccess(Data.RoleInfo roleInfo)
+    public void GetRoleInfoSuccess(Data.RoleInfo roleInfo)
     {
         var uiMgr = WorldManager.Instance.UIMgr;
         uiMgr.ShowPanel(PanelType.MainPanel);
         uiMgr.HidePanel(PanelType);
     }
 
-    public void OnGetRoleInfoFailed(int result)
+    public void GetRoleInfoFailed(int result)
     {
 
     }

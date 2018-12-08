@@ -3,10 +3,12 @@ using System;
 
 public enum PlayerNotificationType
 {
-    OnLoginSuccess,
-    OnLoginFailed,
-    OnGetRoleInfoSuccess,
-    OnGetRoleInfoFailed,
+    LoginSuccess,
+    LoginFailed,
+    GetRoleInfoSuccess,
+    GetRoleInfoFailed,
+    CreateRoleSuccess,
+    CreateRoleFailed
 }
 
 public class PlayerNotification : BaseNotification
@@ -16,7 +18,7 @@ public class PlayerNotification : BaseNotification
     public PlayerNotification()
     {
         _id = Constant.NOTIFICATION_TYPE_NETWORK;
-        _typeList = new int[] { (int)Protocols.ResLoginGame, (int)Protocols.ResRoleInfo };
+        _typeList = new int[] { (int)Protocols.ResLoginGame, (int)Protocols.ResRoleInfo, (int)Protocols.ResCreateRole };
 
         notification = new NotificationData();
         notification.id = Constant.NOTIFICATION_TYPE_PLAYER;
@@ -70,13 +72,13 @@ public class PlayerNotification : BaseNotification
                 roleInfoLiteList.Add(roleInfoLite);
             }
 
-            notification.type = (int)PlayerNotificationType.OnLoginSuccess;
+            notification.type = (int)PlayerNotificationType.LoginSuccess;
             notification.mode = NotificationMode.Object;
             notification.data1 = playerBaseData;
         }
         else
         {
-            notification.type = (int)PlayerNotificationType.OnLoginFailed;
+            notification.type = (int)PlayerNotificationType.LoginFailed;
             notification.mode = NotificationMode.ValueType;
             notification.data2 = resLoginGame.Result;
         }
@@ -103,15 +105,48 @@ public class PlayerNotification : BaseNotification
             playerBaseData.roleInfo.roleName = roleInfo.RoleName;
             playerBaseData.roleInfo.roleLevel = roleInfo.RoleLevel;
 
-            notification.type = (int)PlayerNotificationType.OnGetRoleInfoSuccess;
+            notification.type = (int)PlayerNotificationType.GetRoleInfoSuccess;
             notification.mode = NotificationMode.ValueType;
             notification.data2 = playerBaseData.roleInfo;
         }
         else
         {
-            notification.type = (int)PlayerNotificationType.OnGetRoleInfoFailed;
+            notification.type = (int)PlayerNotificationType.GetRoleInfoFailed;
             notification.mode = NotificationMode.ValueType;
             notification.data2 = resRoleInfo.Result;
+        }
+
+        worldMgr.NotificationCenter.Notificate(notification);
+    }
+
+    public enum CreateRoleResult
+    {
+        Success = 0,
+    }
+
+    void ResCreateRole(ByteBuffer byteBuffer)
+    {
+        var worldMgr = WorldManager.Instance;
+        var resCreateRole = Protocol.Login.ResCreateRole.GetRootAsResCreateRole(byteBuffer);
+
+        if (resCreateRole.Result == (int)CreateRoleResult.Success)
+        {
+            var roleInfo = resCreateRole.RoleInfo.Value;
+
+            var playerBaseData = worldMgr.Player.GetData<Data.PlayerBaseData>();
+            playerBaseData.roleInfo.roleId = roleInfo.RoleId;
+            playerBaseData.roleInfo.roleName = roleInfo.RoleName;
+            playerBaseData.roleInfo.roleLevel = roleInfo.RoleLevel;
+
+            notification.type = (int)PlayerNotificationType.CreateRoleSuccess;
+            notification.mode = NotificationMode.ValueType;
+            notification.data2 = playerBaseData.roleInfo;
+        }
+        else
+        {
+            notification.type = (int)PlayerNotificationType.CreateRoleFailed;
+            notification.mode = NotificationMode.ValueType;
+            notification.data2 = resCreateRole.Result;
         }
 
         worldMgr.NotificationCenter.Notificate(notification);

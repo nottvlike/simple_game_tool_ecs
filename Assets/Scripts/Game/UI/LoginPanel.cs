@@ -13,15 +13,15 @@ public class LoginNotification : BaseNotification
         _loginPanel = panel;
 
         _id = Constant.NOTIFICATION_TYPE_PLAYER;
-        _typeList = new int[] { (int)PlayerNotificationType.OnLoginSuccess, (int)PlayerNotificationType.OnLoginFailed };
+        _typeList = new int[] { (int)PlayerNotificationType.LoginSuccess, (int)PlayerNotificationType.LoginFailed };
     }
 
     public override void OnReceive(int type, object notificationData)
     {
         switch (type)
         {
-            case (int)PlayerNotificationType.OnLoginSuccess:
-                _loginPanel.OnLoginSuccess((Data.PlayerBaseData)notificationData);
+            case (int)PlayerNotificationType.LoginSuccess:
+                _loginPanel.LoginSuccess((Data.PlayerBaseData)notificationData);
                 break;
         }
     }
@@ -30,8 +30,8 @@ public class LoginNotification : BaseNotification
     {
         switch (type)
         {
-            case (int)PlayerNotificationType.OnLoginFailed:
-                _loginPanel.OnLoginFailed((int)notificationData);
+            case (int)PlayerNotificationType.LoginFailed:
+                _loginPanel.LoginFailed((int)notificationData);
                 break;
         }
     }
@@ -47,9 +47,9 @@ public class LoginPanel : Panel
 
     protected override void OnInit()
     {
-        loginButton.onClick.AddListener(OnLoginClick);
-
         _notification = new LoginNotification(this);
+
+        loginButton.onClick.AddListener(OnLoginClick);
     }
 
     protected override void OnShow()
@@ -82,7 +82,7 @@ public class LoginPanel : Panel
         worldMgr.SocketMgr.SendMessage(buf, (int)Protocols.ReqLoginGame);
     }
 
-    public void OnLoginSuccess(Data.PlayerBaseData data)
+    public void LoginSuccess(Data.PlayerBaseData data)
     {
         var uiMgr = WorldManager.Instance.UIMgr;
         if (data.roleInfoLiteList.Count > 0)
@@ -97,7 +97,7 @@ public class LoginPanel : Panel
         uiMgr.HidePanel(PanelType);
     }
 
-    public void OnLoginFailed(int result)
+    public void LoginFailed(int result)
     {
 
     }
