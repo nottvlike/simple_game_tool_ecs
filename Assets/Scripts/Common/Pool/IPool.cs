@@ -1,7 +1,6 @@
 ﻿public interface IPoolObject
 {
-    bool GetIsInUse();
-    void SetIsInUse(bool inUse);
+    bool IsInUse { get; set; }
     void Clear();
 }
 

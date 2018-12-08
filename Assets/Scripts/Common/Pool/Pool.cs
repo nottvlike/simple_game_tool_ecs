@@ -135,9 +135,9 @@ public class Pool : IPool
             for (var i = 0; i < poolObjectList.Count; i++)
             {
                 var tmp = poolObjectList[i];
-                if (!tmp.GetIsInUse())
+                if (!tmp.IsInUse)
                 {
-                    tmp.SetIsInUse(true);
+                    tmp.IsInUse = true;
                     poolObject = tmp;
                     break;
                 }
@@ -147,7 +147,7 @@ public class Pool : IPool
         if (poolObject == null)
         {
             poolObject = new T();
-            poolObject.SetIsInUse(true);
+            poolObject.IsInUse = true;
 
             poolObjectList.Add(poolObject);
         }
@@ -165,7 +165,7 @@ public class Pool : IPool
             if (poolObjectList.IndexOf(obj) != -1)
             {
                 obj.Clear();
-                obj.SetIsInUse(false);
+                obj.IsInUse = false;
             }
             else
             {
