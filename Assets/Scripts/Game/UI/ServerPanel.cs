@@ -3,17 +3,17 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 
-public class ServerPanel : MonoBehaviour 
+public class ServerPanel : Panel 
 {
     public Button closeButton;
 
-    void Awake()
+    protected override void OnInit()
     {
         closeButton.onClick.AddListener(OnCloseClick);
     }
 
     void OnCloseClick()
     {
-        WorldManager.Instance.UIMgr.HidePanel(PanelType.ServerPanel);
+        WorldManager.Instance.UIMgr.HidePanel(PanelType);
     }
 }

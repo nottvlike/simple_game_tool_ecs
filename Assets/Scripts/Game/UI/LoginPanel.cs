@@ -37,7 +37,7 @@ public class LoginNotification : BaseNotification
     }
 }
 
-public class LoginPanel : MonoBehaviour 
+public class LoginPanel : Panel 
 {
     public Button loginButton;
     public InputField nameInput;
@@ -45,19 +45,19 @@ public class LoginPanel : MonoBehaviour
 
     LoginNotification _notification;
 
-    void Awake()
+    protected override void OnInit()
     {
         loginButton.onClick.AddListener(OnLoginClick);
 
         _notification = new LoginNotification(this);
     }
 
-    void OnEnable()
+    protected override void OnShow()
     {
         _notification.Enabled = true;
     }
 
-    void OnDisable()
+    protected override void OnHide()
     {
         _notification.Enabled = false;
     }
@@ -93,6 +93,8 @@ public class LoginPanel : MonoBehaviour
         {
             uiMgr.ShowPanel(PanelType.CreateRolePanel);
         }
+
+        uiMgr.HidePanel(PanelType);
     }
 
     public void OnLoginFailed(int result)

@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 
-public class FightPanel : MonoBehaviour 
+public class FightPanel : Panel 
 {
     public Button left;
     public Button right;
@@ -13,7 +13,7 @@ public class FightPanel : MonoBehaviour
 
     public Button exit;
 
-    void Awake()
+    protected override void OnInit()
     {
         left.onClick.AddListener(OnLeftClick);
         right.onClick.AddListener(OnRightClick);
@@ -51,6 +51,8 @@ public class FightPanel : MonoBehaviour
 
     void OnExitClick()
     {
-        WorldManager.Instance.UIMgr.ShowPanel(PanelType.MainPanel);
+        var uiMgr = WorldManager.Instance.UIMgr;
+        uiMgr.ShowPanel(PanelType.MainPanel);
+        uiMgr.HidePanel(PanelType);
     }
 }

@@ -3,16 +3,19 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 
-public class HomePanel : MonoBehaviour {
+public class HomePanel : Panel
+{
     public Button fight;
 
-    void Awake()
+    protected override void OnInit()
     {
         fight.onClick.AddListener(OnFightClick);
     }
 
     void OnFightClick()
     {
-        WorldManager.Instance.UIMgr.ShowPanel(PanelType.FightPanel);
+        var uiMgr = WorldManager.Instance.UIMgr;
+        uiMgr.ShowPanel(PanelType.FightPanel);
+        uiMgr.HidePanel(PanelType);
     }
 }

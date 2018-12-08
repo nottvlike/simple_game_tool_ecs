@@ -2,17 +2,19 @@
 using UnityEngine.UI;
 using System.Collections;
 
-public class GameUpdatePanel : MonoBehaviour
+public class GameUpdatePanel : Panel
 {
     public Button skipButton;
 
-    void Awake()
+    protected override void OnInit()
     {
         skipButton.onClick.AddListener(OnSkipClick);
     }
 
     void OnSkipClick()
     {
-        WorldManager.Instance.UIMgr.ShowPanel(PanelType.LoginPanel);
+        var uiMgr = WorldManager.Instance.UIMgr;
+        uiMgr.ShowPanel(PanelType.LoginPanel);
+        uiMgr.HidePanel(PanelType);
     }
 }

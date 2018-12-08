@@ -3,12 +3,12 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 
-public class CreateRolePanel : MonoBehaviour 
+public class CreateRolePanel : Panel 
 {
     public Button okButton;
     public Button backButton;
 
-    void Awake()
+    protected override void OnInit()
     {
         okButton.onClick.AddListener(OnOkClick);
         backButton.onClick.AddListener(OnBackClick);
@@ -16,7 +16,9 @@ public class CreateRolePanel : MonoBehaviour
 
     void OnOkClick()
     {
-        WorldManager.Instance.UIMgr.ShowPanel(PanelType.MainPanel);
+        var uiMgr = WorldManager.Instance.UIMgr;
+        uiMgr.ShowPanel(PanelType.MainPanel);
+        uiMgr.HidePanel(PanelType);
     }
 
     void OnBackClick()

@@ -1,9 +1,12 @@
 ﻿using System;
 using UnityEngine;
 
-public class Panel : MonoBehaviour, IPanel
+public class Panel : MonoBehaviour
 {
-    public PanelType panelType;
+    [SerializeField]
+    PanelType _panelType;
+    [SerializeField]
+    bool _inactiveWhenHide;
 
     public bool IsOpen
     {
@@ -12,12 +15,12 @@ public class Panel : MonoBehaviour, IPanel
 
     public PanelType PanelType
     {
-        get { return panelType; }
+        get { return _panelType; }
     }
 
-    public GameObject Resource
+    public bool InactiveWhenHide
     {
-        get { return gameObject; }
+        get { return _inactiveWhenHide; }
     }
 
     // Use this for initialization
@@ -25,5 +28,39 @@ public class Panel : MonoBehaviour, IPanel
     {
         WorldManager.Instance.UIMgr.AddPanel(this);
         gameObject.SetActive(false);
+
+        OnInit();
     }
+
+    protected virtual void OnInit() {}
+
+    public void Show()
+    {
+        if (IsOpen)
+        {
+            return;
+        }
+
+        gameObject.SetActive(true);
+
+        OnShow();
+    }
+
+    public void Hide()
+    {
+        if (!IsOpen)
+        {
+            return;
+        }
+
+        if (_inactiveWhenHide)
+        {
+            gameObject.SetActive(false);
+        }
+
+        OnHide();
+    }
+
+    protected virtual void OnShow() {}
+    protected virtual void OnHide() {}
 }

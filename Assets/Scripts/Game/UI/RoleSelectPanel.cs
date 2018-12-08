@@ -30,7 +30,7 @@ public class GetRoleInfoNotification : BaseNotification
     }
 }
 
-public class RoleSelectPanel : MonoBehaviour 
+public class RoleSelectPanel : Panel 
 {
     public Button showServerPanelButton;
     public Text currentServer;
@@ -49,7 +49,7 @@ public class RoleSelectPanel : MonoBehaviour
 
     GetRoleInfoNotification getRoleInfoNotification;
 
-    void Awake() 
+    protected override void OnInit() 
     {
         getRoleInfoNotification = new GetRoleInfoNotification(this);
 
@@ -57,7 +57,7 @@ public class RoleSelectPanel : MonoBehaviour
         goButton.onClick.AddListener(OnGoClick);
     }
 
-    void OnEnable()
+    protected override void OnShow()
     {
         var playerBaseData = WorldManager.Instance.Player.GetData<Data.PlayerBaseData>();
         var roleInfoLiteList = playerBaseData.roleInfoLiteList;
@@ -86,11 +86,15 @@ public class RoleSelectPanel : MonoBehaviour
         {
             _roleSelectItemList[i].gameObject.SetActive(false);
         }
+
+        getRoleInfoNotification.Enabled = true;
     }
 
-    void OnDisable()
+    protected override void OnHide()
     {
         WorldManager.Instance.UIMgr.HidePanel(PanelType.ServerPanel);
+
+        getRoleInfoNotification.Enabled = false;
     }
 
     void OnShowServerPanelClick()
@@ -129,7 +133,9 @@ public class RoleSelectPanel : MonoBehaviour
 
     public void OnGetRoleInfoSuccess(Data.RoleInfo roleInfo)
     {
-        WorldManager.Instance.UIMgr.ShowPanel(PanelType.MainPanel);
+        var uiMgr = WorldManager.Instance.UIMgr;
+        uiMgr.ShowPanel(PanelType.MainPanel);
+        uiMgr.HidePanel(PanelType);
     }
 
     public void OnGetRoleInfoFailed(int result)

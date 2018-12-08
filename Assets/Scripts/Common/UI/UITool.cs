@@ -13,7 +13,7 @@ public delegate void OnRootLoadedFinished(PanelType panelType);
 
 public class UITool : IUITool
 {
-    Dictionary<PanelType, IPanel> _panelDataDict = new Dictionary<PanelType, IPanel>();
+    Dictionary<PanelType, Panel> _panelDataDict = new Dictionary<PanelType, Panel>();
     List<PanelType> _showedPanelList = new List<PanelType>();
 
     PanelData _defaultPanelConfig;
@@ -56,7 +56,7 @@ public class UITool : IUITool
         return _defaultPanelConfig;
     }
 
-    public void AddPanel(IPanel data)
+    public void AddPanel(Panel data)
     {
         var panelType = data.PanelType;
         if (!_panelDataDict.ContainsKey(panelType))
@@ -69,7 +69,7 @@ public class UITool : IUITool
         }
     }
 
-    public void RemovePanel(IPanel data)
+    public void RemovePanel(Panel data)
     {
         var panelType = data.PanelType;
         if (_panelDataDict.ContainsKey(panelType))
@@ -82,9 +82,9 @@ public class UITool : IUITool
         }
     }
 
-    public IPanel GetPanel(PanelType panelType)
+    public Panel GetPanel(PanelType panelType)
     {
-        IPanel panel;
+        Panel panel;
         if (!_panelDataDict.TryGetValue(panelType, out panel))
         {
             return null;
@@ -139,11 +139,11 @@ public class UITool : IUITool
 
     void ShowPanelImpl(PanelType panelType)
     {
-        IPanel data;
+        Panel data;
         if (_panelDataDict.TryGetValue(panelType, out data))
         {
             _showedPanelList.Add(panelType);
-            data.Resource.SetActive(true);
+            data.Show();
 
             _notificationData.type = (int)PanelNotificationType.OpenPanel;
             _notificationData.mode = NotificationMode.Object;
@@ -213,12 +213,11 @@ public class UITool : IUITool
 
     void HidePanelImpl(PanelType panelType)
     {
-        IPanel data;
+        Panel data;
         if (_panelDataDict.TryGetValue(panelType, out data))
         {
             _showedPanelList.Remove(panelType);
-
-            data.Resource.SetActive(false);
+            data.Hide();
 
             _notificationData.type = (int)PanelNotificationType.ClosePanel;
             _notificationData.mode = NotificationMode.Object;

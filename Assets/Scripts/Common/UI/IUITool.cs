@@ -34,10 +34,10 @@ public interface IUITool
 {
     void Init();
 
-    void AddPanel(IPanel panel);
-    void RemovePanel(IPanel panel);
+    void AddPanel(Panel panel);
+    void RemovePanel(Panel panel);
 
-    IPanel GetPanel(PanelType panelType);
+    Panel GetPanel(PanelType panelType);
     void ShowPanel(PanelType panelType);
     void HidePanel(PanelType panelType);
     void ShowLastShowedPanel();
