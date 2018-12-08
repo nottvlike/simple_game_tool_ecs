@@ -42,6 +42,8 @@ namespace Module{
                     return;
                 }
 
+                _enabled = value;
+
                 if (_enabled)
                 {
                     OnEnable();
