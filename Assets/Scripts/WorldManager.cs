@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using UnityEngine;
 
 public partial class WorldManager : Singleton<WorldManager>
 {
@@ -28,6 +29,8 @@ public partial class WorldManager : Singleton<WorldManager>
 
         SocketMgr.Init("127.0.0.1", 8888);
 
+        TestHttpUtil();
+
         RegisterAllModule();
 
         var player = Player;
@@ -40,6 +43,21 @@ public partial class WorldManager : Singleton<WorldManager>
         UIMgr.ShowPanel(PanelType.GameUpdatePanel);
         LevelLoader.DoDrama();
     }
+
+    #region Test
+
+    void TestHttpUtil()
+    {
+        var result = HttpUtil.Get("http://www.baidu.com");
+        LogUtil.I(result);
+
+        HttpUtil.GetAsync("http://www.baidu.com", delegate (string result1)
+        {
+            LogUtil.I(result1);
+        });
+    }
+
+    #endregion
 
     public void Destroy()
     {

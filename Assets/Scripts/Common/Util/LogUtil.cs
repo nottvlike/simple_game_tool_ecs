@@ -19,7 +19,14 @@ public class LogUtil
             return;
         }
 
-        Debug.LogFormat(format, args);
+        if (args != null && args.Length != 0)
+        {
+            Debug.LogFormat(format, args);
+        }
+        else
+        {
+            Debug.Log(format);
+        }
     }
 
     public static void W(string format, params object[] args)
@@ -29,7 +36,15 @@ public class LogUtil
             return;
         }
 
-        Debug.LogWarningFormat(format, args);
+
+        if (args != null && args.Length != 0)
+        {
+            Debug.LogWarningFormat(format, args);
+        }
+        else
+        {
+            Debug.LogWarning(format);
+        }
     }
 
     public static void E(string format, params object[] args)
@@ -39,7 +54,15 @@ public class LogUtil
             return;
         }
 
-        Debug.LogErrorFormat(format, args);
+
+        if (args != null && args.Length != 0)
+        {
+            Debug.LogErrorFormat(format, args);
+        }
+        else
+        {
+            Debug.LogError(format);
+        }
     }
 
     static bool CanLog(LogState state)

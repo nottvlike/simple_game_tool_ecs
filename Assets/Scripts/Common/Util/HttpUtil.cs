@@ -16,6 +16,30 @@ public class HttpUtil
         public WebRequestResult webResult;
     }
 
+    public static string Get(string url)
+    {
+        var result = "";
+        try
+        {
+            var webRequest = (HttpWebRequest)WebRequest.Create(url);
+            var response = webRequest.GetResponse();
+            using (var streamReader = new StreamReader(response.GetResponseStream(), Encoding.UTF8))
+            {
+                result = streamReader.ReadToEnd();
+            }
+        }
+        catch (WebException e)
+        {
+            LogUtil.E("WebException raised, {0} {1}!", e.Status, e.Message);
+        }
+        catch (Exception e)
+        {
+            LogUtil.E("Exception raised, {0} {1}!", e.Source, e.Message);
+        }
+
+        return result;
+    }
+
     const int WAIT_TIME = 4000;
 
     public static void GetAsync(string url, WebRequestResult callback)
@@ -52,7 +76,6 @@ public class HttpUtil
             using (var streamReader = new StreamReader(response.GetResponseStream(), Encoding.UTF8))
             {
                 var result = streamReader.ReadToEnd();
-                LogUtil.I(result);
 
                 var webResult = request.webResult;
                 if (webResult != null)
@@ -61,9 +84,13 @@ public class HttpUtil
                 }
             }
         }
+        catch (WebException e)
+        {
+            LogUtil.E("WebException raised, {0} {1}!", e.GetType(), e.Message);
+        }
         catch (Exception e)
         {
-            LogUtil.E("WebRequestCallback Exception raised, {0} {1}!", e.Source, e.Message);
+            LogUtil.E("Exception raised, {0} {1}!", e.Source, e.Message);
         }
     }
 
