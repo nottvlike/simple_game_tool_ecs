@@ -1,11 +1,7 @@
 root = "./Skynet/"
-project = "./Game/"
 
 luaservice = root .. "service/?.lua;" .. root .. "test/?.lua;" .. root .. "test/?/init.lua"
 lualoader = root .. "lualib/loader.lua"
 lua_path = root.."lualib/?.lua;"..root.."lualib/?/init.lua;"
 lua_cpath = root .. "luaclib/?.so"
-snax = project.."?.lua;"..root.."test/?.lua"
-
-luaservice = project .. "Service/?.lua;" .. luaservice
-lua_path = project .."?.lua;" .. project .."Logic/?.lua;" .. project.."LuaLib/?.lua;" .. lua_path
+snax = root.."test/?.lua"
