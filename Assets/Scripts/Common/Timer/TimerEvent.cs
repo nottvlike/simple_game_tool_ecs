@@ -35,7 +35,7 @@
         _tick = tick;
 
         var gameSystemData = WorldManager.Instance.GameCore.GetData<Data.GameSystemData>();
-        _lastInvokeTime = gameSystemData.systemTime;
+        _lastInvokeTime = gameSystemData.realTime;
 
         _isDelayed = false;
     }

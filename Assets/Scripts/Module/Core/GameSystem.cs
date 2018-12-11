@@ -33,7 +33,7 @@ namespace Module
             var gameSystemData = objData.GetData<GameSystemData>() as GameSystemData;
 
             gameSystemData.clientFrame++;
-            gameSystemData.systemTime = Mathf.CeilToInt(Time.realtimeSinceStartup * 1000);
+            gameSystemData.realTime = Mathf.CeilToInt(Time.realtimeSinceStartup * 1000);
 
             worldMgr.TimerMgr.Update();
         }
