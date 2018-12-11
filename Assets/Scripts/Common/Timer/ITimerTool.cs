@@ -9,5 +9,7 @@ public interface ITimerTool
     TimerEvent AddMulti(int delay, int count, int interval, ITimerObject timer);
     TimerEvent AddEndLess(int delay, int interval, ITimerObject timer);
 
+    void Update();
+
     void Destroy();
 }

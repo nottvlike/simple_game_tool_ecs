@@ -4,7 +4,7 @@ using UnityEngine;
 
 public partial class WorldManager : Singleton<WorldManager>
 {
-    public ITimerTool _timerTool;
+    ITimerTool _timerTool;
     public ITimerTool TimerMgr
     {
         get

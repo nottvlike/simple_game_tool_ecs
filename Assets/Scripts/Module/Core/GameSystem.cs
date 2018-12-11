@@ -28,11 +28,14 @@ namespace Module
 
         public void Update()
         {
-            var objData = WorldManager.Instance.GameCore;
+            var worldMgr = WorldManager.Instance;
+            var objData = worldMgr.GameCore;
             var gameSystemData = objData.GetData<GameSystemData>() as GameSystemData;
 
             gameSystemData.clientFrame++;
             gameSystemData.systemTime = Mathf.CeilToInt(Time.realtimeSinceStartup * 1000);
+
+            worldMgr.TimerMgr.Update();
         }
     }
 }

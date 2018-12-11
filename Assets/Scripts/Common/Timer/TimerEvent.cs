@@ -23,6 +23,7 @@
         _tick = null;
 
         _lastInvokeTime = 0;
+
         _isDelayed = false;
     }
 
@@ -32,6 +33,11 @@
         _count = count;
         _interval = interval;
         _tick = tick;
+
+        var gameSystemData = WorldManager.Instance.GameCore.GetData<Data.GameSystemData>();
+        _lastInvokeTime = gameSystemData.systemTime;
+
+        _isDelayed = false;
     }
 
     bool CanInvoke(int time)
