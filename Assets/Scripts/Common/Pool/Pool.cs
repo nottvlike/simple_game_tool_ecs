@@ -155,9 +155,9 @@ public class Pool : IPool
         return (T)poolObject;
     }
 
-    public void Release<T>(T obj) where T : IPoolObject, new()
+    public void Release(IPoolObject obj)
     {
-        var type = typeof(T);
+        var type = obj.GetType();
 
         List<IPoolObject> poolObjectList = null;
         if (_poolObjectDict.TryGetValue(type, out poolObjectList))

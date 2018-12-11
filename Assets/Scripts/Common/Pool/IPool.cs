@@ -10,7 +10,7 @@ public interface IPool
     void Release(ObjectData obj);
 
     T Get<T>() where T : IPoolObject, new();
-    void Release<T>(T obj) where T : IPoolObject, new();
+    void Release(IPoolObject obj);
 
     void Destroy();
 }
