@@ -32,6 +32,7 @@ namespace Module
             var gameSystemData = objData.GetData<GameSystemData>() as GameSystemData;
 
             gameSystemData.clientFrame++;
+            gameSystemData.systemTime = Mathf.CeilToInt(Time.realtimeSinceStartup * 1000);
         }
     }
 }

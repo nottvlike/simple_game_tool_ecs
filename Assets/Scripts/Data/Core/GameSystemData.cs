@@ -5,6 +5,7 @@ namespace Data
 {
     public class GameSystemData : Data
     {
+        public int systemTime;
         public int clientFrame;
     }
 
