@@ -5,7 +5,8 @@ namespace Data
 {
     public class GameSystemData : Data
     {
-        public int realTime;
+        public int unscaleDeltaTime;
+        public int unscaleTime;
         public int clientFrame;
     }
 

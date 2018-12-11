@@ -5,7 +5,7 @@
     int _delay;
     ITimerObject _tick;
 
-    float _lastInvokeTime;
+    int _lastInvokeTime;
 
     bool _isDelayed;
 
@@ -35,7 +35,7 @@
         _tick = tick;
 
         var gameSystemData = WorldManager.Instance.GameCore.GetData<Data.GameSystemData>();
-        _lastInvokeTime = gameSystemData.realTime;
+        _lastInvokeTime = gameSystemData.unscaleTime;
 
         _isDelayed = false;
     }

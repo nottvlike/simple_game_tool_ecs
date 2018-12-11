@@ -43,7 +43,7 @@ public class TimerTool : ITimerTool
         }
 
         var gameSystemData = WorldManager.Instance.GameCore.GetData<Data.GameSystemData>();
-        var currentTime = gameSystemData.realTime;
+        var currentTime = gameSystemData.unscaleTime;
         for (var i = 0; i < _timerEventList.Count;)
         {
             var timerEvent = _timerEventList[i];
