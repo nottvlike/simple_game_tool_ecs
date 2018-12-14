@@ -27,8 +27,6 @@ public partial class WorldManager : Singleton<WorldManager>
     {
         ResourceMgr.Init();
 
-        SocketMgr.Init("127.0.0.1", 8888);
-
         TestHttpUtil();
 
         RegisterAllModule();

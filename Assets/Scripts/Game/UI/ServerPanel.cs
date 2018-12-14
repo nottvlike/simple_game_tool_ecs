@@ -3,6 +3,13 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 
+[System.Serializable]
+public struct GetServerInfoResult
+{
+    public int result;
+    public List<Data.ServerInfo> serverInfoList;
+}
+
 public class ServerPanel : Panel 
 {
     public GridLayoutGroup grid;

@@ -4,37 +4,12 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 
-public class LoginNotification : BaseNotification
+[Serializable]
+public struct GetAccountInfoResult
 {
-    LoginPanel _loginPanel;
-
-    public LoginNotification(LoginPanel panel)
-    {
-        _loginPanel = panel;
-
-        _id = Constant.NOTIFICATION_TYPE_PLAYER;
-        _typeList = new int[] { (int)PlayerNotificationType.LoginSuccess, (int)PlayerNotificationType.LoginFailed };
-    }
-
-    public override void OnReceive(int type, object notificationData)
-    {
-        switch (type)
-        {
-            case (int)PlayerNotificationType.LoginSuccess:
-                _loginPanel.LoginSuccess((Data.PlayerBaseData)notificationData);
-                break;
-        }
-    }
-
-    public override void OnReceive(int type, ValueType notificationData)
-    {
-        switch (type)
-        {
-            case (int)PlayerNotificationType.LoginFailed:
-                _loginPanel.LoginFailed((int)notificationData);
-                break;
-        }
-    }
+    public int result;
+    public string accountId;
+    public List<Data.RoleInfoLite> roleInfoLiteList;
 }
 
 public class LoginPanel : Panel 
@@ -43,23 +18,9 @@ public class LoginPanel : Panel
     public InputField nameInput;
     public InputField passwordInput;
 
-    LoginNotification _notification;
-
     protected override void OnInit()
     {
-        _notification = new LoginNotification(this);
-
         loginButton.onClick.AddListener(OnLoginClick);
-    }
-
-    protected override void OnShow()
-    {
-        _notification.Enabled = true;
-    }
-
-    protected override void OnHide()
-    {
-        _notification.Enabled = false;
     }
 
     void OnLoginClick()
@@ -72,14 +33,26 @@ public class LoginPanel : Panel
         var userName = builder.CreateString(nameInput.text);
         var password = builder.CreateString(passwordInput.text);
 
-        Protocol.Login.ReqLoginGame.StartReqLoginGame(builder);
-        Protocol.Login.ReqLoginGame.AddName(builder, userName);
-        Protocol.Login.ReqLoginGame.AddPassword(builder, password);
-        var orc = Protocol.Login.ReqLoginGame.EndReqLoginGame(builder);
-        builder.Finish(orc.Value);
+        var loginUrl = string.Format("http://127.0.0.1:8001/login?user={0}&password={1}", userName, password);
+        HttpUtil.GetAsync(loginUrl, delegate (string accountInfoStr)
+        {
+            var accountInfoResult = JsonUtility.FromJson<GetAccountInfoResult>(accountInfoStr);
+            var playerBaseData = WorldManager.Instance.Player.GetData<Data.PlayerBaseData>();
+            var result = accountInfoResult.result;
+            if (accountInfoResult.result == 0)
+            {
+                playerBaseData.accountId = accountInfoResult.accountId;
+                playerBaseData.roleInfoLiteList.Clear();
+                playerBaseData.roleInfoLiteList.AddRange(accountInfoResult.roleInfoLiteList);
 
-        var buf = builder.SizedByteArray();
-        worldMgr.SocketMgr.SendMessage(buf, (int)Protocols.ReqLoginGame);
+                LoginSuccess(playerBaseData);
+            }
+            else
+            {
+                LoginFailed(accountInfoResult.result);
+            }
+
+        });
     }
 
     public void LoginSuccess(Data.PlayerBaseData data)

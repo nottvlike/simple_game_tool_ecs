@@ -55,6 +55,18 @@ public class RoleSelectPanel : Panel
 
         showServerPanelButton.onClick.AddListener(OnShowServerPanelClick);
         goButton.onClick.AddListener(OnGoClick);
+
+        HttpUtil.GetAsync("http://127.0.0.1:8001/serverInfo", delegate (string serverInfoStr)
+        {
+            var serverInfoResult = JsonUtility.FromJson<GetServerInfoResult>(serverInfoStr);
+            var serverData = WorldManager.Instance.Player.GetData<Data.ServerData>();
+            var result = serverInfoResult.result;
+            if (serverInfoResult.result == 0)
+            {
+                serverData.serverInfoList.Clear();
+                serverData.serverInfoList.AddRange(serverInfoResult.serverInfoList);
+            }
+        });
     }
 
     protected override void OnShow()
