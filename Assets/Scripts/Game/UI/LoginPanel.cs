@@ -30,8 +30,8 @@ public class LoginPanel : Panel
         var builder = gameServerData.builder;
         builder.Clear();
 
-        var userName = builder.CreateString(nameInput.text);
-        var password = builder.CreateString(passwordInput.text);
+        var userName = nameInput.text;
+        var password = passwordInput.text;
 
         var uiMgr = WorldManager.Instance.UIMgr;
         uiMgr.ShowPanel(PanelType.AsyncPanel);
