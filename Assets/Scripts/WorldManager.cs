@@ -49,7 +49,7 @@ public partial class WorldManager : Singleton<WorldManager>
         var result = HttpUtil.Get("http://www.baidu.com");
         LogUtil.I(result);
 
-        HttpUtil.GetAsync("http://www.baidu.com", delegate (string result1)
+        HttpUtil.GetAsync("http://www.baidu.com", delegate (WebRequestResultType resultType, string result1)
         {
             LogUtil.I(result1);
         });

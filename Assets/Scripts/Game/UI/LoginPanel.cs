@@ -12,7 +12,7 @@ public struct GetAccountInfoResult
     public List<Data.RoleInfoLite> roleInfoLiteList;
 }
 
-public class LoginPanel : Panel 
+public class LoginPanel : Panel
 {
     public Button loginButton;
     public InputField nameInput;
@@ -34,24 +34,26 @@ public class LoginPanel : Panel
         var password = builder.CreateString(passwordInput.text);
 
         var loginUrl = string.Format("http://127.0.0.1:8001/login?user={0}&password={1}", userName, password);
-        HttpUtil.GetAsync(loginUrl, delegate (string accountInfoStr)
+        HttpUtil.GetAsync(loginUrl, delegate (WebRequestResultType resultType, string accountInfoStr)
         {
-            var accountInfoResult = JsonUtility.FromJson<GetAccountInfoResult>(accountInfoStr);
-            var playerBaseData = WorldManager.Instance.Player.GetData<Data.PlayerBaseData>();
-            var result = accountInfoResult.result;
-            if (accountInfoResult.result == 0)
+            if (resultType == WebRequestResultType.Success)
             {
-                playerBaseData.accountId = accountInfoResult.accountId;
-                playerBaseData.roleInfoLiteList.Clear();
-                playerBaseData.roleInfoLiteList.AddRange(accountInfoResult.roleInfoLiteList);
+                var accountInfoResult = JsonUtility.FromJson<GetAccountInfoResult>(accountInfoStr);
+                var playerBaseData = WorldManager.Instance.Player.GetData<Data.PlayerBaseData>();
+                var result = accountInfoResult.result;
+                if (accountInfoResult.result == 0)
+                {
+                    playerBaseData.accountId = accountInfoResult.accountId;
+                    playerBaseData.roleInfoLiteList.Clear();
+                    playerBaseData.roleInfoLiteList.AddRange(accountInfoResult.roleInfoLiteList);
 
-                LoginSuccess(playerBaseData);
+                    LoginSuccess(playerBaseData);
+                }
+                else
+                {
+                    LoginFailed(accountInfoResult.result);
+                }
             }
-            else
-            {
-                LoginFailed(accountInfoResult.result);
-            }
-
         });
     }
 

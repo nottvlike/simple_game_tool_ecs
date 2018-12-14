@@ -6,7 +6,15 @@ using System.Threading;
 using UnityEngine.Networking;
 using System.Collections;
 
-public delegate void WebRequestResult(string content);
+public enum WebRequestResultType
+{
+    Success = 0,
+    ConnectFailure,
+    TimeOut,
+    Unknown
+}
+
+public delegate void WebRequestResult(WebRequestResultType result, string content);
 
 public class HttpUtil
 {
@@ -42,7 +50,7 @@ public class HttpUtil
 
     const int WAIT_TIME = 4000;
 
-    public static void GetAsync(string url, WebRequestResult callback)
+    public static void GetAsync(string url, WebRequestResult resultCallback)
     {
         try
         {
@@ -50,18 +58,20 @@ public class HttpUtil
 
             var request = new RequestObject();
             request.webRequest = webRequest;
-            request.webResult = callback;
+            request.webResult = resultCallback;
 
             var result = webRequest.BeginGetResponse(new AsyncCallback(WebRequestCallback), request);
-            ThreadPool.RegisterWaitForSingleObject(result.AsyncWaitHandle, new WaitOrTimerCallback(WebRequestTimeoutCallback), webRequest, WAIT_TIME, true);
+            ThreadPool.RegisterWaitForSingleObject(result.AsyncWaitHandle, new WaitOrTimerCallback(WebRequestTimeoutCallback), request, WAIT_TIME, true);
         }
         catch(WebException e)
         {
             LogUtil.E("WebException raised, {0} {1}!", e.Status, e.Message);
+            WebRequestFinished(resultCallback, WebRequestResultType.ConnectFailure, string.Empty);
         }
         catch(Exception e)
         {
             LogUtil.E("Exception raised, {0} {1}!", e.Source, e.Message);
+            WebRequestFinished(resultCallback, WebRequestResultType.Unknown, string.Empty);
         }
     }
 
@@ -69,6 +79,7 @@ public class HttpUtil
     {
         var request = (RequestObject)asynchronousResult.AsyncState;
         var webRequest = request.webRequest;
+        var webResult = request.webResult;
 
         try
         {
@@ -77,20 +88,29 @@ public class HttpUtil
             {
                 var result = streamReader.ReadToEnd();
 
-                var webResult = request.webResult;
-                if (webResult != null)
-                {
-                    webResult(result);
-                }
+                WebRequestFinished(webResult, WebRequestResultType.Success, result);
             }
         }
         catch (WebException e)
         {
             LogUtil.E("WebException raised, {0} {1}!", e.GetType(), e.Message);
+            WebRequestFinished(webResult, WebRequestResultType.ConnectFailure, string.Empty);
         }
         catch (Exception e)
         {
             LogUtil.E("Exception raised, {0} {1}!", e.Source, e.Message);
+            WebRequestFinished(webResult, WebRequestResultType.Unknown, string.Empty);
+        }
+    }
+
+    static void WebRequestFinished(WebRequestResult callback, WebRequestResultType resultType, string result)
+    {
+        if (callback != null)
+        {
+            WorldManager.Instance.TimerMgr.AddOnce(0, delegate ()
+            {
+                callback(resultType, result);
+            });
         }
     }
 
@@ -98,10 +118,17 @@ public class HttpUtil
     {
         if (timedOut)
         {
-            HttpWebRequest request = state as HttpWebRequest;
-            if (request != null)
+            var request = (RequestObject)state;
+            var webRequest = request.webRequest;
+            if (webRequest != null)
             {
-                request.Abort();
+                webRequest.Abort();
+            }
+
+            var resultCallback = request.webResult;
+            if (resultCallback != null)
+            {
+                resultCallback(WebRequestResultType.TimeOut, string.Empty);
             }
         }
     }
