@@ -33,9 +33,14 @@ public class LoginPanel : Panel
         var userName = builder.CreateString(nameInput.text);
         var password = builder.CreateString(passwordInput.text);
 
+        var uiMgr = WorldManager.Instance.UIMgr;
+        uiMgr.ShowPanel(PanelType.AsyncPanel);
+
         var loginUrl = string.Format("http://127.0.0.1:8001/login?user={0}&password={1}", userName, password);
         HttpUtil.GetAsync(loginUrl, delegate (WebRequestResultType resultType, string accountInfoStr)
         {
+            uiMgr.HidePanel(PanelType.AsyncPanel);
+
             if (resultType == WebRequestResultType.Success)
             {
                 var accountInfoResult = JsonUtility.FromJson<GetAccountInfoResult>(accountInfoStr);

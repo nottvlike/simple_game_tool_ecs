@@ -27,7 +27,9 @@ public enum PanelType
     ServerPanel,
     CreateRolePanel,
     MainPanel,
-    FightPanel
+    FightPanel,
+
+    AsyncPanel = 1000,
 }
 
 public interface IUITool
