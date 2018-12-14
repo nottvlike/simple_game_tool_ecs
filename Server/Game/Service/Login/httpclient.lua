@@ -6,6 +6,69 @@ local urllib = require "http.url"
 local table = table
 local string = string
 
+local CMD = 
+{
+	"/login" = function(id, params)
+		skynet.error(string.format("%s login success!", params["user"]))
+		response(id, 200, [[
+				{
+					"result": 0,
+					"accountId": "111111111111111",
+					"roleInfoLiteList": [{
+						"roleId": "1",
+						"roleName": "Test111",
+						"roleLevel": 1,
+						"serverId": 1
+					}, {
+						"roleId": "2",
+						"roleName": "Test222",
+						"roleLevel": 2,
+						"serverId": 2
+					}, {
+						"roleId": "3",
+						"roleName": "Test333",
+						"roleLevel": 3,
+						"serverId": 3
+					}]
+				}
+			]])
+	end,
+	"/register" = function(id, params)
+		skynet.error(string.format("%s register success!", params["user"]))
+		response(id, 200, [[
+				{
+					"result": 0,
+					"accountId": "111111111111111",
+					"roleInfoLiteList": []
+				}
+			]])
+	end,
+	"/serverInfo" = function(id, params)
+		skynet.error(string.format("%s get server info success!", id))
+		response(id, 200, [[
+				{
+					"result": 0,
+					"serverInfoList": [{
+						"serverId": "1",
+						"serverName": "Test1",
+						"serverAddress": "127.0.0.1",
+						"serverPort": 8888
+					}, {
+						"serverId": "2",
+						"serverName": "Test2",
+						"serverAddress": "127.0.0.1",
+						"serverPort": 8888
+					}, {
+						"serverId": "3",
+						"serverName": "Test3",
+						"serverAddress": "127.0.0.1",
+						"serverPort": 8888
+					}]
+				}
+			]])
+	end
+}
+
 local function response(id, ...)
 	local ok, err = httpd.write_response(sockethelper.writefunc(id), ...)
 	if not ok then
@@ -27,20 +90,17 @@ skynet.start(function()
 				if header.host then
 					table.insert(tmp, string.format("host: %s", header.host))
 				end
+
 				local path, query = urllib.parse(url)
-				table.insert(tmp, string.format("path: %s", path))
-				if query then
-					local q = urllib.parse_query(query)
-					for k, v in pairs(q) do
-						table.insert(tmp, string.format("query: %s= %s", k,v))
-					end
+				local params = {}				if query then
+					params = urllib.parse_query(query)
 				end
-				table.insert(tmp, "-----header----")
-				for k,v in pairs(header) do
-					table.insert(tmp, string.format("%s = %s",k,v))
+
+				if CMD[path] then
+					CMD[path](params)
+				else
+					response(id, code, "{}")
 				end
-				table.insert(tmp, "-----body----\n" .. body)
-				response(id, code, table.concat(tmp,"\n"))
 			end
 		else
 			if url == sockethelper.socket_error then
