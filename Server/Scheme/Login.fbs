@@ -1,23 +1,5 @@
 namespace Protocol.Login;
 
-table RoleInfoLite {
-	roleId:string;
-	roleName:string;
-	roleLevel:int;
-	serverId:int;
-}
-
-table ResLoginGame {
-	result:int;
-	accountId:string;
-	roleInfoLites:[RoleInfoLite];
-}
-
-table ReqLoginGame {
-	name:string;
-	password:string;
-}
-
 table RoleInfo {
 	roleId:string;
 	roleName:string;
