@@ -4,6 +4,7 @@
     int _count;
     int _delay;
     ITimerObject _tick;
+    TimerCallback _callback;
 
     int _lastInvokeTime;
 
@@ -21,18 +22,20 @@
         _count = 0;
         _delay = 0;
         _tick = null;
+        _callback = null;
 
         _lastInvokeTime = 0;
 
         _isDelayed = false;
     }
 
-    public void Init(int delay, int count, int interval, ITimerObject tick)
+    public void Init(int delay, int count, int interval, ITimerObject tick, TimerCallback timerCallback = null)
     {
         _delay = delay;
         _count = count;
         _interval = interval;
         _tick = tick;
+        _callback = timerCallback;
 
         var gameSystemData = WorldManager.Instance.GameCore.GetData<Data.GameSystemData>();
         _lastInvokeTime = gameSystemData.unscaleTime;
@@ -65,7 +68,15 @@
                 _isDelayed = true;
             }
 
-            _tick.Tick();
+            if (_tick != null)
+            {
+                _tick.Tick();
+            }
+
+            if (_callback != null)
+            {
+                _callback();
+            }
 
             if (_count > 0)
             {

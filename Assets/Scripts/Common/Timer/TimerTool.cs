@@ -7,16 +7,37 @@ public class TimerTool : ITimerTool
     List<TimerEvent> _timerEventList = new List<TimerEvent>();
     List<TimerEvent> _tmpTimerEventList = new List<TimerEvent>();
 
-    TimerEvent Add(int delay, int count, int interval, ITimerObject timer)
+    public TimerEvent AddOnce(int delay, TimerCallback timerCallback)
     {
-        if (timer == null)
+        return Add(delay, 1, 0, null, timerCallback);
+    }
+
+    public TimerEvent AddMulti(int delay, int count, int interval, TimerCallback timerCallback)
+    {
+        if (count <= 0)
         {
-            LogUtil.E("Timer object should not be null!");
+            LogUtil.E("AddMulti count should more than zero");
+            return null;
+        }
+
+        return Add(delay, count, interval, null, timerCallback);
+    }
+
+    public TimerEvent AddEndLess(int delay, int interval, ITimerObject timer)
+    {
+        return Add(delay, -1, interval, timer);
+    }
+
+    TimerEvent Add(int delay, int count, int interval, ITimerObject timer, TimerCallback timerCallback = null)
+    {
+        if (timer == null && timerCallback == null) 
+        {
+            LogUtil.E("Timer and timerCallback are null!");
             return null;
         }
 
         var timerEvent = WorldManager.Instance.PoolMgr.Get<TimerEvent>();
-        timerEvent.Init(delay, count, interval, timer);
+        timerEvent.Init(delay, count, interval, timer, timerCallback);
 
         _tmpTimerEventList.Add(timerEvent);
 
@@ -57,27 +78,6 @@ public class TimerTool : ITimerTool
                 Remove(timerEvent);
             }
         }
-    }
-
-    public TimerEvent AddEndLess(int delay, int interval, ITimerObject timer)
-    {
-        return Add(delay, -1, interval, timer);
-    }
-
-    public TimerEvent AddMulti(int delay, int count, int interval, ITimerObject timer)
-    {
-        if (count <= 0)
-        {
-            LogUtil.E("AddMulti count should more than zero");
-            return null;
-        }
-
-        return Add(delay, count, interval, timer);
-    }
-
-    public TimerEvent AddOnce(int delay, ITimerObject timer)
-    {
-        return Add(delay, 1, 0, timer);
     }
 
     public void Destroy()
