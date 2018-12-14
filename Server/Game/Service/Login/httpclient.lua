@@ -6,9 +6,16 @@ local urllib = require "http.url"
 local table = table
 local string = string
 
-local CMD = 
-{
-	"/login" = function(id, params)
+local function response(id, ...)
+	local ok, err = httpd.write_response(sockethelper.writefunc(id), ...)
+	if not ok then
+		-- if err == sockethelper.socket_error , that means socket closed.
+		skynet.error(string.format("fd = %d, %s", id, err))
+	end
+end
+
+local CMD = {
+	["/login"] = function(id, params)
 		skynet.error(string.format("%s login success!", params["user"]))
 		response(id, 200, [[
 				{
@@ -33,7 +40,7 @@ local CMD =
 				}
 			]])
 	end,
-	"/register" = function(id, params)
+	["/register"] = function(id, params)
 		skynet.error(string.format("%s register success!", params["user"]))
 		response(id, 200, [[
 				{
@@ -43,7 +50,7 @@ local CMD =
 				}
 			]])
 	end,
-	"/serverInfo" = function(id, params)
+	["/serverInfo"] = function(id, params)
 		skynet.error(string.format("%s get server info success!", id))
 		response(id, 200, [[
 				{
@@ -69,14 +76,6 @@ local CMD =
 	end
 }
 
-local function response(id, ...)
-	local ok, err = httpd.write_response(sockethelper.writefunc(id), ...)
-	if not ok then
-		-- if err == sockethelper.socket_error , that means socket closed.
-		skynet.error(string.format("fd = %d, %s", id, err))
-	end
-end
-
 skynet.start(function()
 	skynet.dispatch("lua", function (_,_,id)
 		socket.start(id)
@@ -92,12 +91,17 @@ skynet.start(function()
 				end
 
 				local path, query = urllib.parse(url)
-				local params = {}				if query then
+				local params = {}				
+				if query then
 					params = urllib.parse_query(query)
 				end
 
+				for i,v in pairs(params) do
+					print(i,v)
+				end
+
 				if CMD[path] then
-					CMD[path](params)
+					CMD[path](id, params)
 				else
 					response(id, code, "{}")
 				end
