@@ -29,6 +29,21 @@ public partial class WorldManager : Singleton<WorldManager>
 
         TestHttpUtil();
 
+        HttpUtil.GetAsync("http://127.0.0.1:8001/serverInfo", delegate (WebRequestResultType resultType, string serverInfoStr)
+        {
+            if (resultType == WebRequestResultType.Success)
+            {
+                var serverInfoResult = JsonUtility.FromJson<GetServerInfoResult>(serverInfoStr);
+                var serverData = Player.GetData<Data.ServerData>();
+                var result = serverInfoResult.result;
+                if (serverInfoResult.result == 0)
+                {
+                    serverData.serverInfoList.Clear();
+                    serverData.serverInfoList.AddRange(serverInfoResult.serverInfoList);
+                }
+            }
+        });
+
         RegisterAllModule();
 
         var player = Player;
