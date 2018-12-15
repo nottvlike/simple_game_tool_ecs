@@ -17,21 +17,6 @@ local CMD = {}
 local REQUEST = {}
 local client_fd
 
-function REQUEST:get()
-	print("get", self.what)
-	local r = skynet.call("SIMPLEDB", "lua", "get", self.what)
-	return { result = r }
-end
-
-function REQUEST:set()
-	print("set", self.what, self.value)
-	local r = skynet.call("SIMPLEDB", "lua", "set", self.what, self.value)
-end
-
-function REQUEST:handshake()
-	return { msg = "Welcome to skynet, I will send heartbeat every 5 sec." }
-end
-
 function REQUEST:quit()
 	skynet.call(WATCHDOG, "lua", "close", client_fd)
 end
