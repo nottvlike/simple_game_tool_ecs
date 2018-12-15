@@ -1,7 +1,7 @@
 include "config.path"
 
 project = "./Game/"
-luaservice = project .."?.lua;" .. project .. "Service/?.lua;" .. luaservice
+luaservice = project .."?.lua;" .. project .. "Service/?.lua;" .. project .. "Service/Login/?.lua;" .. luaservice
 lua_path = project .."?.lua;" .. project .."Logic/?.lua;" .. project.."LuaLib/?.lua;" .. lua_path
 
 -- preload = "./examples/preload.lua"	-- run preload.lua before every lua service run
