@@ -32,26 +32,22 @@ public struct RoleInfo : IFlatbufferObject
 #endif
   public byte[] GetRoleNameArray() { return __p.__vector_as_array<byte>(6); }
   public int RoleLevel { get { int o = __p.__offset(8); return o != 0 ? __p.bb.GetInt(o + __p.bb_pos) : (int)0; } }
-  public int ServerId { get { int o = __p.__offset(10); return o != 0 ? __p.bb.GetInt(o + __p.bb_pos) : (int)0; } }
 
   public static Offset<RoleInfo> CreateRoleInfo(FlatBufferBuilder builder,
       StringOffset roleIdOffset = default(StringOffset),
       StringOffset roleNameOffset = default(StringOffset),
-      int roleLevel = 0,
-      int serverId = 0) {
-    builder.StartObject(4);
-    RoleInfo.AddServerId(builder, serverId);
+      int roleLevel = 0) {
+    builder.StartObject(3);
     RoleInfo.AddRoleLevel(builder, roleLevel);
     RoleInfo.AddRoleName(builder, roleNameOffset);
     RoleInfo.AddRoleId(builder, roleIdOffset);
     return RoleInfo.EndRoleInfo(builder);
   }
 
-  public static void StartRoleInfo(FlatBufferBuilder builder) { builder.StartObject(4); }
+  public static void StartRoleInfo(FlatBufferBuilder builder) { builder.StartObject(3); }
   public static void AddRoleId(FlatBufferBuilder builder, StringOffset roleIdOffset) { builder.AddOffset(0, roleIdOffset.Value, 0); }
   public static void AddRoleName(FlatBufferBuilder builder, StringOffset roleNameOffset) { builder.AddOffset(1, roleNameOffset.Value, 0); }
   public static void AddRoleLevel(FlatBufferBuilder builder, int roleLevel) { builder.AddInt(2, roleLevel, 0); }
-  public static void AddServerId(FlatBufferBuilder builder, int serverId) { builder.AddInt(3, serverId, 0); }
   public static Offset<RoleInfo> EndRoleInfo(FlatBufferBuilder builder) {
     int o = builder.EndObject();
     return new Offset<RoleInfo>(o);
