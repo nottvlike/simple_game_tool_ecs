@@ -1,12 +1,15 @@
 local skynet = require "skynet"
 local netpack = require "skynet.netpack"
 local socket = require "skynet.socket"
-local netpack = require "skynet.netpack"
 
 local flatbuffers = require 'flatbuffers'
-local reqlogingame = require 'Protocol.Login.ReqLoginGame'
-local reslogingame = require 'Protocol.Login.ResLoginGame'
-local roleInfoLite = require 'Protocol.Login.RoleInfoLite'
+
+local roleInfo = require 'Protocol.Login.RoleInfo'
+local reqRoleInfo = require 'Protocol.Login.ReqRoleInfo'
+local resRoleInfo = require 'Protocol.Login.ResRoleInfo'
+local reqCreateRole = require 'Protocol.Login.ReqCreateRole'
+local resCreateRole = require 'Protocol.Login.ResCreateRole'
+
 local proto = require 'protoloader'
 
 local WATCHDOG
@@ -21,59 +24,54 @@ function REQUEST:quit()
 	skynet.call(WATCHDOG, "lua", "close", client_fd)
 end
 
-function REQUEST:ReqLoginGame(content)
+function REQUEST:ReqRoleInfo(content)
 	local buf = flatbuffers.binaryArray.New(content)
-	local message = reqlogingame.GetRootAsReqLoginGame(buf, 0)
-
-	print('Name ' .. message:Name())
-	print('Password ' .. message:Password())
+	local message = reqRoleInfo.GetRootAsReqRoleInfo(buf, 0)
 
 	local builder = flatbuffers.Builder(1024)
 
-	local accountId = builder:CreateString("11111111")
+	local roleId = builder:CreateString(message:RoleId())
+	local roleName = builder:CreateString("Test1")
 
-	local roleId1 = builder:CreateString("roleId1")
-	local roleName1 = builder:CreateString("roleName1")
+	roleInfo.Start(builder)
+	roleInfo.AddRoleId(builder, roleId)
+	roleInfo.AddRoleName(builder, roleName)
+	roleInfo.AddRoleLevel(builder, 3)
+	local role = roleInfo.End(builder)
 
-	roleInfoLite.Start(builder)
-	roleInfoLite.AddRoleId(builder, roleId1)
-	roleInfoLite.AddRoleName(builder, roleName1)
-	roleInfoLite.AddRoleLevel(builder, 3)
-	local role1 = roleInfoLite.End(builder)
-
-	local roleId2 = builder:CreateString("roleId2")
-	local roleName2 = builder:CreateString("roleName2")
-
-	roleInfoLite.Start(builder)
-	roleInfoLite.AddRoleId(builder, roleId2)
-	roleInfoLite.AddRoleName(builder, roleName2)
-	roleInfoLite.AddRoleLevel(builder, 3)
-	local role2 = roleInfoLite.End(builder)
-
-	local roleId3 = builder:CreateString("roleId3")
-	local roleName3 = builder:CreateString("roleName3")
-
-	roleInfoLite.Start(builder)
-	roleInfoLite.AddRoleId(builder, roleId3)
-	roleInfoLite.AddRoleName(builder, roleName3)
-	roleInfoLite.AddRoleLevel(builder, 3)
-	local role3 = roleInfoLite.End(builder)
-
-	reslogingame.StartRoleInfoLitesVector(builder, 3)
-	builder:PrependUOffsetTRelative(role1)
-	builder:PrependUOffsetTRelative(role2)
-	builder:PrependUOffsetTRelative(role3)
-	local roleInfoLites = builder:EndVector(3)
-
-	reslogingame.Start(builder)
-	reslogingame.AddResult(builder, 1)
-	reslogingame.AddAccountId(builder, accountId)
-	reslogingame.AddRoleInfoLites(builder, roleInfoLites)
-	local orc = reslogingame.End(builder)
+	resRoleInfo.Start(builder)
+	resRoleInfo.AddResult(builder, 0)
+	resRoleInfo.AddRoleInfo(builder, role)
+	local orc = resRoleInfo.End(builder)
 	
 	builder:Finish(orc)
 
-	return { id = proto.getId("ResLoginGame"), data = builder:Output()}
+	return { id = proto.getId("ResRoleInfo"), data = builder:Output()}
+end
+
+function REQUEST:ReqCreateRole(content)
+	local buf = flatbuffers.binaryArray.New(content)
+	local message = reqlogingame.GetRootAsReqLoginGame(buf, 0)
+
+	local builder = flatbuffers.Builder(1024)
+
+	local roleId = builder:CreateString("1")
+	local roleName = builder:CreateString(message:RoleName())
+
+	roleInfo.Start(builder)
+	roleInfo.AddRoleId(builder, roleId)
+	roleInfo.AddRoleName(builder, roleName)
+	roleInfo.AddRoleLevel(builder, 3)
+	local role = roleInfo.End(builder)
+
+	resCreateRole.Start(builder)
+	resCreateRole.AddResult(builder, 0)
+	resCreateRole.AddRoleInfo(builder, role)
+	local orc = resCreateRole.End(builder)
+	
+	builder:Finish(orc)
+
+	return { id = proto.getId("ResCreateRole"), data = builder:Output()}
 end
 
 local function request(name, args, response)
@@ -95,9 +93,6 @@ local function send_package(pack)
 	socket.write(client_fd, package)
 end
 
-local function leftShift(num, shift)
-	return math.floor(num * (2 ^ shift));
-end
 skynet.register_protocol {
 	name = "client",
 	id = skynet.PTYPE_CLIENT,

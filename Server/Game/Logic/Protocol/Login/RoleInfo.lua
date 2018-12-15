@@ -40,18 +40,10 @@ function RoleInfo_mt:RoleLevel()
     end
     return 0
 end
-function RoleInfo_mt:ServerId()
-    local o = self.view:Offset(10)
-    if o ~= 0 then
-        return self.view:Get(flatbuffers.N.Int32, o + self.view.pos)
-    end
-    return 0
-end
-function RoleInfo.Start(builder) builder:StartObject(4) end
+function RoleInfo.Start(builder) builder:StartObject(3) end
 function RoleInfo.AddRoleId(builder, roleId) builder:PrependUOffsetTRelativeSlot(0, roleId, 0) end
 function RoleInfo.AddRoleName(builder, roleName) builder:PrependUOffsetTRelativeSlot(1, roleName, 0) end
 function RoleInfo.AddRoleLevel(builder, roleLevel) builder:PrependInt32Slot(2, roleLevel, 0) end
-function RoleInfo.AddServerId(builder, serverId) builder:PrependInt32Slot(3, serverId, 0) end
 function RoleInfo.End(builder) return builder:EndObject() end
 
 return RoleInfo -- return the module
