@@ -39,10 +39,6 @@ public struct AsyncResourceRequest : IEquatable<AsyncResourceRequest>
 
 public class ResourceTool : MonoSingleton<ResourceTool> , IResourceTool
 {
-	public string ConfigurationConfig = "Config/ConfigurationTest";
-	public string AssetBundleConfig = "AssetBundleConfigTest";
-
-	public const string PREFIX_RESOURCE_PATH = "Prefab";
 	public const string PREFIX_ASSETBUNDLE_PATH = "AssetBundle";
 	public const string SUFFIX_ASSETBUNDLE_PATH = ".assetbundle";
 
