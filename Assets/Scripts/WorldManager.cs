@@ -29,12 +29,19 @@ public partial class WorldManager : Singleton<WorldManager>
 
         TestHttpUtil();
 
+        RegisterAllModule();
+
+        var player = Player;
+        var item = Item;
+        var gameServer = GameServer;
+        var gameCore = GameCore;
+
         HttpUtil.GetAsync("http://127.0.0.1:8001/serverInfo", delegate (WebRequestResultType resultType, string serverInfoStr)
         {
             if (resultType == WebRequestResultType.Success)
             {
                 var serverInfoResult = JsonUtility.FromJson<GetServerInfoResult>(serverInfoStr);
-                var serverData = Player.GetData<Data.ServerData>();
+                var serverData = player.GetData<Data.ServerData>();
                 var result = serverInfoResult.result;
                 if (serverInfoResult.result == 0)
                 {
@@ -43,13 +50,6 @@ public partial class WorldManager : Singleton<WorldManager>
                 }
             }
         });
-
-        RegisterAllModule();
-
-        var player = Player;
-        var item = Item;
-        var gameServer = GameServer;
-        var gameCore = GameCore;
 
         LoadConfig();
 
