@@ -13,6 +13,7 @@
 
 using UnityEngine;
 using System;
+using System.Collections;
 using System.Collections.Generic;
 using LitJson;
 
@@ -27,13 +28,12 @@ public enum ResourceLoadStateType {
 /// </summary>
 public struct AsyncResourceRequest : IEquatable<AsyncResourceRequest>
 {
-    public float Id;
     public string ResourceName;
     public OnResourceLoadFinished CallBack;
 
     public bool Equals(AsyncResourceRequest other)
     {
-        return Id == other.Id && ResourceName == other.ResourceName;
+        return ResourceName == other.ResourceName;
     }
 }
 
@@ -42,9 +42,9 @@ public class ResourceTool : MonoSingleton<ResourceTool> , IResourceTool
 	public const string PREFIX_ASSETBUNDLE_PATH = "AssetBundle";
 	public const string SUFFIX_ASSETBUNDLE_PATH = ".assetbundle";
 
-    Dictionary<string, ResourceData> _resourceDict;
+    Dictionary<string, ResourceData> _resourceDataDict;
 
-    Dictionary<string, ResourceRequest> _resourceRequestDict = new Dictionary<string, ResourceRequest>();
+    Dictionary<string, UnityEngine.Object> _resourceDict = new Dictionary<string, UnityEngine.Object>();
 
     List<AsyncResourceRequest> _asyncResourceRequestList = new List<AsyncResourceRequest>();
 
@@ -65,47 +65,24 @@ public class ResourceTool : MonoSingleton<ResourceTool> , IResourceTool
 
     public void Init()
     {
-        if (!_isInit)
+        if (_resourceDataDict != null)
         {
-            _isInit = true;
-            var resourceConfig = Load("ResourceConfig", "Config/ResourceConfig", "", false) as ResourceConfig;
-            _resourceDict = resourceConfig.ResourceDict;
+            LogUtil.W("Resource tool has inited!");
+            return;
         }
+
+        LoadResourceConfig();
+    }
+
+    void LoadResourceConfig()
+    {
+        var resourceConfig = Resources.Load("Config/ResourceConfig") as ResourceConfig;
+        _resourceDataDict = resourceConfig.ResourceDict;
     }
 
     public bool IsResourceLoaded(string resourceName)
     {
-        ResourceRequest resourceRequest = null;
-        if (!_resourceRequestDict.TryGetValue(resourceName, out resourceRequest))
-        {
-            return false;
-        }
-
-        if (resourceRequest.Resource == null )
-        {
-            return false;
-        }
-
-        return true;
-    }
-
-    UnityEngine.Object Load(string resourceName, string resourcePath, string assetbundlePath, bool isFromAssetbundle)
-    {
-        ResourceRequest resourceRequest = null;
-        if (_resourceRequestDict.TryGetValue(resourceName, out resourceRequest))
-        {
-            resourceRequest.Load();
-        }
-        else
-        {
-            resourceRequest = new ResourceRequest();
-            resourceRequest.Init(resourceName, resourcePath, assetbundlePath, isFromAssetbundle);
-            resourceRequest.Load();
-
-            _resourceRequestDict.Add(resourceName, resourceRequest);
-        }
-
-        return resourceRequest.Resource;
+        return _resourceDict.ContainsKey(resourceName);
     }
 
     /// <summary>
@@ -115,35 +92,26 @@ public class ResourceTool : MonoSingleton<ResourceTool> , IResourceTool
     /// <returns></returns>
     public UnityEngine.Object Load(string resourceName)
     {
-        if (_resourceLoadState == ResourceLoadStateType.Loading)
+        UnityEngine.Object resource = null;
+        if (_resourceDict.TryGetValue(resourceName, out resource))
         {
-            Debug.Log("An resource is loading, Please wait!");
-            return null;
+            return resource;
         }
 
-        ResourceRequest resourceRequest = null;
-        if (_resourceRequestDict.TryGetValue(resourceName, out resourceRequest))
+        ResourceData resourceInfo;
+        if (_resourceDataDict.TryGetValue(resourceName, out resourceInfo))
         {
-            resourceRequest.Load();
+            resource = Resources.Load(resourceInfo.resourcePath);
+            _resourceDict.Add(resourceName, resource);
+
+            return resource;
         }
         else
         {
-            ResourceData resourceInfo;
-            if (_resourceDict.TryGetValue(resourceName, out resourceInfo))
-            {
-                resourceRequest = new ResourceRequest();
-                resourceRequest.Init(resourceInfo);
-
-                resourceRequest.Load();
-
-                _resourceRequestDict.Add(resourceName, resourceRequest);
-            }
-            else
-            {
-                Debug.Log(string.Format("No resource named {0} found!", resourceName));
-            }
+            LogUtil.W(string.Format("No resource named {0} found!", resourceName));
         }
-        return resourceRequest.Resource;
+
+        return null;
     }
 
     /// <summary>
@@ -156,12 +124,12 @@ public class ResourceTool : MonoSingleton<ResourceTool> , IResourceTool
 		var resourceRequest = new AsyncResourceRequest();
 		resourceRequest.ResourceName = resourceName;
 		resourceRequest.CallBack = func;
-		resourceRequest.Id = Time.realtimeSinceStartup;
+
 		_asyncResourceRequestList.Add(resourceRequest);
 
         StartLoadAsync();
 	}
-	
+
 	void  StartLoadAsync()
 	{
 		if (_asyncResourceRequestList.Count <= 0)
@@ -175,33 +143,55 @@ public class ResourceTool : MonoSingleton<ResourceTool> , IResourceTool
 		}
 		
 		var asyncRequest = _asyncResourceRequestList[0];
-		var resourceName = asyncRequest.ResourceName;
-		var callBack = asyncRequest.CallBack;
-		
-        _asyncResourceRequestList.Remove(asyncRequest);
 
-        ResourceRequest resourceRequest = null;
-        if (_resourceRequestDict.TryGetValue(resourceName, out resourceRequest))
+        ResourceData resourceInfo;
+        if (_resourceDataDict.TryGetValue(asyncRequest.ResourceName, out resourceInfo))
         {
-            resourceRequest.LoadAsync(callBack);
+            StartCoroutine(LoadCoroutine(resourceInfo, asyncRequest.CallBack));
         }
         else
         {
-            ResourceData resourceInfo;
-            if (_resourceDict.TryGetValue(resourceName, out resourceInfo))
-            {
-                resourceRequest = new ResourceRequest();
-                resourceRequest.Init(resourceInfo);
-
-                resourceRequest.LoadAsync(callBack);
-
-                _resourceRequestDict.Add(resourceName, resourceRequest);
-            }
-            else
-            {
-                Debug.Log(string.Format("No resource named {0} found!", resourceName));
-            }
+            LogUtil.W(string.Format("No resource named {0} found!", asyncRequest.ResourceName));
         }
+
+        _asyncResourceRequestList.Remove(asyncRequest);
+    }
+
+    IEnumerator LoadCoroutine(ResourceData resourceInfo, OnResourceLoadFinished callback)
+    {
+        ResourceLoadState = ResourceLoadStateType.Loading;
+
+        UnityEngine.Object resource;
+
+        if (resourceInfo.isFromAssetBundle)
+        {
+            var assetbundlePath = string.Format("{0}{1}/{2}{3}", Application.streamingAssetsPath, PREFIX_ASSETBUNDLE_PATH, resourceInfo.assetbundlePath, SUFFIX_ASSETBUNDLE_PATH);
+            WWW www = new WWW(assetbundlePath);
+            yield return www;
+
+            var bundle = www.assetBundle;
+            var request = bundle.LoadAssetAsync<GameObject>(resourceInfo.resourceName);
+            yield return request;
+
+            resource = request.asset;
+            bundle.Unload(false);
+
+        }
+        else
+        {
+            var request = Resources.LoadAsync(resourceInfo.resourcePath);
+            yield return request;
+            resource = request.asset;
+        }
+
+        _resourceDict.Add(resourceInfo.resourceName, resource);
+
+        if (callback != null)
+        {
+            callback(resource);
+        }
+
+        ResourceLoadState = ResourceLoadStateType.Finished;
     }
 
     public void Destroy()
