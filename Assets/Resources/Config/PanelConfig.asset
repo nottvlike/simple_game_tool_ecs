@@ -57,3 +57,8 @@ MonoBehaviour:
     panelGroup: 2
     rootPanelType: 0
     resourceName: SimpleTipsPanel
+  - panelType: 1002
+    panelMode: 3
+    panelGroup: 2
+    rootPanelType: 0
+    resourceName: YesNoPanel

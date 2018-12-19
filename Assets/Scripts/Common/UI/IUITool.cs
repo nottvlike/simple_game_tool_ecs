@@ -31,6 +31,7 @@ public enum PanelType
 
     AsyncPanel = 1000,
     SimpleTipsPanel,
+    YesNoPanel
 }
 
 public interface IUITool

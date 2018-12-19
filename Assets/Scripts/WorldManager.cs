@@ -22,8 +22,23 @@ public class ResourcePreloadNotification : BaseNotification
 
         worldMgr.LoadConfig();
 
+        GetServerList();
+
+        worldMgr.UIMgr.ShowPanel(PanelType.GameUpdatePanel);
+        worldMgr.LevelLoader.DoDrama();
+    }
+
+    void GetServerList()
+    {
+        var worldMgr = WorldManager.Instance;
+        var player = worldMgr.Player;
+        var uiMgr = worldMgr.UIMgr;
+
+        uiMgr.ShowPanel(PanelType.AsyncPanel);
         HttpUtil.GetAsync("http://127.0.0.1:8001/serverInfo", delegate (WebRequestResultType resultType, string serverInfoStr)
         {
+            uiMgr.HidePanel(PanelType.AsyncPanel);
+
             if (resultType == WebRequestResultType.Success)
             {
                 var serverInfoResult = JsonUtility.FromJson<GetServerInfoResult>(serverInfoStr);
@@ -35,10 +50,14 @@ public class ResourcePreloadNotification : BaseNotification
                     serverData.serverInfoList.AddRange(serverInfoResult.serverInfoList);
                 }
             }
+            else
+            {
+                AlertUtil.ShowYesNoPanel(StringUtil.Get("Get server list failed, click ok retry!"), delegate ()
+                {
+                    GetServerList();
+                });
+            }
         });
-
-        worldMgr.UIMgr.ShowPanel(PanelType.GameUpdatePanel);
-        worldMgr.LevelLoader.DoDrama();
     }
 }
 

@@ -72,3 +72,7 @@ MonoBehaviour:
     resourcePath: Config/LocalizationConfigGroup
     assetbundlePath: 
     isFromAssetBundle: 0
+  - resourceName: YesNoPanel
+    resourcePath: Prefab/UI/YesNoPanel
+    assetbundlePath: 
+    isFromAssetBundle: 0
