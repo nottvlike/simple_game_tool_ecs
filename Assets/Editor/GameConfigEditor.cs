@@ -39,4 +39,22 @@ public class GameConfigEditor {
         AssetDatabase.CreateAsset(resourceConfig, path);
         AssetDatabase.SaveAssets();
     }
+
+    [MenuItem("Config/Create Localization Config")]
+    static void CreateLocalizationConfig()
+    {
+        LocalizationConfig localizationConfig = ScriptableObject.CreateInstance<LocalizationConfig>();
+        string path = "Assets/Resources/Config/LocalizationConfig.asset";
+        AssetDatabase.CreateAsset(localizationConfig, path);
+        AssetDatabase.SaveAssets();
+    }
+
+    [MenuItem("Config/Create Localization Config Group")]
+    static void CreateLocalizationConfigGroup()
+    {
+        LocalizationConfigGroup localizationConfigList = ScriptableObject.CreateInstance<LocalizationConfigGroup>();
+        string path = "Assets/Resources/Config/LocalizationConfigGroup.asset";
+        AssetDatabase.CreateAsset(localizationConfigList, path);
+        AssetDatabase.SaveAssets();
+    }
 }

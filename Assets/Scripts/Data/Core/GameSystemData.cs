@@ -17,4 +17,10 @@ namespace Data
         public int lastHeartBeatTime;
         public int serverTime;
     }
+
+    public class GameLocalizationData : Data
+    {
+        public string zone;
+        public LocalizationConfig currentConfig;
+    }
 }

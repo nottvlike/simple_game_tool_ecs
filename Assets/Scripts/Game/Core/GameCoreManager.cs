@@ -11,6 +11,23 @@ public partial class WorldManager : Singleton<WorldManager>
             {
                 _gameCore = new ObjectData();
                 _gameCore.AddData(new GameSystemData());
+
+                var localizationData = new GameLocalizationData();
+                localizationData.zone = "zh-cn";
+                _gameCore.AddData(localizationData);
+
+                var localizationListConfig = ResourceMgr.Load("LocalizationConfigGroup") as LocalizationConfigGroup;
+                LocalizationConfig[] localizationConfigList = localizationListConfig.localizationConfigList;
+                for (var i = 0; i < localizationConfigList.Length; i++)
+                {
+                    var localizationConfig = localizationConfigList[i];
+                    if (localizationConfig.zone == localizationData.zone)
+                    {
+                        localizationConfig.Init();
+                        localizationData.currentConfig = localizationConfig;
+                    }
+                }
+
                 _objectDataList.Add(_gameCore);
 
                 _gameCore.RefreshModuleAddedObjectIdList();

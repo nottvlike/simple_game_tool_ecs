@@ -4,6 +4,14 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 
+public enum LoginGameResult
+{
+    Success = 0,
+    NoneAccount,
+    WrongPassword,
+    Unkonw
+}
+
 [Serializable]
 public struct GetAccountInfoResult
 {
@@ -45,8 +53,8 @@ public class LoginPanel : Panel
             {
                 var accountInfoResult = JsonUtility.FromJson<GetAccountInfoResult>(accountInfoStr);
                 var playerBaseData = WorldManager.Instance.Player.GetData<Data.PlayerBaseData>();
-                var result = accountInfoResult.result;
-                if (accountInfoResult.result == 0)
+                var result = (LoginGameResult)accountInfoResult.result;
+                if (result == LoginGameResult.Success)
                 {
                     playerBaseData.accountId = accountInfoResult.accountId;
                     playerBaseData.roleInfoLiteList.Clear();
@@ -56,8 +64,12 @@ public class LoginPanel : Panel
                 }
                 else
                 {
-                    LoginFailed(accountInfoResult.result);
+                    LoginFailed(result);
                 }
+            }
+            else
+            {
+                LoginFailed(LoginGameResult.Unkonw);
             }
         });
     }
@@ -77,8 +89,25 @@ public class LoginPanel : Panel
         uiMgr.HidePanel(PanelType);
     }
 
-    public void LoginFailed(int result)
+    public void LoginFailed(LoginGameResult result)
     {
+        string tips = "";
+        switch(result)
+        {
+            case LoginGameResult.NoneAccount:
+                tips = StringUtil.Get("Login failed, account not found!");
+                break;
+            case LoginGameResult.WrongPassword:
+                tips = StringUtil.Get("Login failed, wrong password!");
+                break;
+            case LoginGameResult.Unkonw:
+                tips = StringUtil.Get("Login failed, server error!");
+                break;
+            default:
+                LogUtil.W("Unknow LoginGameResult type {0}", result);
+                break;
+        }
 
+        AlertUtil.ShowSimpleTipsPanel(tips);
     }
 }
