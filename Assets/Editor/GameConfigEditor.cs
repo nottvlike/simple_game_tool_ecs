@@ -57,4 +57,13 @@ public class GameConfigEditor {
         AssetDatabase.CreateAsset(localizationConfigList, path);
         AssetDatabase.SaveAssets();
     }
+
+    [MenuItem("Config/Create Resource Preload Config")]
+    static void CreateResourcePreloadConfig()
+    {
+        ResourcePreloadConfig resourcePreloadConfig = ScriptableObject.CreateInstance<ResourcePreloadConfig>();
+        string path = "Assets/Resources/Config/ResourcePreloadConfig.asset";
+        AssetDatabase.CreateAsset(resourcePreloadConfig, path);
+        AssetDatabase.SaveAssets();
+    }
 }
