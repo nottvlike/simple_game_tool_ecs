@@ -97,6 +97,11 @@ public class UITool : IUITool
         return panel;
     }
 
+    bool IsPanelShowed(PanelType panelType)
+    {
+        return _showedPanelList.IndexOf(panelType) != -1;
+    }
+
     bool IsPanelLoaded(PanelType panelType)
     {
         return _panelDataDict.ContainsKey(panelType);
@@ -112,7 +117,7 @@ public class UITool : IUITool
             return;
         }
 
-        if (_showedPanelList.IndexOf(panelType) != -1)
+        if (IsPanelShowed(panelType))
         {
             LogUtil.W("PanelData {0} has been showed!", panelType.ToString());
             return;
@@ -128,24 +133,26 @@ public class UITool : IUITool
         // 保存最后打开面板
         UpdateLastShowedPanel();
 
-        if (panelConfig.panelMode == PanelMode.Child && _showedPanelList.IndexOf(panelConfig.rootPanelType) == -1)
+        if (panelConfig.panelMode == PanelMode.Child)
         {
-            ShowPanelImpl(panelConfig.rootPanelType);
-        }
-
-        // 关闭即将打开面板的其它子面板
-        for (var i = 0; i < _showedPanelList.Count;)
-        {
-            var showedPanelType = _showedPanelList[i];
-            var showedPanelConfig = GetPanelConfig(showedPanelType);
-            if (showedPanelConfig.rootPanelType != PanelType.None && 
-                showedPanelConfig.rootPanelType == panelConfig.rootPanelType)
+            if (!IsPanelShowed(panelConfig.rootPanelType))
             {
-                HidePanelImpl(showedPanelType);
+                ShowPanelImpl(panelConfig.rootPanelType);
             }
-            else
+
+            // 关闭相同根面板的其它子面板
+            for (var i = 0; i < _showedPanelList.Count;)
             {
-                i++;
+                var showedPanelType = _showedPanelList[i];
+                var showedPanelConfig = GetPanelConfig(showedPanelType);
+                if (showedPanelConfig.rootPanelType == panelConfig.rootPanelType)
+                {
+                    HidePanelImpl(showedPanelType);
+                }
+                else
+                {
+                    i++;
+                }
             }
         }
 
@@ -198,7 +205,7 @@ public class UITool : IUITool
             return;
         }
 
-        if (_showedPanelList.IndexOf(panelType) == -1)
+        if (!IsPanelShowed(panelType))
         {
             LogUtil.W("PanelData {0} is not showed!", panelType.ToString());
             return;
