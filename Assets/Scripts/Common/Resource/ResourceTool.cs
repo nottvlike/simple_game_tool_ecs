@@ -43,7 +43,7 @@ public class ResourceTool : MonoSingleton<ResourceTool> , IResourceTool
 
     public string[] PreloadResourceList;
 
-    Dictionary<string, ResourceData> _resourceDataDict;
+    Dictionary<string, ResourceInfo> _resourceInfoDict;
     Dictionary<string, Object> _resourceDict = new Dictionary<string, Object>();
     List<AsyncResourceRequest> _asyncResourceRequestList = new List<AsyncResourceRequest>();
 
@@ -64,7 +64,7 @@ public class ResourceTool : MonoSingleton<ResourceTool> , IResourceTool
 
     public void Init()
     {
-        if (_resourceDataDict != null)
+        if (_resourceInfoDict != null)
         {
             LogUtil.W("Resource tool has inited!");
             return;
@@ -96,7 +96,7 @@ public class ResourceTool : MonoSingleton<ResourceTool> , IResourceTool
     void LoadResourceConfig()
     {
         var resourceConfig = Resources.Load("Config/ResourceConfig") as ResourceConfig;
-        _resourceDataDict = resourceConfig.ResourceDict;
+        _resourceInfoDict = resourceConfig.ResourceDict;
     }
 
     public bool IsResourceLoaded(string resourceName)
@@ -117,8 +117,8 @@ public class ResourceTool : MonoSingleton<ResourceTool> , IResourceTool
             return resource;
         }
 
-        ResourceData resourceInfo;
-        if (_resourceDataDict.TryGetValue(resourceName, out resourceInfo))
+        ResourceInfo resourceInfo;
+        if (_resourceInfoDict.TryGetValue(resourceName, out resourceInfo))
         {
             resource = Resources.Load(resourceInfo.resourcePath);
             _resourceDict.Add(resourceName, resource);
@@ -180,8 +180,8 @@ public class ResourceTool : MonoSingleton<ResourceTool> , IResourceTool
 		
 		var asyncRequest = _asyncResourceRequestList[0];
 
-        ResourceData resourceInfo;
-        if (_resourceDataDict.TryGetValue(asyncRequest.resourceName, out resourceInfo))
+        ResourceInfo resourceInfo;
+        if (_resourceInfoDict.TryGetValue(asyncRequest.resourceName, out resourceInfo))
         {
             StartCoroutine(LoadCoroutine(resourceInfo, asyncRequest.callBack));
         }
@@ -194,7 +194,7 @@ public class ResourceTool : MonoSingleton<ResourceTool> , IResourceTool
         _asyncResourceRequestList.Remove(asyncRequest);
     }
 
-    IEnumerator LoadCoroutine(ResourceData resourceInfo, OnResourceLoadFinished callback)
+    IEnumerator LoadCoroutine(ResourceInfo resourceInfo, OnResourceLoadFinished callback)
     {
         ResourceLoadState = ResourceLoadStateType.Loading;
 
@@ -240,7 +240,7 @@ public class ResourceTool : MonoSingleton<ResourceTool> , IResourceTool
 
     public void Destroy()
     {
-        _resourceDataDict.Clear();
+        _resourceInfoDict.Clear();
         _asyncResourceRequestList.Clear();
         _resourceDict.Clear();
     }

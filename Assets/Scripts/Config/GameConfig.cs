@@ -4,17 +4,17 @@ using UnityEngine;
 using Data;
 
 [Serializable]
-public class PlayerData
+public class PlayerInfo
 {
     public PositionData positionData;
     public DirectionData directionData;
     public SpeedData speedData;
-    public Data.ResourceData resourceData;
+    public ResourceData resourceData;
     public ResourceStateData resourceStateData;
 }
 
 [Serializable]
-public class TalkingData
+public class TalkingInfo
 {
     public int id;
     public string name;
@@ -32,28 +32,28 @@ public enum DramaItemType
 }
 
 [Serializable]
-public class DramaData
+public class DramaInfo
 {
     public DramaItemType dramaItemType;
     public int id;
 }
 
 [Serializable]
-public class LevelData
+public class LevelInfo
 {
     public int levelId;
     public string levelName;
 
-    public List<DramaData> dramaItemList;
+    public List<DramaInfo> dramaItemList;
 }
 
 [Serializable]
 public class LevelConfig
 {
-    public PlayerData playerData;
-    public TalkingData[] talkingData;
+    public PlayerInfo playerData;
+    public TalkingInfo[] talkingData;
 
-    public LevelData levelData;
+    public LevelInfo levelData;
 }
 
 public class GameConfig : ScriptableObject

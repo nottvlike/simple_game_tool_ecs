@@ -15,7 +15,7 @@ public class UITool : IUITool
     Dictionary<PanelType, Panel> _panelDataDict = new Dictionary<PanelType, Panel>();
     List<PanelType> _showedPanelList = new List<PanelType>();
 
-    PanelData _defaultPanelConfig;
+    PanelInfo _defaultPanelConfig;
 
     GameObject _uiRoot;
 
@@ -43,9 +43,9 @@ public class UITool : IUITool
         });
     }
 
-    public PanelData GetPanelConfig(PanelType panelType)
+    public PanelInfo GetPanelConfig(PanelType panelType)
     {
-        PanelData config;
+        PanelInfo config;
         var panelConfigDict = WorldManager.Instance.PanelConfig.PanelConfigDict;
         if (panelConfigDict.TryGetValue(panelType, out config))
         {

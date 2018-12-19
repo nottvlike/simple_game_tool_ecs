@@ -18,7 +18,6 @@ namespace Data
         }
     }
 
-    [Serializable]
     public class ResourcePoolData : Data
     {
         public string name;

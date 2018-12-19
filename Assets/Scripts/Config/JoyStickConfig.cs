@@ -10,7 +10,7 @@ public enum KeyStateType
 }
 
 [Serializable]
-public struct JoyStickMapData
+public struct JoyStickMapInfo
 {
     public KeyCode[] keyCode;
     public KeyStateType keyStateType;
@@ -20,7 +20,7 @@ public struct JoyStickMapData
 
 public class JoyStickConfig : ScriptableObject
 {
-    public JoyStickMapData[] joyStickMapDataList;
+    public JoyStickMapInfo[] joyStickMapDataList;
 }
 
 

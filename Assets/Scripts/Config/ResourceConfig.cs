@@ -4,14 +4,14 @@ using System.Collections.Generic;
 using UnityEngine;
 
 [Serializable]
-public struct ResourceData
+public struct ResourceInfo
 {
     public string resourceName;
     public string resourcePath;
     public string assetbundlePath;
     public bool isFromAssetBundle;
 
-    public bool Equals(ResourceData other)
+    public bool Equals(ResourceInfo other)
     {
         return resourceName == other.resourceName && resourcePath == other.resourcePath;
     }
@@ -19,16 +19,16 @@ public struct ResourceData
 
 public class ResourceConfig : ScriptableObject
 {
-    public ResourceData[] resourceDataList;
+    public ResourceInfo[] resourceDataList;
 
-    Dictionary<string, ResourceData> _resourceDict = null;
-    public Dictionary<string, ResourceData> ResourceDict
+    Dictionary<string, ResourceInfo> _resourceDict = null;
+    public Dictionary<string, ResourceInfo> ResourceDict
     {
         get
         {
             if (_resourceDict == null)
             {
-                _resourceDict = new Dictionary<string, ResourceData>();
+                _resourceDict = new Dictionary<string, ResourceInfo>();
                 for (var i = 0; i < resourceDataList.Length; i++)
                 {
                     var resourceData = resourceDataList[i];
