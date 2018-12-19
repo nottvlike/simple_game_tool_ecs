@@ -380,3 +380,4 @@ MonoBehaviour:
   - AsyncPanel
   - GameUpdatePanel
   - SimpleTipsPanel
+  - PanelConfig
