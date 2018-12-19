@@ -7,6 +7,10 @@ public class Panel : MonoBehaviour
     PanelType _panelType;
     [SerializeField]
     bool _inactiveWhenHide;
+    [SerializeField]
+    int _order;
+
+    Canvas _canvas;
 
     public bool IsOpen
     {
@@ -40,6 +44,8 @@ public class Panel : MonoBehaviour
         {
             return;
         }
+
+        transform.SetSiblingIndex(_order);
 
         gameObject.SetActive(true);
 

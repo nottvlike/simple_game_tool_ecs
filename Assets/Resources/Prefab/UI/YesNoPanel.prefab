@@ -213,6 +213,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _panelType: 1002
   _inactiveWhenHide: 1
+  _order: 101
   Title: {fileID: 114068914934223278}
   Content: {fileID: 114702351900943212}
   okButton: {fileID: 114677733137281170}

@@ -31,7 +31,6 @@ public class ResourcePreloadNotification : BaseNotification
     void GetServerList()
     {
         var worldMgr = WorldManager.Instance;
-        var player = worldMgr.Player;
         var uiMgr = worldMgr.UIMgr;
 
         uiMgr.ShowPanel(PanelType.AsyncPanel);
@@ -42,7 +41,7 @@ public class ResourcePreloadNotification : BaseNotification
             if (resultType == WebRequestResultType.Success)
             {
                 var serverInfoResult = JsonUtility.FromJson<GetServerInfoResult>(serverInfoStr);
-                var serverData = player.GetData<Data.ServerData>();
+                var serverData = worldMgr.Player.GetData<Data.ServerData>();
                 var result = serverInfoResult.result;
                 if (serverInfoResult.result == 0)
                 {

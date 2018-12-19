@@ -23,7 +23,7 @@ MonoBehaviour:
     rootPanelType: 0
     resourceName: LoginPanel
   - panelType: 4
-    panelMode: 1
+    panelMode: 2
     panelGroup: 1
     rootPanelType: 3
     resourceName: ServerPanel

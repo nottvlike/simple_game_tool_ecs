@@ -110,6 +110,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _panelType: 1001
   _inactiveWhenHide: 1
+  _order: 101
   closeButton: {fileID: 114956521165184346}
   tips: {fileID: 114087925552093418}
 --- !u!114 &114551523164568516

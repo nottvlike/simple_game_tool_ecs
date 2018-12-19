@@ -35,7 +35,11 @@ public class UITool : IUITool
         // 异步加载 UI
         WorldManager.Instance.ResourceMgr.LoadAsync("UI Root", delegate (UnityEngine.Object obj)
         {
-            _uiRoot = UnityEngine.Object.Instantiate(obj, Vector3.zero, Quaternion.identity) as GameObject;
+            if (_uiRoot == null)
+            {
+                _uiRoot = UnityEngine.Object.Instantiate(obj, Vector3.zero, Quaternion.identity) as GameObject;
+            }
+
             onLoaded(panelType);
         });
     }
@@ -93,6 +97,11 @@ public class UITool : IUITool
         return panel;
     }
 
+    bool IsPanelLoaded(PanelType panelType)
+    {
+        return _panelDataDict.ContainsKey(panelType);
+    }
+
     public void ShowPanel(PanelType panelType, params object[] args)
     {
         if (_uiRoot == null)
@@ -119,12 +128,18 @@ public class UITool : IUITool
         // 保存最后打开面板
         UpdateLastShowedPanel();
 
+        if (panelConfig.panelMode == PanelMode.Child && _showedPanelList.IndexOf(panelConfig.rootPanelType) == -1)
+        {
+            ShowPanelImpl(panelConfig.rootPanelType);
+        }
+
         // 关闭即将打开面板的其它子面板
         for (var i = 0; i < _showedPanelList.Count;)
         {
             var showedPanelType = _showedPanelList[i];
             var showedPanelConfig = GetPanelConfig(showedPanelType);
-            if (showedPanelConfig.rootPanelType == panelType)
+            if (showedPanelConfig.rootPanelType != PanelType.None && 
+                showedPanelConfig.rootPanelType == panelConfig.rootPanelType)
             {
                 HidePanelImpl(showedPanelType);
             }
@@ -158,11 +173,14 @@ public class UITool : IUITool
                 // 异步加载 UI
                 WorldManager.Instance.ResourceMgr.LoadAsync(panelConfig.resourceName, delegate (UnityEngine.Object obj)
                 {
-                    var panel = UnityEngine.Object.Instantiate(obj, Vector3.zero, Quaternion.identity) as GameObject;
-                    var rectTransform = panel.GetComponent<RectTransform>();
-                    rectTransform.SetParent(_uiRoot.transform);
-                    rectTransform.offsetMax = Vector2.zero;
-                    rectTransform.offsetMin = Vector2.zero;
+                    if (!IsPanelLoaded(panelType))
+                    {
+                        var panelObject = UnityEngine.Object.Instantiate(obj, Vector3.zero, Quaternion.identity) as GameObject;
+                        var rectTransform = panelObject.GetComponent<RectTransform>();
+                        rectTransform.SetParent(_uiRoot.transform);
+                        rectTransform.offsetMax = Vector2.zero;
+                        rectTransform.offsetMin = Vector2.zero;
+                    }
 
                     ShowPanelImpl(panelType, args);
                 });

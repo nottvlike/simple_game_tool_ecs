@@ -60,6 +60,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _panelType: 1000
   _inactiveWhenHide: 1
+  _order: 100
 --- !u!114 &114430705593995118
 MonoBehaviour:
   m_ObjectHideFlags: 1

@@ -109,6 +109,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _panelType: 4
   _inactiveWhenHide: 1
+  _order: 10
   grid: {fileID: 114320900212156766}
   serverItemTemplate: {fileID: 114252947502494902, guid: 11209b7c16df144f9a4d35da448970f3,
     type: 2}
