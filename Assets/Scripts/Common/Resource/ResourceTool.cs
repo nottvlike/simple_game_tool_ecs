@@ -153,6 +153,16 @@ public class ResourceTool : MonoSingleton<ResourceTool> , IResourceTool
             return;
         }
 
+        for (var i = 0; i < _asyncResourceRequestList.Count; i++)
+        {
+            var request = _asyncResourceRequestList[i];
+            if (request.resourceName == resourceName)
+            {
+                request.callBack += callback;
+                return;
+            }
+        }
+
 		var resourceRequest = WorldManager.Instance.PoolMgr.Get<AsyncResourceRequest>();
 		resourceRequest.resourceName = resourceName;
 		resourceRequest.callBack = callback;
@@ -216,6 +226,8 @@ public class ResourceTool : MonoSingleton<ResourceTool> , IResourceTool
             yield return request;
             resource = request.asset;
         }
+
+        LogUtil.I("Load Resource " + resourceInfo.resourceName);
 
         _resourceDict.Add(resourceInfo.resourceName, resource);
 

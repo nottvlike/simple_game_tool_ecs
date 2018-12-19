@@ -18,7 +18,10 @@ public partial class WorldManager : Singleton<WorldManager>
 
     void DestroySocketMgr()
     {
-        _socketMgr.Destroy();
-        _socketMgr = null;
+        if (_socketMgr != null)
+        {
+            _socketMgr.Destroy();
+            _socketMgr = null;
+        }
     }
 }
