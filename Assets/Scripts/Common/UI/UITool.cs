@@ -1,5 +1,4 @@
 ﻿using UnityEngine;
-using System;
 using System.Collections.Generic;
 
 public enum PanelNotificationType
@@ -33,11 +32,11 @@ public class UITool : IUITool
     void LoadUIRoot(PanelType panelType, OnRootLoadedFinished onLoaded)
     {
         // 异步加载 UI
-        WorldManager.Instance.ResourceMgr.LoadAsync("UI Root", delegate (UnityEngine.Object obj)
+        WorldManager.Instance.ResourceMgr.LoadAsync("UI Root", delegate (Object obj)
         {
             if (_uiRoot == null)
             {
-                _uiRoot = UnityEngine.Object.Instantiate(obj, Vector3.zero, Quaternion.identity) as GameObject;
+                _uiRoot = Object.Instantiate(obj, Vector3.zero, Quaternion.identity) as GameObject;
             }
 
             onLoaded(panelType);
@@ -178,11 +177,11 @@ public class UITool : IUITool
             if (panelConfig.panelType != PanelType.None)
             {
                 // 异步加载 UI
-                WorldManager.Instance.ResourceMgr.LoadAsync(panelConfig.resourceName, delegate (UnityEngine.Object obj)
+                WorldManager.Instance.ResourceMgr.LoadAsync(panelConfig.resourceName, delegate (Object obj)
                 {
                     if (!IsPanelLoaded(panelType))
                     {
-                        var panelObject = UnityEngine.Object.Instantiate(obj, Vector3.zero, Quaternion.identity) as GameObject;
+                        var panelObject = Object.Instantiate(obj, Vector3.zero, Quaternion.identity) as GameObject;
                         var rectTransform = panelObject.GetComponent<RectTransform>();
                         rectTransform.SetParent(_uiRoot.transform);
                         rectTransform.offsetMax = Vector2.zero;

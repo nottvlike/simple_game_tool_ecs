@@ -10,10 +10,6 @@ public class UnityEventTool : MonoSingleton<UnityEventTool>, IUnityEventTool
         WorldManager.Instance.LaunchGame();
     }
 
-    public void Destroy()
-    {
-    }
-
     void OnApplicationQuit()
     {
         WorldManager.Instance.Destroy();

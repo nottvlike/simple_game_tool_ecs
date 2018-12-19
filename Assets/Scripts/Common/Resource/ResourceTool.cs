@@ -1,5 +1,4 @@
 ﻿using UnityEngine;
-using System;
 using System.Collections;
 using System.Collections.Generic;
 
@@ -19,7 +18,7 @@ public enum ResourceLoadStateType
 /// <summary>
 /// 异步加载资源请求结构体
 /// </summary>
-public class AsyncResourceRequest : IEquatable<AsyncResourceRequest>, IPoolObject
+public class AsyncResourceRequest : IPoolObject
 {
     public string resourceName;
     public OnResourceLoadFinished callBack;
@@ -35,11 +34,6 @@ public class AsyncResourceRequest : IEquatable<AsyncResourceRequest>, IPoolObjec
         resourceName = string.Empty;
         callBack = null;
     }
-
-    public bool Equals(AsyncResourceRequest other)
-    {
-        return resourceName == other.resourceName;
-    }
 }
 
 public class ResourceTool : MonoSingleton<ResourceTool> , IResourceTool
@@ -50,7 +44,7 @@ public class ResourceTool : MonoSingleton<ResourceTool> , IResourceTool
     public string[] PreloadResourceList;
 
     Dictionary<string, ResourceData> _resourceDataDict;
-    Dictionary<string, UnityEngine.Object> _resourceDict = new Dictionary<string, UnityEngine.Object>();
+    Dictionary<string, Object> _resourceDict = new Dictionary<string, Object>();
     List<AsyncResourceRequest> _asyncResourceRequestList = new List<AsyncResourceRequest>();
 
     NotificationData _notificationData;
@@ -85,7 +79,7 @@ public class ResourceTool : MonoSingleton<ResourceTool> , IResourceTool
         for (var i = 0; i < PreloadResourceList.Length; i++)
         {
             var resourceName = PreloadResourceList[i];
-            LoadAsync(resourceName, delegate (UnityEngine.Object obj) {
+            LoadAsync(resourceName, delegate (Object obj) {
                 count++;
 
                 if (count == PreloadResourceList.Length)
@@ -115,9 +109,9 @@ public class ResourceTool : MonoSingleton<ResourceTool> , IResourceTool
     /// </summary>
     /// <param name="resourceName"></param>
     /// <returns></returns>
-    public UnityEngine.Object Load(string resourceName)
+    public Object Load(string resourceName)
     {
-        UnityEngine.Object resource = null;
+        Object resource = null;
         if (_resourceDict.TryGetValue(resourceName, out resource))
         {
             return resource;
@@ -146,7 +140,7 @@ public class ResourceTool : MonoSingleton<ResourceTool> , IResourceTool
     /// <param name="callback">加载成功的回调</param>
 	public void LoadAsync(string resourceName, OnResourceLoadFinished callback)
 	{
-        UnityEngine.Object resource;
+        Object resource;
         if (_resourceDict.TryGetValue(resourceName, out resource))
         {
             LoadAsyncFinished(resource, callback);
@@ -204,7 +198,7 @@ public class ResourceTool : MonoSingleton<ResourceTool> , IResourceTool
     {
         ResourceLoadState = ResourceLoadStateType.Loading;
 
-        UnityEngine.Object resource;
+        Object resource;
 
         if (resourceInfo.isFromAssetBundle)
         {
@@ -234,7 +228,7 @@ public class ResourceTool : MonoSingleton<ResourceTool> , IResourceTool
         LoadAsyncFinished(resource, callback);
     }
 
-    void LoadAsyncFinished(UnityEngine.Object resource, OnResourceLoadFinished callback)
+    void LoadAsyncFinished(Object resource, OnResourceLoadFinished callback)
     {
         if (callback != null)
         {
@@ -246,6 +240,8 @@ public class ResourceTool : MonoSingleton<ResourceTool> , IResourceTool
 
     public void Destroy()
     {
-
+        _resourceDataDict.Clear();
+        _asyncResourceRequestList.Clear();
+        _resourceDict.Clear();
     }
 }
