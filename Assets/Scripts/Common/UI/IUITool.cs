@@ -41,9 +41,9 @@ public interface IUITool
     void RemovePanel(Panel panel);
 
     Panel GetPanel(PanelType panelType);
-    void ShowPanel(PanelType panelType);
+    void ShowPanel(PanelType panelType, params object[] args);
     void HidePanel(PanelType panelType);
-    void ShowLastShowedPanel();
+    void ShowLastShowedPanel(params object[] args);
 
     void Destroy();
 }

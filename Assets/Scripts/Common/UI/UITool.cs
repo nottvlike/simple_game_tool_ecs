@@ -93,12 +93,12 @@ public class UITool : IUITool
         return panel;
     }
 
-    public void ShowPanel(PanelType panelType)
+    public void ShowPanel(PanelType panelType, params object[] args)
     {
         if (_uiRoot == null)
         {
             LoadUIRoot(panelType, delegate {
-                ShowPanel(panelType);
+                ShowPanel(panelType, args);
             });
             return;
         }
@@ -112,7 +112,7 @@ public class UITool : IUITool
         var panelConfig = GetPanelConfig(panelType);
         if (panelConfig.panelMode == PanelMode.Popover)
         {
-            ShowPanelImpl(panelType);
+            ShowPanelImpl(panelType, args);
             return;
         }
 
@@ -134,16 +134,16 @@ public class UITool : IUITool
             }
         }
 
-        ShowPanelImpl(panelType);
+        ShowPanelImpl(panelType, args);
     }
 
-    void ShowPanelImpl(PanelType panelType)
+    void ShowPanelImpl(PanelType panelType, params object[] args)
     {
         Panel data;
         if (_panelDataDict.TryGetValue(panelType, out data))
         {
             _showedPanelList.Add(panelType);
-            data.Show();
+            data.Show(args);
 
             _notificationData.type = (int)PanelNotificationType.OpenPanel;
             _notificationData.mode = NotificationMode.Object;
@@ -164,7 +164,7 @@ public class UITool : IUITool
                     rectTransform.offsetMax = Vector2.zero;
                     rectTransform.offsetMin = Vector2.zero;
 
-                    ShowPanelImpl(panelType);
+                    ShowPanelImpl(panelType, args);
                 });
             }
         }
@@ -230,12 +230,12 @@ public class UITool : IUITool
         }
     }
 
-    public void ShowLastShowedPanel()
+    public void ShowLastShowedPanel(params object[] args)
     {
         if (_uiRoot == null)
         {
             LoadUIRoot(_lastShowedPanelType, delegate {
-                ShowLastShowedPanel();
+                ShowLastShowedPanel(args);
             });
             return;
         }
@@ -243,7 +243,7 @@ public class UITool : IUITool
         if (_lastShowedPanelType == PanelType.None)
             return;
 
-        ShowPanel(_lastShowedPanelType);
+        ShowPanel(_lastShowedPanelType, args);
     }
 
 

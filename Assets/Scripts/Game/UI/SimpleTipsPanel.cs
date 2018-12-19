@@ -13,9 +13,9 @@ public class SimpleTipsPanel : Panel
         closeButton.onClick.AddListener(OnCloseClick);
     }
 
-    public void SetTips(string tipsStr)
+    protected override void OnShow(params object[] args)
     {
-        tips.text = tipsStr;
+        tips.text = args[0] as string;
     }
 
     public void OnCloseClick()

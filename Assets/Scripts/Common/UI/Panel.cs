@@ -34,7 +34,7 @@ public class Panel : MonoBehaviour
 
     protected virtual void OnInit() {}
 
-    public void Show()
+    public void Show(params object[] args)
     {
         if (IsOpen)
         {
@@ -43,7 +43,7 @@ public class Panel : MonoBehaviour
 
         gameObject.SetActive(true);
 
-        OnShow();
+        OnShow(args);
     }
 
     public void Hide()
@@ -61,6 +61,6 @@ public class Panel : MonoBehaviour
         OnHide();
     }
 
-    protected virtual void OnShow() {}
+    protected virtual void OnShow(params object[] args) {}
     protected virtual void OnHide() {}
 }

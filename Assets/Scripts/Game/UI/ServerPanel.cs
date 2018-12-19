@@ -24,7 +24,7 @@ public class ServerPanel : Panel
         closeButton.onClick.AddListener(OnCloseClick);
     }
 
-    protected override void OnShow()
+    protected override void OnShow(params object[] args)
     {
         var serverData = WorldManager.Instance.Player.GetData<Data.ServerData>();
         var serverInfoList = serverData.serverInfoList;

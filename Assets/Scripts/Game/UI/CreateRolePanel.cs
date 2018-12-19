@@ -46,7 +46,7 @@ public class CreateRolePanel : Panel
         backButton.onClick.AddListener(OnBackClick);
     }
 
-    protected override void OnShow()
+    protected override void OnShow(params object[] args)
     {
         _createRoleNotification.Enabled = true;
     }

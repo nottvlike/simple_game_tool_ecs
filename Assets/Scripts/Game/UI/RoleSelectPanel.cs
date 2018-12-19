@@ -57,7 +57,7 @@ public class RoleSelectPanel : Panel
         goButton.onClick.AddListener(OnGoClick);
     }
 
-    protected override void OnShow()
+    protected override void OnShow(params object[] args)
     {
         var player = WorldManager.Instance.Player;
         var playerBaseData = player.GetData<Data.PlayerBaseData>();
