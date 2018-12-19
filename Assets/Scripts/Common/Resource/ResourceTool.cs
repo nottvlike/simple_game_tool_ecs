@@ -1,23 +1,16 @@
-﻿/*
- * 对于一个prefab，将其相关的资源拆分为6个部分
- * 1，texture资源单独打一个assetbundle
- * 2, material资源单独打一个assetbundle
- * 3, shader资源单独打一个assetbundle
- * 4, animator控制器单独打一个assetbundle
- * 5，模型资源单独打一个assetbundle
- * 6，prefab单独打一个assetbundle
- *
- * 1~5称作共享assetbundle（或者依赖assetbundle）
- * 6称作主assetbundle
- * */
-
-using UnityEngine;
+﻿using UnityEngine;
 using System;
 using System.Collections;
 using System.Collections.Generic;
-using LitJson;
 
-public enum ResourceLoadStateType {
+public enum ResourceNotificationType
+{
+    None,
+    InitFinished
+}
+
+public enum ResourceLoadStateType
+{
     None,
     Loading,
     Finished
@@ -26,14 +19,26 @@ public enum ResourceLoadStateType {
 /// <summary>
 /// 异步加载资源请求结构体
 /// </summary>
-public struct AsyncResourceRequest : IEquatable<AsyncResourceRequest>
+public class AsyncResourceRequest : IEquatable<AsyncResourceRequest>, IPoolObject
 {
-    public string ResourceName;
-    public OnResourceLoadFinished CallBack;
+    public string resourceName;
+    public OnResourceLoadFinished callBack;
+
+    public bool IsInUse
+    {
+        get;
+        set;
+    }
+
+    public void Clear()
+    {
+        resourceName = string.Empty;
+        callBack = null;
+    }
 
     public bool Equals(AsyncResourceRequest other)
     {
-        return ResourceName == other.ResourceName;
+        return resourceName == other.resourceName;
     }
 }
 
@@ -42,16 +47,16 @@ public class ResourceTool : MonoSingleton<ResourceTool> , IResourceTool
 	public const string PREFIX_ASSETBUNDLE_PATH = "AssetBundle";
 	public const string SUFFIX_ASSETBUNDLE_PATH = ".assetbundle";
 
+    public string[] PreloadResourceList;
+
     Dictionary<string, ResourceData> _resourceDataDict;
-
     Dictionary<string, UnityEngine.Object> _resourceDict = new Dictionary<string, UnityEngine.Object>();
-
     List<AsyncResourceRequest> _asyncResourceRequestList = new List<AsyncResourceRequest>();
 
-    ResourceLoadStateType _resourceLoadState = ResourceLoadStateType.None;
-    bool _isInit = false;
+    NotificationData _notificationData;
 
-    public ResourceLoadStateType ResourceLoadState 
+    ResourceLoadStateType _resourceLoadState = ResourceLoadStateType.None;
+    ResourceLoadStateType ResourceLoadState 
     {
         set
         {
@@ -72,6 +77,26 @@ public class ResourceTool : MonoSingleton<ResourceTool> , IResourceTool
         }
 
         LoadResourceConfig();
+
+        _notificationData = new NotificationData();
+        _notificationData.id = Constant.NOTIFICATION_TYPE_RESOURCE;
+
+        var count = 0;
+        for (var i = 0; i < PreloadResourceList.Length; i++)
+        {
+            var resourceName = PreloadResourceList[i];
+            LoadAsync(resourceName, delegate (UnityEngine.Object obj) {
+                count++;
+
+                if (count == PreloadResourceList.Length)
+                {
+                    _notificationData.mode = NotificationMode.ValueType;
+                    _notificationData.data2 = count;
+
+                    WorldManager.Instance.NotificationCenter.Notificate(_notificationData);
+                }
+            });
+        }
     }
 
     void LoadResourceConfig()
@@ -118,12 +143,19 @@ public class ResourceTool : MonoSingleton<ResourceTool> , IResourceTool
     /// 异步加载资源
     /// </summary>
     /// <param name="resourceName">资源名称</param>
-    /// <param name="func">加载成功的回调</param>
-	public void LoadAsync(string resourceName, OnResourceLoadFinished func)
+    /// <param name="callback">加载成功的回调</param>
+	public void LoadAsync(string resourceName, OnResourceLoadFinished callback)
 	{
-		var resourceRequest = new AsyncResourceRequest();
-		resourceRequest.ResourceName = resourceName;
-		resourceRequest.CallBack = func;
+        UnityEngine.Object resource;
+        if (_resourceDict.TryGetValue(resourceName, out resource))
+        {
+            LoadAsyncFinished(resource, callback);
+            return;
+        }
+
+		var resourceRequest = WorldManager.Instance.PoolMgr.Get<AsyncResourceRequest>();
+		resourceRequest.resourceName = resourceName;
+		resourceRequest.callBack = callback;
 
 		_asyncResourceRequestList.Add(resourceRequest);
 
@@ -145,15 +177,16 @@ public class ResourceTool : MonoSingleton<ResourceTool> , IResourceTool
 		var asyncRequest = _asyncResourceRequestList[0];
 
         ResourceData resourceInfo;
-        if (_resourceDataDict.TryGetValue(asyncRequest.ResourceName, out resourceInfo))
+        if (_resourceDataDict.TryGetValue(asyncRequest.resourceName, out resourceInfo))
         {
-            StartCoroutine(LoadCoroutine(resourceInfo, asyncRequest.CallBack));
+            StartCoroutine(LoadCoroutine(resourceInfo, asyncRequest.callBack));
         }
         else
         {
-            LogUtil.W(string.Format("No resource named {0} found!", asyncRequest.ResourceName));
+            LogUtil.W(string.Format("No resource named {0} found!", asyncRequest.resourceName));
         }
 
+        WorldManager.Instance.PoolMgr.Release(asyncRequest);
         _asyncResourceRequestList.Remove(asyncRequest);
     }
 
@@ -186,6 +219,11 @@ public class ResourceTool : MonoSingleton<ResourceTool> , IResourceTool
 
         _resourceDict.Add(resourceInfo.resourceName, resource);
 
+        LoadAsyncFinished(resource, callback);
+    }
+
+    void LoadAsyncFinished(UnityEngine.Object resource, OnResourceLoadFinished callback)
+    {
         if (callback != null)
         {
             callback(resource);
