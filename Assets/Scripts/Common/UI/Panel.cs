@@ -36,6 +36,15 @@ public class Panel : MonoBehaviour
         OnInit();
     }
 
+    void OnDestroy()
+    {
+        var worldMgr = WorldManager.Instance;
+        if (!worldMgr.IsQuitingGame)
+        {
+            worldMgr.UIMgr.RemovePanel(this);
+        }
+    }
+
     protected virtual void OnInit() {}
 
     public void Show(params object[] args)

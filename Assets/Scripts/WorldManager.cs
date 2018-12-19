@@ -66,6 +66,13 @@ public partial class WorldManager : Singleton<WorldManager>
 
     ResourcePreloadNotification _resourcePreloadNotification;
 
+    bool _isQuitingGame;
+
+    public bool IsQuitingGame
+    {
+        get { return _isQuitingGame; }
+    }
+
     public List<ObjectData> ObjectDataList
     {
         get { return _objectDataList; }
@@ -94,6 +101,8 @@ public partial class WorldManager : Singleton<WorldManager>
 
     public void Destroy()
     {
+        _isQuitingGame = true;
+
         DestroySocketMgr();
         DestroyNotificationCenter();
         DestroyPoolMgr();

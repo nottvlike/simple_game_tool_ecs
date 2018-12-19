@@ -83,6 +83,8 @@ public class UITool : IUITool
         {
             LogUtil.W("PanelData {0} is not exist!", data.PanelType.ToString());
         }
+
+        _showedPanelList.Remove(panelType);
     }
 
     public Panel GetPanel(PanelType panelType)
