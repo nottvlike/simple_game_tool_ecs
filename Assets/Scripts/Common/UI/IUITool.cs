@@ -30,6 +30,7 @@ public enum PanelType
     FightPanel,
 
     AsyncPanel = 1000,
+    SimpleTipsPanel,
 }
 
 public interface IUITool
