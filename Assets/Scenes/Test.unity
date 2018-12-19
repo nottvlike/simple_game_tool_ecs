@@ -381,3 +381,4 @@ MonoBehaviour:
   - GameUpdatePanel
   - SimpleTipsPanel
   - PanelConfig
+  - YesNoPanel
