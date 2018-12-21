@@ -240,7 +240,6 @@ public class Fade : Tweener
 
         var tmp = Mathf.Clamp(_duration, 0, duration);
         var curveValue = animationCurve.Evaluate((float)tmp / 1000);
-        var value = from + (to - from) * curveValue;
 
         if (_canvas != null)
         {

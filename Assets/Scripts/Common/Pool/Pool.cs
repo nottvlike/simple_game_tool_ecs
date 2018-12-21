@@ -12,14 +12,14 @@ public class Pool : IPool
             return null;
         }
 
-        var resourceData = data.GetData<Data.ResourceData>() as Data.ResourceData;
+        var resourceStateData = data.GetData<Data.ResourceStateData>() as Data.ResourceStateData;
 
         ObjectData poolObjectData = null;
         List<ObjectData> objectDataList = null;
-        if (!_objectDataDict.TryGetValue(resourceData.name, out objectDataList))
+        if (!_objectDataDict.TryGetValue(resourceStateData.name, out objectDataList))
         {
             objectDataList = new List<ObjectData>();
-            _objectDataDict.Add(resourceData.name, objectDataList);
+            _objectDataDict.Add(resourceStateData.name, objectDataList);
         }
         else
         {
@@ -84,10 +84,9 @@ public class Pool : IPool
             resourceStateData.isInstantiated = false;
         }
 
-        objData.ModuleTypeList.AddRange(cloneObjData.ModuleTypeList);
         WorldManager.Instance.ObjectDataList.Add(objData);
 
-        objData.RefreshModuleAddedObjectIdList();
+        objData.SetDirty();
         return objData;
     }
 	

@@ -30,7 +30,7 @@ public partial class WorldManager : Singleton<WorldManager>
 
                 _objectDataList.Add(_gameCore);
 
-                _gameCore.RefreshModuleAddedObjectIdList();
+                _gameCore.SetDirty();
             }
 
             return _gameCore;
@@ -48,7 +48,7 @@ public partial class WorldManager : Singleton<WorldManager>
                 _gameServer.AddData(new GameNetworkData());
                 _objectDataList.Add(_gameServer);
 
-                _gameServer.RefreshModuleAddedObjectIdList();
+                _gameServer.SetDirty();
             }
 
             return _gameServer;
@@ -66,7 +66,7 @@ public partial class WorldManager : Singleton<WorldManager>
                 _item.AddData(new ItemInfoData());
                 _objectDataList.Add(_item);
 
-                _item.RefreshModuleAddedObjectIdList();
+                _item.SetDirty();
             }
 
             return _item;
@@ -85,7 +85,7 @@ public partial class WorldManager : Singleton<WorldManager>
                 _player.AddData(new ServerData());
                 _objectDataList.Add(_player);
 
-                _player.RefreshModuleAddedObjectIdList();
+                _player.SetDirty();
             }
 
             return _player;

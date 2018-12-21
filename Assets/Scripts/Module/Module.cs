@@ -7,24 +7,59 @@ namespace Module{
     {
         protected List<int> _objectIdList = new List<int>();
 
-        public abstract bool IsBelong(List<Data.Data> dataList);
+        protected List<Type> _requiredDataTypeList = new List<Type>();
+        static List<Type> _tmpList = new List<Type>();
 
-        public virtual void OnAdd(int objId) { }
-        public virtual void OnRemove(int objId) { }
-
-        public void OnIdListChanged()
+        public bool IsMeet(List<Data.Data> dataList)
         {
-            _objectIdList.Clear();
+            _tmpList.Clear();
 
-            var objectIdList = ObjectData.GetModuleAddedObjectList(GetType());
-            if (objectIdList != null)
+            for (var i = 0; i < dataList.Count; i++)
             {
-                _objectIdList.AddRange(objectIdList);
+                var data = dataList[i];
+                var type = data.GetType();
+                if (IsRequired(data) && _tmpList.IndexOf(type) == -1)
+                {
+                    _tmpList.Add(type);
+                }
             }
+            return _tmpList.Count > 0 && _tmpList.Count == _requiredDataTypeList.Count;
+        }
+
+        public bool IsRequired(Data.Data data)
+        {
+            return _requiredDataTypeList.IndexOf(data.GetType()) != -1;
+        }
+
+        protected abstract void InitRequiredDataType();
+
+        public abstract void Refresh(ObjectData objData, bool notMet = false);
+
+        public void Add(int objectDataId)
+        {
+            _objectIdList.Add(objectDataId);
+
+            var objData = WorldManager.Instance.GetObjectData(objectDataId);
+            Refresh(objData);
+        }
+
+        public void Remove(int objectDataId)
+        {
+            _objectIdList.Remove(objectDataId);
+
+            var objData = WorldManager.Instance.GetObjectData(objectDataId);
+            Refresh(objData, true);
+        }
+
+        public bool Contains(int objectDataId)
+        {
+            return _objectIdList.IndexOf(objectDataId) != -1;
         }
 
         public Module()
         {
+            InitRequiredDataType();
+
             Enabled = true;
         }
 

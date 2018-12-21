@@ -6,16 +6,8 @@ namespace Data
     [Serializable]
     public class ResourceData : Data
     {
-        public string name;
         public string resource;
         public GameObject gameObject;
-
-        public override Data Clone()
-        {
-            var data = base.Clone() as ResourceData;
-            data.name = String.Copy(this.name);
-            return data;
-        }
     }
 
     public class ResourcePoolData : Data
@@ -27,8 +19,16 @@ namespace Data
     [Serializable]
     public class ResourceStateData : Data
     {
+        public string name;
         public bool isGameObject;
         public bool isLoaded;
         public bool isInstantiated;
+
+        public override Data Clone()
+        {
+            var data = base.Clone() as ResourceStateData;
+            data.name = string.Copy(name);
+            return data;
+        }
     }
 }

@@ -17,11 +17,6 @@ namespace Module
             WorldManager.Instance.UnityEventMgr.Remove(this);
         }
 
-        public override bool IsBelong(List<Data.Data> dataList)
-        {
-            return false;
-        }
-
         void IUpdateEvent.Update()
         {
             if (_objectIdList.Count == 0)
@@ -34,16 +29,8 @@ namespace Module
                 var objId = _objectIdList[i];
 
                 var objData = WorldManager.Instance.GetObjectData(objId);
-                var resourceStateData = objData.GetData<Data.ResourceStateData>() as Data.ResourceStateData;
-                if (!resourceStateData.isInstantiated)
-                {
-                    continue;
-                }
-
-                UpdateObject(objId, objData);
+                Refresh(objData);
             }
         }
-
-        protected abstract void UpdateObject(int objId, ObjectData obj);
     }
 }

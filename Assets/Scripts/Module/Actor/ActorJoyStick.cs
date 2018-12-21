@@ -7,22 +7,18 @@ namespace Module
 {
     public class ActorJoyStick : UpdateModule
     {
-        public override bool IsBelong(List<Data.Data> dataList)
+        protected override void InitRequiredDataType()
         {
-            for (var i = 0; i < dataList.Count; ++i)
-            {
-                var dataType = dataList[i].GetType();
-                if (dataType == typeof(JoyStickData))
-                {
-                    return true;
-                }
-            }
-
-            return false;
+            _requiredDataTypeList.Add(typeof(JoyStickData));
         }
 
-        protected override void UpdateObject(int objId, ObjectData objData)
+        public override void Refresh(ObjectData objData, bool notMet = false)
         {
+            if (notMet)
+            {
+                return;
+            }
+
             var joyStickData = objData.GetData<JoyStickData>() as JoyStickData;
 
             var joyStickMapDataList = WorldManager.Instance.JoyStickConfig.joyStickMapDataList;

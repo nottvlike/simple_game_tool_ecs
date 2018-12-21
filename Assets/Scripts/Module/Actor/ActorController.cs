@@ -7,22 +7,21 @@ namespace Module
 {
     public class ActorController : UpdateModule
     {
-        public override bool IsBelong(List<Data.Data> dataList)
+        protected override void InitRequiredDataType()
         {
-            var index = 0;
-            for (var i = 0; i < dataList.Count; ++i)
-            {
-                var dataType = dataList[i].GetType();
-                if (dataType == typeof(PositionData) || dataType == typeof(DirectionData) || dataType == typeof(SpeedData) || dataType == typeof(JoyStickData))
-                {
-                    index++;
-                }
-            }
-            return index == 4;
+            _requiredDataTypeList.Add(typeof(PositionData));
+            _requiredDataTypeList.Add(typeof(DirectionData));
+            _requiredDataTypeList.Add(typeof(SpeedData));
+            _requiredDataTypeList.Add(typeof(JoyStickData));
         }
 
-        protected override void UpdateObject(int objId, ObjectData objData)
+        public override void Refresh(ObjectData objData, bool notMet = false)
         {
+            if (notMet)
+            {
+                return;
+            }
+
             var joyStickData = objData.GetData<JoyStickData>() as JoyStickData;
 
             var gameSystemData = WorldManager.Instance.GameCore.GetData<GameSystemData>() as GameSystemData;
@@ -36,7 +35,7 @@ namespace Module
                 var serverAction = serverActionList[i];
                 if (serverAction.frame == gameSystemData.clientFrame)
                 {
-                    switch(serverAction.actionType)
+                    switch (serverAction.actionType)
                     {
                         case JoyStickActionType.Run:
                             speedData.acceleration = 100;

@@ -8,22 +8,20 @@ namespace Module
 {
     public class ActorMove : UpdateModule
     {
-        public override bool IsBelong(List<Data.Data> dataList)
+        protected override void InitRequiredDataType()
         {
-            var index = 0;
-            for (var i = 0; i < dataList.Count; ++i)
-            {
-                var dataType = dataList[i].GetType();
-                if (dataType == typeof(PositionData) || dataType == typeof(DirectionData) || dataType == typeof(SpeedData))
-                {
-                    index++;
-                }
-            }
-            return index == 3;
+            _requiredDataTypeList.Add(typeof(PositionData));
+            _requiredDataTypeList.Add(typeof(DirectionData));
+            _requiredDataTypeList.Add(typeof(SpeedData));
         }
 
-        protected override void UpdateObject(int objId, ObjectData objData)
+        public override void Refresh(ObjectData objData, bool notMet = false)
         {
+            if (notMet)
+            {
+                return;
+            }
+
             var speedData = objData.GetData<SpeedData>() as SpeedData;
             if (speedData.acceleration == 0)
             {

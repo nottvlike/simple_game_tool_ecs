@@ -10,22 +10,14 @@ public enum ModuleChangeType
 
 public class ObjectData
 {
-    static Dictionary<Type, List<int>> moduleAddedObjectIdList = new Dictionary<Type, List<int>>();
-
     static int _idGenerate = 0;
 
     int _objId = 0;
-    List<Type> _moduleTypeList = new List<Type>();
     List<Data.Data> _dataList = new List<Data.Data>();
 
     public int ObjectId
     {
         get { return _objId; }
-    }
-
-    public List<Type> ModuleTypeList
-    {
-        get { return _moduleTypeList; }
     }
 
     public List<Data.Data> DataList
@@ -38,34 +30,39 @@ public class ObjectData
         _objId = ++_idGenerate;
     }
 
-    public void RefreshModuleAddedObjectIdList()
+    public void SetDirty(params Data.Data[] dataList)
     {
         var moduleList = WorldManager.Instance.ModuleList;
         for (var i = 0; i < moduleList.Count; i++)
         {
             var module = moduleList[i];
-            List<int> objectIdList;
-            if (!moduleAddedObjectIdList.TryGetValue(module.GetType(), out objectIdList))
+
+            var isMeet = module.IsMeet(_dataList);
+            var isContains = module.Contains(_objId);
+            if (!isContains && isMeet)
             {
-                objectIdList = new List<int>();
-                moduleAddedObjectIdList.Add(module.GetType(), objectIdList);
+                module.Add(_objId);
             }
-
-            var isBelong = module.IsBelong(_dataList);
-            var isContains = objectIdList.Contains(_objId);
-            if (!isContains && isBelong)
+            else if (isContains && !isMeet)
             {
-                objectIdList.Add(_objId);
-
-                module.OnIdListChanged();
-                module.OnAdd(_objId);
+                module.Remove(_objId);
             }
-            else if (isContains && !isBelong)
+            else if (isMeet && isContains)
             {
-                objectIdList.Remove(_objId);
+                var needUpdate = false;
+                for (var j = 0; j < dataList.Length; j++)
+                {
+                    if (module.IsRequired(dataList[j]))
+                    {
+                        needUpdate = true;
+                        break;
+                    }
+                }
 
-                module.OnIdListChanged();
-                module.OnRemove(_objId);
+                if (needUpdate)
+                {
+                    module.Refresh(this);
+                }
             }
         }
     }
@@ -92,17 +89,5 @@ public class ObjectData
         }
 
         return null;
-    }
-
-    public static List<int> GetModuleAddedObjectList<T>()
-    {
-        return GetModuleAddedObjectList(typeof(T));
-    }
-
-    public static List<int> GetModuleAddedObjectList(Type moduleType)
-    {
-        List<int> objectList;
-        moduleAddedObjectIdList.TryGetValue(moduleType, out objectList);
-        return objectList;
     }
 }

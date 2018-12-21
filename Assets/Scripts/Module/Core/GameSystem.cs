@@ -7,29 +7,23 @@ namespace Module
 {
     public class GameSystem : Module, IUpdateEvent
     {
-        public GameSystem()
+        protected override void OnEnable()
         {
             WorldManager.Instance.UnityEventMgr.Add(this);
         }
 
-        public override bool IsBelong(List<Data.Data> dataList)
+        protected override void OnDisable()
         {
-            for (var i = 0; i < dataList.Count; ++i)
-            {
-                var dataType = dataList[i].GetType();
-                if (dataType == typeof(GameSystemData))
-                {
-                    return true;
-                }
-            }
-
-            return false;
+            WorldManager.Instance.UnityEventMgr.Remove(this);
         }
 
-        public void Update()
+        protected override void InitRequiredDataType()
         {
-            var worldMgr = WorldManager.Instance;
-            var objData = worldMgr.GameCore;
+            _requiredDataTypeList.Add(typeof(GameSystemData));
+        }
+
+        public override void Refresh(ObjectData objData, bool notMet = false)
+        {
             var gameSystemData = objData.GetData<GameSystemData>() as GameSystemData;
 
             gameSystemData.clientFrame++;
@@ -38,7 +32,14 @@ namespace Module
             gameSystemData.unscaleDeltaTime = deltaTime;
             gameSystemData.unscaleTime += deltaTime;
 
-            worldMgr.TimerMgr.Update();
+            WorldManager.Instance.TimerMgr.Update();
+        }
+
+        public void Update()
+        {
+            var objData = WorldManager.Instance.GameCore;
+
+            Refresh(objData);
         }
     }
 }

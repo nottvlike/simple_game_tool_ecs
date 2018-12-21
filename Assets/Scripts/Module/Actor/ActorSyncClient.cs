@@ -7,27 +7,18 @@ namespace Module
 {
     public class ActorSyncClient : UpdateModule
     {
-        public override bool IsBelong(List<Data.Data> dataList)
-        {
-            var index = 0;
-            for (var i = 0; i < dataList.Count; ++i)
-            {
-                var dataType = dataList[i].GetType();
-                if (dataType == typeof(JoyStickData) || dataType == typeof(ActorSyncData))
-                {
-                    index++;
-                }
-            }
-
-            return index == 2;
-        }
-
-        protected override void UpdateObject(int objId, ObjectData objData)
+        public override void Refresh(ObjectData objData, bool notMet = false)
         {
             var joyStickData = objData.GetData<JoyStickData>() as JoyStickData;
 
             joyStickData.serverActionList.AddRange(joyStickData.clientActionList);
             joyStickData.clientActionList.Clear();
+        }
+
+        protected override void InitRequiredDataType()
+        {
+            _requiredDataTypeList.Add(typeof(JoyStickData));
+            _requiredDataTypeList.Add(typeof(ActorSyncData));
         }
     }
 }

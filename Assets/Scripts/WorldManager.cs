@@ -43,7 +43,7 @@ public class ResourcePreloadNotification : BaseNotification
                 var serverInfoResult = JsonUtility.FromJson<GetServerInfoResult>(serverInfoStr);
                 var serverData = worldMgr.Player.GetData<Data.ServerData>();
                 var result = serverInfoResult.result;
-                if (serverInfoResult.result == 0)
+                if (result == 0)
                 {
                     serverData.serverInfoList.Clear();
                     serverData.serverInfoList.AddRange(serverInfoResult.serverInfoList);

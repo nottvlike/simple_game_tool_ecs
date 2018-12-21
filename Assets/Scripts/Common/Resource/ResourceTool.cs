@@ -221,8 +221,6 @@ public class ResourceTool : MonoSingleton<ResourceTool> , IResourceTool
             resource = request.asset;
         }
 
-        LogUtil.I("Load Resource " + resourceInfo.resourceName);
-
         _resourceDict.Add(resourceInfo.resourceName, resource);
 
         LoadAsyncFinished(resource, callback);

@@ -5,28 +5,14 @@ using UnityEngine;
 
 namespace Module
 {
-    public class GameServer : Module, IUpdateEvent
+    public class GameServer : Module
     {
-        public GameServer()
+        protected override void InitRequiredDataType()
         {
-            WorldManager.Instance.UnityEventMgr.Add(this);
+            _requiredDataTypeList.Add(typeof(GameNetworkData));
         }
 
-        public override bool IsBelong(List<Data.Data> dataList)
-        {
-            for (var i = 0; i < dataList.Count; ++i)
-            {
-                var dataType = dataList[i].GetType();
-                if (dataType == typeof(GameNetworkData))
-                {
-                    return true;
-                }
-            }
-
-            return false;
-        }
-
-        public void Update()
+        public override void Refresh(ObjectData obj, bool notMet = false)
         {
         }
     }

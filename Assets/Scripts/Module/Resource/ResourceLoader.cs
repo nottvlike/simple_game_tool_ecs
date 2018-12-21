@@ -1,60 +1,40 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
+using Data;
 using UnityEngine;
 
 namespace Module
 {
     public class ResourceLoader : Module
     {
-        public override bool IsBelong(List<Data.Data> dataList)
+        protected override void InitRequiredDataType()
         {
-            var index = 0;
-            for (var i = 0; i < dataList.Count; ++i)
-            {
-                var dataType = dataList[i].GetType();
-                if (dataType == typeof(Data.ResourceData) || dataType == typeof(Data.ResourceStateData))
-                {
-                    index++;
-                }
-            }
-
-            return index == 2;
+            _requiredDataTypeList.Add(typeof(ResourceData));
+            _requiredDataTypeList.Add(typeof(ResourceStateData));
         }
 
-        public override void OnAdd(int objId)
+        public override void Refresh(ObjectData objData, bool notMet)
         {
-            base.OnAdd(objId);
-
-            var worldMgr = WorldManager.Instance;
-            var resourceMgr = worldMgr.ResourceMgr;
-            var objData = worldMgr.GetObjectData(objId);
-            var resourceStateData = objData.GetData<Data.ResourceStateData>() as Data.ResourceStateData;
-            var resourceData = objData.GetData<Data.ResourceData>() as Data.ResourceData;
-            resourceStateData.isLoaded = resourceMgr.IsResourceLoaded(resourceData.resource);
-            if (!resourceStateData.isGameObject || (resourceStateData.isLoaded && resourceStateData.isInstantiated) )
+            var resourceStateData = objData.GetData<ResourceStateData>() as ResourceStateData;
+            var resourceData = objData.GetData<ResourceData>() as ResourceData;
+            if (!string.IsNullOrEmpty(resourceData.resource) && resourceStateData.isGameObject)
             {
-                return;
+                resourceStateData.isLoaded = WorldManager.Instance.ResourceMgr.IsResourceLoaded(resourceData.resource);
+                if (!resourceStateData.isInstantiated)
+                {
+                    LoadResource(resourceStateData, resourceData);
+                }
             }
+        }
 
-            resourceMgr.LoadAsync(resourceData.resource, delegate (Object obj)
+        void LoadResource(ResourceStateData resourceStateData, ResourceData resourceData)
+        {
+            WorldManager.Instance.ResourceMgr.LoadAsync(resourceData.resource, delegate (Object obj)
             {
                 resourceStateData.isInstantiated = true;
                 resourceData.gameObject = Object.Instantiate(obj, Vector3.zero, Quaternion.identity) as GameObject;
-                resourceData.gameObject.name = resourceData.name;
+                resourceData.gameObject.name = resourceStateData.name;
             });
-        }
-
-        public override void OnRemove(int objId)
-        {
-            base.OnRemove(objId);
-
-            var worldMgr = WorldManager.Instance;
-            var objData = worldMgr.GetObjectData(objId);
-            var resourceStateData = objData.GetData<Data.ResourceStateData>() as Data.ResourceStateData;
-            var resourceData = objData.GetData<Data.ResourceData>() as Data.ResourceData;
-
-            Object.Destroy(resourceData.gameObject);
-            resourceStateData.isInstantiated = false;
         }
     }
 }

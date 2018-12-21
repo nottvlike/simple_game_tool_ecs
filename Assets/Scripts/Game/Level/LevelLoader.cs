@@ -36,7 +36,7 @@ public class LevelLoader
 
                     objData.AddData(new Data.JoyStickData());
                     objData.AddData(new Data.ActorSyncData());
-                    objData.RefreshModuleAddedObjectIdList();
+                    objData.SetDirty();
                 }
                 break;
             case DramaItemType.CreateEnemy:
