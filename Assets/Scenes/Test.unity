@@ -376,9 +376,3 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b1a1f20fe4bbadb4684ecae83744ab77, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  PreloadResourceList:
-  - AsyncPanel
-  - GameUpdatePanel
-  - SimpleTipsPanel
-  - PanelConfig
-  - YesNoPanel
