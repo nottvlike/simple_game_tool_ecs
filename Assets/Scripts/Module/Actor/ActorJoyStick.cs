@@ -12,13 +12,8 @@ namespace Module
             _requiredDataTypeList.Add(typeof(JoyStickData));
         }
 
-        public override void Refresh(ObjectData objData, bool notMet = false)
+        public override void Refresh(ObjectData objData)
         {
-            if (notMet)
-            {
-                return;
-            }
-
             var joyStickData = objData.GetData<JoyStickData>() as JoyStickData;
 
             var joyStickMapDataList = WorldManager.Instance.JoyStickConfig.joyStickMapDataList;
@@ -54,7 +49,7 @@ namespace Module
         {
             var gameSystemData = WorldManager.Instance.GameCore.GetData<GameSystemData>() as GameSystemData;
 
-            var joyStickActionData = new JoyStickActionData();
+            var joyStickActionData = WorldManager.Instance.PoolMgr.Get<JoyStickActionData>();
             joyStickActionData.frame = gameSystemData.clientFrame + Constant.JOYSTICK_DELAY_FRAME_COUNT;
             joyStickActionData.actionType = actionType;
             joyStickActionData.actionParam = faceType;

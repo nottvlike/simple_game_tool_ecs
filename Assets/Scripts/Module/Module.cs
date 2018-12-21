@@ -5,10 +5,17 @@ using System;
 namespace Module{
     public abstract class Module
     {
-        protected List<int> _objectIdList = new List<int>();
+        public Module()
+        {
+            InitRequiredDataType();
+
+            Enabled = true;
+        }
 
         protected List<Type> _requiredDataTypeList = new List<Type>();
         static List<Type> _tmpList = new List<Type>();
+
+        protected abstract void InitRequiredDataType();
 
         public bool IsMeet(List<Data.Data> dataList)
         {
@@ -31,9 +38,10 @@ namespace Module{
             return _requiredDataTypeList.IndexOf(data.GetType()) != -1;
         }
 
-        protected abstract void InitRequiredDataType();
+        public abstract void Refresh(ObjectData objData);
 
-        public abstract void Refresh(ObjectData objData, bool notMet = false);
+
+        protected List<int> _objectIdList = new List<int>();
 
         public void Add(int objectDataId)
         {
@@ -46,9 +54,7 @@ namespace Module{
         public void Remove(int objectDataId)
         {
             _objectIdList.Remove(objectDataId);
-
-            var objData = WorldManager.Instance.GetObjectData(objectDataId);
-            Refresh(objData, true);
+            Enabled = _objectIdList.Count != 0;
         }
 
         public bool Contains(int objectDataId)
@@ -56,12 +62,6 @@ namespace Module{
             return _objectIdList.IndexOf(objectDataId) != -1;
         }
 
-        public Module()
-        {
-            InitRequiredDataType();
-
-            Enabled = true;
-        }
 
         bool _enabled;
         public bool Enabled

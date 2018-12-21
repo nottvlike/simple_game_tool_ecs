@@ -19,7 +19,7 @@ namespace Module
             _requiredDataTypeList.Add(typeof(Data.ResourcePreloadData));
         }
 
-        public override void Refresh(ObjectData objData, bool notMet = false)
+        public override void Refresh(ObjectData objData)
         {
             var worldMgr = WorldManager.Instance;
             if (worldMgr.ResourcePreloadConfig == null)

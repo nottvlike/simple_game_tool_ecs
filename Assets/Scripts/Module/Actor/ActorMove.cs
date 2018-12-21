@@ -15,13 +15,8 @@ namespace Module
             _requiredDataTypeList.Add(typeof(SpeedData));
         }
 
-        public override void Refresh(ObjectData objData, bool notMet = false)
+        public override void Refresh(ObjectData objData)
         {
-            if (notMet)
-            {
-                return;
-            }
-
             var speedData = objData.GetData<SpeedData>() as SpeedData;
             if (speedData.acceleration == 0)
             {

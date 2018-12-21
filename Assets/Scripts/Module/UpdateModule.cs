@@ -19,11 +19,6 @@ namespace Module
 
         void IUpdateEvent.Update()
         {
-            if (_objectIdList.Count == 0)
-            {
-                return;
-            }
-
             for (var i = 0; i < _objectIdList.Count; ++i)
             {
                 var objId = _objectIdList[i];

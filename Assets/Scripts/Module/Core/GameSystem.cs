@@ -22,7 +22,7 @@ namespace Module
             _requiredDataTypeList.Add(typeof(GameSystemData));
         }
 
-        public override void Refresh(ObjectData objData, bool notMet = false)
+        public override void Refresh(ObjectData objData)
         {
             var gameSystemData = objData.GetData<GameSystemData>() as GameSystemData;
 

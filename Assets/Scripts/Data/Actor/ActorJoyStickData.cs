@@ -6,7 +6,8 @@ namespace Data
 {
     public enum JoyStickActionType
     {
-        Run = 0,
+        None = 0,
+        Run,
         CancelRun,
         Jump,
         SkillDefault,
@@ -20,11 +21,23 @@ namespace Data
         Right
     }
 
-    public struct JoyStickActionData
+    public class JoyStickActionData : IPoolObject
     {
         public int frame;
         public JoyStickActionType actionType;
         public JoyStickActionFaceType actionParam;
+
+        public bool IsInUse
+        {
+            get; set;
+        }
+
+        public void Clear()
+        {
+            frame = 0;
+            actionType = JoyStickActionType.None;
+            actionParam = JoyStickActionFaceType.None;
+        }
     }
 
     public class JoyStickData : Data

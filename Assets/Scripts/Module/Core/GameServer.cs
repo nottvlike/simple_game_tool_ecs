@@ -12,7 +12,7 @@ namespace Module
             _requiredDataTypeList.Add(typeof(GameNetworkData));
         }
 
-        public override void Refresh(ObjectData obj, bool notMet = false)
+        public override void Refresh(ObjectData obj)
         {
         }
     }

@@ -7,7 +7,7 @@ namespace Module
 {
     public class ActorSyncClient : UpdateModule
     {
-        public override void Refresh(ObjectData objData, bool notMet = false)
+        public override void Refresh(ObjectData objData)
         {
             var joyStickData = objData.GetData<JoyStickData>() as JoyStickData;
 

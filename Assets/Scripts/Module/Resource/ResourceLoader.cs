@@ -13,7 +13,7 @@ namespace Module
             _requiredDataTypeList.Add(typeof(ResourceStateData));
         }
 
-        public override void Refresh(ObjectData objData, bool notMet)
+        public override void Refresh(ObjectData objData)
         {
             var resourceStateData = objData.GetData<ResourceStateData>() as ResourceStateData;
             var resourceData = objData.GetData<ResourceData>() as ResourceData;

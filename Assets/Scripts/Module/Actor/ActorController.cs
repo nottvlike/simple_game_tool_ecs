@@ -15,22 +15,18 @@ namespace Module
             _requiredDataTypeList.Add(typeof(JoyStickData));
         }
 
-        public override void Refresh(ObjectData objData, bool notMet = false)
+        public override void Refresh(ObjectData objData)
         {
-            if (notMet)
-            {
-                return;
-            }
+            var worldMgr = WorldManager.Instance;
 
-            var joyStickData = objData.GetData<JoyStickData>() as JoyStickData;
+            var gameSystemData = worldMgr.GameCore.GetData<GameSystemData>();
 
-            var gameSystemData = WorldManager.Instance.GameCore.GetData<GameSystemData>() as GameSystemData;
+            var speedData = objData.GetData<SpeedData>();
+            var directionData = objData.GetData<DirectionData>();
 
-            var speedData = objData.GetData<SpeedData>() as SpeedData;
-            var directionData = objData.GetData<DirectionData>() as DirectionData;
-
+            var joyStickData = objData.GetData<JoyStickData>();
             var serverActionList = joyStickData.serverActionList;
-            for (var i = 0; i < serverActionList.Count; i++)
+            for (var i = 0; i < serverActionList.Count;)
             {
                 var serverAction = serverActionList[i];
                 if (serverAction.frame == gameSystemData.clientFrame)
@@ -46,6 +42,13 @@ namespace Module
                             speedData.accelerationDelta = 10;
                             break;
                     }
+
+                    serverActionList.Remove(serverAction);
+                    worldMgr.PoolMgr.Release(serverAction);
+                }
+                else
+                {
+                    i++;
                 }
             }
         }
