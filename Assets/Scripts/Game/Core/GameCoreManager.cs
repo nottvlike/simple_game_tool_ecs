@@ -28,6 +28,8 @@ public partial class WorldManager : Singleton<WorldManager>
                     }
                 }
 
+                _gameCore.AddData(new ResourcePreloadData());
+
                 _objectDataList.Add(_gameCore);
 
                 _gameCore.SetDirty();

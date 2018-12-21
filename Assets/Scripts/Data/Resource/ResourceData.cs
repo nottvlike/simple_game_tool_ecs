@@ -31,4 +31,10 @@ namespace Data
             return data;
         }
     }
+
+    public class ResourcePreloadData : Data
+    {
+        public ResourcePreloadType preloadType;
+        public int preloadCount;
+    }
 }

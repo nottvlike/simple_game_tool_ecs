@@ -41,8 +41,6 @@ public class ResourceTool : MonoSingleton<ResourceTool> , IResourceTool
 	public const string PREFIX_ASSETBUNDLE_PATH = "AssetBundle";
 	public const string SUFFIX_ASSETBUNDLE_PATH = ".assetbundle";
 
-    public string[] PreloadResourceList;
-
     Dictionary<string, ResourceInfo> _resourceInfoDict;
     Dictionary<string, Object> _resourceDict = new Dictionary<string, Object>();
     List<AsyncResourceRequest> _asyncResourceRequestList = new List<AsyncResourceRequest>();
@@ -71,26 +69,6 @@ public class ResourceTool : MonoSingleton<ResourceTool> , IResourceTool
         }
 
         LoadResourceConfig();
-
-        _notificationData = new NotificationData();
-        _notificationData.id = Constant.NOTIFICATION_TYPE_RESOURCE;
-
-        var count = 0;
-        for (var i = 0; i < PreloadResourceList.Length; i++)
-        {
-            var resourceName = PreloadResourceList[i];
-            LoadAsync(resourceName, delegate (Object obj) {
-                count++;
-
-                if (count == PreloadResourceList.Length)
-                {
-                    _notificationData.mode = NotificationMode.ValueType;
-                    _notificationData.data2 = count;
-
-                    WorldManager.Instance.NotificationCenter.Notificate(_notificationData);
-                }
-            });
-        }
     }
 
     void LoadResourceConfig()

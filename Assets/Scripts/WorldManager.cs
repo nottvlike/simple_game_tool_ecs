@@ -17,8 +17,6 @@ public class ResourcePreloadNotification : BaseNotification
         var worldMgr = WorldManager.Instance;
         var player = worldMgr.Player;
         var item = worldMgr.Item;
-        var gameServer = worldMgr.GameServer;
-        var gameCore = worldMgr.GameCore;
 
         worldMgr.LoadConfig();
 
@@ -97,6 +95,11 @@ public partial class WorldManager : Singleton<WorldManager>
         ResourceMgr.Init();
 
         RegisterAllModule();
+
+        var gameCore = GameCore;
+        var gameServer = GameServer;
+
+        LoadPreloadConfig();
     }
 
     public void Destroy()
