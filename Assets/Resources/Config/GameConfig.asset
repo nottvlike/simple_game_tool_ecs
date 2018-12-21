@@ -29,10 +29,10 @@ MonoBehaviour:
         acceleration: 0
         accelerationDelta: 10
       resourceData:
-        name: Cube
         resource: Cube
         gameObject: {fileID: 0}
       resourceStateData:
+        name: TestPlayer
         isGameObject: 1
         isLoaded: 0
         isInstantiated: 0

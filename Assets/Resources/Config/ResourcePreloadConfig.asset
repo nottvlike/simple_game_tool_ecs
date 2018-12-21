@@ -11,11 +11,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ac73f2b68a26ed14680ab7a646629b77, type: 3}
   m_Name: ResourcePreloadConfig
   m_EditorClassIdentifier: 
-  resourcePreloadDataList:
+  resourcePreloadInfoList:
   - type: 0
     resourceNameList:
-    - AsyncPanel
+    - PanelConfig
     - SimpleTipsPanel
     - YesNoPanel
-    - PanelConfig
     - GameUpdatePanel
+    - AsyncPanel

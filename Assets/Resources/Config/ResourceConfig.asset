@@ -76,3 +76,7 @@ MonoBehaviour:
     resourcePath: Prefab/UI/YesNoPanel
     assetbundlePath: 
     isFromAssetBundle: 0
+  - resourceName: ResourcePreloadConfig
+    resourcePath: Config/ResourcePreloadConfig
+    assetbundlePath: 
+    isFromAssetBundle: 0
