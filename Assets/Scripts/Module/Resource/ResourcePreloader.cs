@@ -39,6 +39,7 @@ namespace Module
                     if (resourcePreloadData.preloadCount == resourceNameList.Length)
                     {
                         _notificationData.mode = NotificationMode.ValueType;
+                        _notificationData.type = (int)resourcePreloadData.preloadType;
                         _notificationData.data2 = resourcePreloadData.preloadCount;
 
                         worldMgr.NotificationCenter.Notificate(_notificationData);

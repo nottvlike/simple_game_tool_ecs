@@ -14,16 +14,19 @@ public class ResourcePreloadNotification : BaseNotification
 
     public override void OnReceive(int type, ValueType notificationData)
     {
-        var worldMgr = WorldManager.Instance;
-        var player = worldMgr.Player;
-        var item = worldMgr.Item;
+        if (type == (int)ResourcePreloadType.GameInit)
+        {
+            var worldMgr = WorldManager.Instance;
+            var player = worldMgr.Player;
+            var item = worldMgr.Item;
 
-        worldMgr.LoadConfig();
+            worldMgr.LoadConfig();
 
-        GetServerList();
+            GetServerList();
 
-        worldMgr.UIMgr.ShowPanel(PanelType.GameUpdatePanel);
-        worldMgr.LevelLoader.DoDrama();
+            worldMgr.UIMgr.ShowPanel(PanelType.GameUpdatePanel);
+            worldMgr.LevelLoader.DoDrama();
+        }
     }
 
     void GetServerList()
