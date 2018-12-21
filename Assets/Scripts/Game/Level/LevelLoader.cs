@@ -9,7 +9,8 @@ public class LevelLoader
 
     public void DoDrama()
     {
-        var levelConfig = WorldManager.Instance.GameConfig.GetLevelConfig(currentLevelId);
+        var worldMgr = WorldManager.Instance;
+        var levelConfig = worldMgr.GameConfig.GetLevelConfig(currentLevelId);
 #if UNITY_EDITOR
         if (levelConfig == null || currentLevelIndex >= levelConfig.levelData.dramaItemList.Count)
         {
@@ -24,8 +25,7 @@ public class LevelLoader
             case DramaItemType.CreatePlayer:
                 {
                     var playerData = levelConfig.playerData;
-                    var objData = new ObjectData();
-                    WorldManager.Instance.ObjectDataList.Add(objData);
+                    var objData = worldMgr.Player;
 
                     objData.AddData(playerData.positionData.Clone());
                     objData.AddData(playerData.directionData.Clone());

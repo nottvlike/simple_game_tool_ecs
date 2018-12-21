@@ -9,7 +9,7 @@ namespace Module
     {
         public override void Refresh(ObjectData objData)
         {
-            var joyStickData = objData.GetData<JoyStickData>() as JoyStickData;
+            var joyStickData = objData.GetData<JoyStickData>();
 
             joyStickData.serverActionList.AddRange(joyStickData.clientActionList);
             joyStickData.clientActionList.Clear();

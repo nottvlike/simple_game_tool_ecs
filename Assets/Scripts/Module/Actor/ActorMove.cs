@@ -17,7 +17,7 @@ namespace Module
 
         public override void Refresh(ObjectData objData)
         {
-            var speedData = objData.GetData<SpeedData>() as SpeedData;
+            var speedData = objData.GetData<SpeedData>();
             if (speedData.acceleration == 0)
             {
                 return;
@@ -28,8 +28,8 @@ namespace Module
             speedData.lastAcceleration = speedData.acceleration;
             speedData.acceleration = speedData.acceleration - speedData.accelerationDelta;
 
-            var directionData = objData.GetData<DirectionData>() as DirectionData;
-            var positionData = objData.GetData<PositionData>() as PositionData;
+            var directionData = objData.GetData<DirectionData>();
+            var positionData = objData.GetData<PositionData>();
             var deltaX = directionData.x * curSpeed;
             var deltaY = directionData.y * curSpeed;
             var deltaZ = directionData.z * curSpeed;
@@ -37,7 +37,7 @@ namespace Module
             positionData.y += deltaY;
             positionData.z += deltaZ;
 
-            var resourceData = objData.GetData<Data.ResourceData>() as Data.ResourceData;
+            var resourceData = objData.GetData<ResourceData>();
             var transform = resourceData.gameObject.transform;
             var deltaSpeed = Time.deltaTime / Constant.SPEED;
             transform.Translate(deltaX * Time.deltaTime / Constant.SPEED, deltaY * Time.deltaTime / Constant.SPEED, deltaZ * Time.deltaTime / Constant.SPEED);

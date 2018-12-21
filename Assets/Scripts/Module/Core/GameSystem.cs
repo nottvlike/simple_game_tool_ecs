@@ -24,7 +24,7 @@ namespace Module
 
         public override void Refresh(ObjectData objData)
         {
-            var gameSystemData = objData.GetData<GameSystemData>() as GameSystemData;
+            var gameSystemData = objData.GetData<GameSystemData>();
 
             gameSystemData.clientFrame++;
 

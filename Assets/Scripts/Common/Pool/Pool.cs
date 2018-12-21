@@ -12,7 +12,7 @@ public class Pool : IPool
             return null;
         }
 
-        var resourceStateData = data.GetData<Data.ResourceStateData>() as Data.ResourceStateData;
+        var resourceStateData = data.GetData<Data.ResourceStateData>();
 
         ObjectData poolObjectData = null;
         List<ObjectData> objectDataList = null;
@@ -26,7 +26,7 @@ public class Pool : IPool
             for (var i = 0; i < objectDataList.Count; i++)
             {
                 var tmpObjectData = objectDataList[i];
-                var resourcePoolData = tmpObjectData.GetData<Data.ResourcePoolData>() as Data.ResourcePoolData;
+                var resourcePoolData = tmpObjectData.GetData<Data.ResourcePoolData>();
                 if (!resourcePoolData.isInUse)
                 {
                     resourcePoolData.isInUse = true;
@@ -39,7 +39,7 @@ public class Pool : IPool
         if (poolObjectData == null)
         {
             poolObjectData = DeepClone(data);
-            var resourcePoolData = poolObjectData.GetData<Data.ResourcePoolData>() as Data.ResourcePoolData;
+            var resourcePoolData = poolObjectData.GetData<Data.ResourcePoolData>();
             resourcePoolData.isInUse = true;
 
             objectDataList.Add(poolObjectData);
@@ -57,7 +57,7 @@ public class Pool : IPool
             return false;
         }
 
-        var resourceData = objData.GetData<Data.ResourceData>() as Data.ResourceData;
+        var resourceData = objData.GetData<Data.ResourceData>();
         if (resourceData == null)
         {
             LogUtil.W("ResourceData not exist {0}!", objData.ObjectId);
@@ -78,7 +78,7 @@ public class Pool : IPool
             objData.AddData(data.Clone());
         }
 
-        var resourceStateData = objData.GetData<Data.ResourceStateData>() as Data.ResourceStateData;
+        var resourceStateData = objData.GetData<Data.ResourceStateData>();
         if (resourceStateData != null)
         {
             resourceStateData.isInstantiated = false;
@@ -97,7 +97,7 @@ public class Pool : IPool
             return;
         }
 
-        var poolData = objData.GetData<Data.ResourcePoolData>() as Data.ResourcePoolData;
+        var poolData = objData.GetData<Data.ResourcePoolData>();
         List<ObjectData> poolObjectList = null;
 		if (_objectDataDict.TryGetValue(poolData.name, out poolObjectList))
 		{   

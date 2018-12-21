@@ -14,7 +14,7 @@ namespace Module
 
         public override void Refresh(ObjectData objData)
         {
-            var joyStickData = objData.GetData<JoyStickData>() as JoyStickData;
+            var joyStickData = objData.GetData<JoyStickData>();
 
             var joyStickMapDataList = WorldManager.Instance.JoyStickConfig.joyStickMapDataList;
             for (var j = 0; j < joyStickMapDataList.Length; j++)
@@ -45,9 +45,9 @@ namespace Module
             }
         }
 
-        void AddJoyStickActionData(JoyStickData joyStickData, JoyStickActionType actionType, JoyStickActionFaceType faceType)
+        public static void AddJoyStickActionData(JoyStickData joyStickData, JoyStickActionType actionType, JoyStickActionFaceType faceType)
         {
-            var gameSystemData = WorldManager.Instance.GameCore.GetData<GameSystemData>() as GameSystemData;
+            var gameSystemData = WorldManager.Instance.GameCore.GetData<GameSystemData>();
 
             var joyStickActionData = WorldManager.Instance.PoolMgr.Get<JoyStickActionData>();
             joyStickActionData.frame = gameSystemData.clientFrame + Constant.JOYSTICK_DELAY_FRAME_COUNT;

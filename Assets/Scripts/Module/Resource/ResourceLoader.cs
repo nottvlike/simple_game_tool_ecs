@@ -15,8 +15,8 @@ namespace Module
 
         public override void Refresh(ObjectData objData)
         {
-            var resourceStateData = objData.GetData<ResourceStateData>() as ResourceStateData;
-            var resourceData = objData.GetData<ResourceData>() as ResourceData;
+            var resourceStateData = objData.GetData<ResourceStateData>();
+            var resourceData = objData.GetData<ResourceData>();
             if (!string.IsNullOrEmpty(resourceData.resource) && resourceStateData.isGameObject)
             {
                 resourceStateData.isLoaded = WorldManager.Instance.ResourceMgr.IsResourceLoaded(resourceData.resource);

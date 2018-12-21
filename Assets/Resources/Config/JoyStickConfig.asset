@@ -14,18 +14,14 @@ MonoBehaviour:
   joyStickMapDataList:
   - keyCode: 61000000
     keyStateType: 1
-    joyStickActionType: 0
+    joyStickActionType: 1
     joyStickActionFaceType: 1
   - keyCode: 64000000
     keyStateType: 1
-    joyStickActionType: 0
+    joyStickActionType: 1
     joyStickActionFaceType: 2
   - keyCode: 6100000064000000
     keyStateType: 2
-    joyStickActionType: 1
-    joyStickActionFaceType: 0
-  - keyCode: 
-    keyStateType: 1
     joyStickActionType: 2
     joyStickActionFaceType: 0
   - keyCode: 
@@ -35,4 +31,8 @@ MonoBehaviour:
   - keyCode: 
     keyStateType: 1
     joyStickActionType: 4
+    joyStickActionFaceType: 0
+  - keyCode: 
+    keyStateType: 1
+    joyStickActionType: 5
     joyStickActionFaceType: 0
