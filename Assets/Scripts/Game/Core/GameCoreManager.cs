@@ -16,19 +16,9 @@ public partial class WorldManager : Singleton<WorldManager>
                 localizationData.zone = "zh-cn";
                 _gameCore.AddData(localizationData);
 
-                var localizationListConfig = ResourceMgr.Load("LocalizationConfigGroup") as LocalizationConfigGroup;
-                LocalizationConfig[] localizationConfigList = localizationListConfig.localizationConfigList;
-                for (var i = 0; i < localizationConfigList.Length; i++)
-                {
-                    var localizationConfig = localizationConfigList[i];
-                    if (localizationConfig.zone == localizationData.zone)
-                    {
-                        localizationConfig.Init();
-                        localizationData.currentConfig = localizationConfig;
-                    }
-                }
-
                 _gameCore.AddData(new ResourcePreloadData());
+
+                _gameCore.AddData(new PlayerBaseData());
 
                 _objectDataList.Add(_gameCore);
 
@@ -83,8 +73,20 @@ public partial class WorldManager : Singleton<WorldManager>
             if (_player == null)
             {
                 _player = new ObjectData();
-                _player.AddData(new PlayerBaseData());
+
+                var actorData = new ActorData();
+                actorData.actorId = 1;
+                _player.AddData(actorData);
+
                 _player.AddData(new ServerData());
+                _player.AddData(new DirectionData());
+                _player.AddData(new SpeedData());
+                _player.AddData(new ResourceData());
+                _player.AddData(new ResourceStateData());
+
+                _player.AddData(new JoyStickData());
+                _player.AddData(new ActorSyncData());
+
                 _objectDataList.Add(_player);
 
                 _player.SetDirty();

@@ -16,14 +16,6 @@ MonoBehaviour:
     resourcePath: Prefab/Cube
     assetbundlePath: 
     isFromAssetBundle: 0
-  - resourceName: GameConfig
-    resourcePath: Config/GameConfig
-    assetbundlePath: 
-    isFromAssetBundle: 0
-  - resourceName: JoyStickConfig
-    resourcePath: Config/JoyStickConfig
-    assetbundlePath: 
-    isFromAssetBundle: 0
   - resourceName: UI Root
     resourcePath: Prefab/UI/UI Root
     assetbundlePath: 
@@ -42,10 +34,6 @@ MonoBehaviour:
     isFromAssetBundle: 0
   - resourceName: CreateRolePanel
     resourcePath: Prefab/UI/CreateRolePanel
-    assetbundlePath: 
-    isFromAssetBundle: 0
-  - resourceName: PanelConfig
-    resourcePath: Config/PanelConfig
     assetbundlePath: 
     isFromAssetBundle: 0
   - resourceName: FightPanel
@@ -68,15 +56,15 @@ MonoBehaviour:
     resourcePath: Prefab/UI/SimpleTipsPanel
     assetbundlePath: 
     isFromAssetBundle: 0
-  - resourceName: LocalizationConfigGroup
-    resourcePath: Config/LocalizationConfigGroup
-    assetbundlePath: 
-    isFromAssetBundle: 0
   - resourceName: YesNoPanel
     resourcePath: Prefab/UI/YesNoPanel
     assetbundlePath: 
     isFromAssetBundle: 0
-  - resourceName: ResourcePreloadConfig
-    resourcePath: Config/ResourcePreloadConfig
+  - resourceName: MainConfigGroup
+    resourcePath: Config/MainConfigGroup
+    assetbundlePath: 
+    isFromAssetBundle: 0
+  - resourceName: PreloadConfigGroup
+    resourcePath: Config/PreloadConfigGroup
     assetbundlePath: 
     isFromAssetBundle: 0

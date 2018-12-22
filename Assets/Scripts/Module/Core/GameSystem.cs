@@ -28,7 +28,7 @@ namespace Module
 
             gameSystemData.clientFrame++;
 
-            var deltaTime = Mathf.CeilToInt(Time.unscaledDeltaTime * 1000);
+            var deltaTime = Mathf.CeilToInt(Time.unscaledDeltaTime * Constant.SECOND_TO_MILLISECOND);
             gameSystemData.unscaleDeltaTime = deltaTime;
             gameSystemData.unscaleTime += deltaTime;
 

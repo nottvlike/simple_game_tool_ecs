@@ -10,37 +10,41 @@ namespace Module
     {
         protected override void InitRequiredDataType()
         {
-            _requiredDataTypeList.Add(typeof(PositionData));
             _requiredDataTypeList.Add(typeof(DirectionData));
             _requiredDataTypeList.Add(typeof(SpeedData));
+            _requiredDataTypeList.Add(typeof(ResourceStateData));
         }
 
         public override void Refresh(ObjectData objData)
         {
-            var speedData = objData.GetData<SpeedData>();
-            if (speedData.acceleration == 0)
+            var resourceStateData = objData.GetData<ResourceStateData>();
+            if (!resourceStateData.isInstantiated)
             {
                 return;
             }
 
-            var curSpeed = speedData.lastAcceleration > speedData.acceleration ? speedData.noraml : speedData.noraml + speedData.delta;
+            var speedData = objData.GetData<SpeedData>();
+            if (speedData.speed == 0)
+            {
+                return;
+            }
 
-            speedData.lastAcceleration = speedData.acceleration;
-            speedData.acceleration = speedData.acceleration - speedData.accelerationDelta;
+            speedData.speed = speedData.speed - speedData.friction;
+            if (speedData.speed < 0)
+            {
+                speedData.speed = 0;
+            }
 
             var directionData = objData.GetData<DirectionData>();
-            var positionData = objData.GetData<PositionData>();
-            var deltaX = directionData.x * curSpeed;
-            var deltaY = directionData.y * curSpeed;
-            var deltaZ = directionData.z * curSpeed;
-            positionData.x += deltaX;
-            positionData.y += deltaY;
-            positionData.z += deltaZ;
+            var deltaX = (float)directionData.x * speedData.speed / Constant.SPEED_BASE;
+            var deltaY = (float)directionData.y * speedData.speed / Constant.SPEED_BASE;
+            var deltaZ = (float)directionData.z * speedData.speed / Constant.SPEED_BASE;
 
             var resourceData = objData.GetData<ResourceData>();
             var transform = resourceData.gameObject.transform;
-            var deltaSpeed = Time.deltaTime / Constant.SPEED;
-            transform.Translate(deltaX * Time.deltaTime / Constant.SPEED, deltaY * Time.deltaTime / Constant.SPEED, deltaZ * Time.deltaTime / Constant.SPEED);
+            var gameSystemData = WorldManager.Instance.GameCore.GetData<GameSystemData>();
+            var deltaTime = (float)gameSystemData.unscaleDeltaTime / Constant.SECOND_TO_MILLISECOND;
+            transform.Translate(deltaX * deltaTime, deltaY * deltaTime, deltaZ * deltaTime);
         }
     }
 }

@@ -59,8 +59,8 @@ public class RoleSelectPanel : Panel
 
     protected override void OnShow(params object[] args)
     {
-        var player = WorldManager.Instance.Player;
-        var playerBaseData = player.GetData<Data.PlayerBaseData>();
+        var gameCore = WorldManager.Instance.GameCore;
+        var playerBaseData = gameCore.GetData<Data.PlayerBaseData>();
         var roleInfoLiteList = playerBaseData.roleInfoLiteList;
         for (var i = 0; i < roleInfoLiteList.Count; i++)
         {
@@ -88,7 +88,7 @@ public class RoleSelectPanel : Panel
             _roleSelectItemList[i].gameObject.SetActive(false);
         }
 
-        var serverData = player.GetData<Data.ServerData>();
+        var serverData = gameCore.GetData<Data.ServerData>();
         var serverInfoList = serverData.serverInfoList;
         if (serverInfoList.Count > 0)
         {
@@ -158,7 +158,7 @@ public class RoleSelectPanel : Panel
 
     bool HasRole(int serverId)
     {
-        var playerBaseData = WorldManager.Instance.Player.GetData<Data.PlayerBaseData>();
+        var playerBaseData = WorldManager.Instance.GameCore.GetData<Data.PlayerBaseData>();
         var roleInfoLiteList = playerBaseData.roleInfoLiteList;
         for (var i = 0; i < roleInfoLiteList.Count; i++)
         {

@@ -54,7 +54,7 @@ public class PlayerNotification : BaseNotification
         {
             var roleInfo = resRoleInfo.RoleInfo.Value;
 
-            var playerBaseData = worldMgr.Player.GetData<Data.PlayerBaseData>();
+            var playerBaseData = worldMgr.GameCore.GetData<Data.PlayerBaseData>();
             playerBaseData.roleInfo.roleId = roleInfo.RoleId;
             playerBaseData.roleInfo.roleName = roleInfo.RoleName;
             playerBaseData.roleInfo.roleLevel = roleInfo.RoleLevel;
@@ -87,7 +87,7 @@ public class PlayerNotification : BaseNotification
         {
             var roleInfo = resCreateRole.RoleInfo.Value;
 
-            var playerBaseData = worldMgr.Player.GetData<Data.PlayerBaseData>();
+            var playerBaseData = worldMgr.GameCore.GetData<Data.PlayerBaseData>();
             playerBaseData.roleInfo.roleId = roleInfo.RoleId;
             playerBaseData.roleInfo.roleName = roleInfo.RoleName;
             playerBaseData.roleInfo.roleLevel = roleInfo.RoleLevel;

@@ -17,6 +17,8 @@ public class LocalizationConfig : ScriptableObject
     Dictionary<string, string> _stringDictionary = new Dictionary<string, string>();
     public void Init()
     {
+        _stringDictionary.Clear();
+
         for (var i = 0; i < stringList.Length; i++)
         {
             var stringObject = stringList[i];

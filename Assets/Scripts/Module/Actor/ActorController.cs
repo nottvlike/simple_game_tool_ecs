@@ -9,7 +9,7 @@ namespace Module
     {
         protected override void InitRequiredDataType()
         {
-            _requiredDataTypeList.Add(typeof(PositionData));
+            _requiredDataTypeList.Add(typeof(ActorData));
             _requiredDataTypeList.Add(typeof(DirectionData));
             _requiredDataTypeList.Add(typeof(SpeedData));
             _requiredDataTypeList.Add(typeof(JoyStickData));
@@ -20,6 +20,9 @@ namespace Module
             var worldMgr = WorldManager.Instance;
 
             var gameSystemData = worldMgr.GameCore.GetData<GameSystemData>();
+
+            var actorData = objData.GetData<ActorData>();
+            var actorInfo = worldMgr.ActorConfig.Get(actorData.actorId);
 
             var speedData = objData.GetData<SpeedData>();
             var directionData = objData.GetData<DirectionData>();
@@ -34,12 +37,12 @@ namespace Module
                     switch (serverAction.actionType)
                     {
                         case JoyStickActionType.Run:
-                            speedData.acceleration = 100;
-                            speedData.accelerationDelta = 0;
+                            speedData.speed = actorInfo.speed;
+                            speedData.friction = 0;
                             directionData.x = serverAction.actionParam == JoyStickActionFaceType.Right ? 1 : -1;
                             break;
                         case JoyStickActionType.CancelRun:
-                            speedData.accelerationDelta = 10;
+                            speedData.friction = actorInfo.friction;
                             break;
                     }
 

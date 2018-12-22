@@ -52,7 +52,7 @@ public class LoginPanel : Panel
             if (resultType == WebRequestResultType.Success)
             {
                 var accountInfoResult = JsonUtility.FromJson<GetAccountInfoResult>(accountInfoStr);
-                var playerBaseData = WorldManager.Instance.Player.GetData<Data.PlayerBaseData>();
+                var playerBaseData = WorldManager.Instance.GameCore.GetData<Data.PlayerBaseData>();
                 var result = (LoginGameResult)accountInfoResult.result;
                 if (result == LoginGameResult.Success)
                 {

@@ -4,14 +4,15 @@ using UnityEngine;
 
 public partial class WorldManager : Singleton<WorldManager>
 {
-    GameConfig _gameConfig;
+    ActorConfig _actorConfig;
     JoyStickConfig _joyStickConfig;
     PanelConfig _panelConfig;
     ResourcePreloadConfig _resourcePreloadConfig;
+    LocalizationConfigGroup _localizationConfigGroup;
 
-    public GameConfig GameConfig
+    public ActorConfig ActorConfig
     {
-        get { return _gameConfig; }
+        get { return _actorConfig; }
     }
 
     public JoyStickConfig JoyStickConfig
@@ -29,18 +30,30 @@ public partial class WorldManager : Singleton<WorldManager>
         get { return _resourcePreloadConfig; }
     }
 
+    public LocalizationConfigGroup LocalizationConfigGroup
+    {
+        get { return _localizationConfigGroup; }
+    }
+
     public void LoadConfig()
     {
-        _gameConfig = ResourceMgr.Load("GameConfig") as GameConfig;
-        _joyStickConfig = ResourceMgr.Load("JoyStickConfig") as JoyStickConfig;
-        _panelConfig = ResourceMgr.Load("PanelConfig") as PanelConfig;
+        ResourceMgr.LoadAsync("MainConfigGroup", delegate (Object obj)
+        {
+            var configGroup = obj as ConfigGroup;
+
+            _actorConfig = configGroup.Get<ActorConfig>();
+            _joyStickConfig = configGroup.Get<JoyStickConfig>();
+            _localizationConfigGroup = configGroup.Get<LocalizationConfigGroup>();
+        });
     }
 
     public void LoadPreloadConfig()
     {
-        ResourceMgr.LoadAsync("ResourcePreloadConfig", delegate(Object obj)
+        ResourceMgr.LoadAsync("PreloadConfigGroup", delegate(Object obj)
         {
-            _resourcePreloadConfig = obj as ResourcePreloadConfig;
+            var configGroup = obj as ConfigGroup;
+            _resourcePreloadConfig = configGroup.Get<ResourcePreloadConfig>();
+            _panelConfig = configGroup.Get<PanelConfig>();
 
             var resourcePreloadData = GameCore.GetData<Data.ResourcePreloadData>();
             resourcePreloadData.preloadType = ResourcePreloadType.GameInit;

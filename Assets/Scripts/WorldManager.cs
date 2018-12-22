@@ -20,12 +20,9 @@ public class ResourcePreloadNotification : BaseNotification
             var player = worldMgr.Player;
             var item = worldMgr.Item;
 
-            worldMgr.LoadConfig();
-
             GetServerList();
 
             worldMgr.UIMgr.ShowPanel(PanelType.GameUpdatePanel);
-            worldMgr.LevelLoader.DoDrama();
         }
     }
 
@@ -103,6 +100,8 @@ public partial class WorldManager : Singleton<WorldManager>
         var gameServer = GameServer;
 
         LoadPreloadConfig();
+
+        LoadConfig();
     }
 
     public void Destroy()
@@ -115,6 +114,5 @@ public partial class WorldManager : Singleton<WorldManager>
         DestroyResourceMgr();
         DestroyUIMgr();
         DestroyUnityEventMgr();
-        DestroyLevelLoader();
     }
 }

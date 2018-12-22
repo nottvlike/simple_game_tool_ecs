@@ -3,16 +3,8 @@ using System.Collections.Generic;
 using UnityEditor;
 using UnityEngine;
 
-public class GameConfigEditor {
-    [MenuItem("Config/Create Game Config")]
-    static void CreateGameConfig()
-    {
-        GameConfig gameConfig = ScriptableObject.CreateInstance<GameConfig>();
-        string path = "Assets/Resources/Config/GameConfig.asset";
-        AssetDatabase.CreateAsset(gameConfig, path);
-        AssetDatabase.SaveAssets();
-    }
-
+public class GameConfigEditor
+{
     [MenuItem("Config/Create ActorJoyStick Config")]
     static void CreateJoyStickConfig()
     {
@@ -64,6 +56,33 @@ public class GameConfigEditor {
         ResourcePreloadConfig resourcePreloadConfig = ScriptableObject.CreateInstance<ResourcePreloadConfig>();
         string path = "Assets/Resources/Config/ResourcePreloadConfig.asset";
         AssetDatabase.CreateAsset(resourcePreloadConfig, path);
+        AssetDatabase.SaveAssets();
+    }
+
+    [MenuItem("Config/Create Actor Config")]
+    static void CreateActorConfig()
+    {
+        ActorConfig actorConfig = ScriptableObject.CreateInstance<ActorConfig>();
+        string path = "Assets/Resources/Config/ActorConfig.asset";
+        AssetDatabase.CreateAsset(actorConfig, path);
+        AssetDatabase.SaveAssets();
+    }
+
+    [MenuItem("Config/Create Preload Config Group")]
+    static void CreatePreloadConfigGroup()
+    {
+        ConfigGroup preloadConfigGroup = ScriptableObject.CreateInstance<ConfigGroup>();
+        string path = "Assets/Resources/Config/Group/PreloadConfigGroup.asset";
+        AssetDatabase.CreateAsset(preloadConfigGroup, path);
+        AssetDatabase.SaveAssets();
+    }
+
+    [MenuItem("Config/Create Main Config Group")]
+    static void CreateMainConfigGroup()
+    {
+        ConfigGroup mainConfigGroup = ScriptableObject.CreateInstance<ConfigGroup>();
+        string path = "Assets/Resources/Config/Group/MainConfigGroup.asset";
+        AssetDatabase.CreateAsset(mainConfigGroup, path);
         AssetDatabase.SaveAssets();
     }
 }
