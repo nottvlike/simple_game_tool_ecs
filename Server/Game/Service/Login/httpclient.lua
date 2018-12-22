@@ -56,17 +56,17 @@ local CMD = {
 				{
 					"result": 0,
 					"serverInfoList": [{
-						"serverId": "1",
+						"serverId": 1,
 						"serverName": "Test1",
 						"serverAddress": "127.0.0.1",
 						"serverPort": 8888
 					}, {
-						"serverId": "2",
+						"serverId": 2,
 						"serverName": "Test2",
 						"serverAddress": "127.0.0.1",
 						"serverPort": 8888
 					}, {
-						"serverId": "3",
+						"serverId": 3,
 						"serverName": "Test3",
 						"serverAddress": "127.0.0.1",
 						"serverPort": 8888
