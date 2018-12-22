@@ -4,6 +4,7 @@ using UnityEngine;
 
 namespace Data
 {
+    [System.Serializable]
     public struct RoleInfoLite
     {
         public string roleId;
@@ -28,6 +29,7 @@ namespace Data
         public PlayerNotification notification = new PlayerNotification();
     }
 
+    [System.Serializable]
     public struct ServerInfo
     {
         public int serverId;
