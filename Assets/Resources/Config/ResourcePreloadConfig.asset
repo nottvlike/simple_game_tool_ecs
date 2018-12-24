@@ -18,3 +18,4 @@ MonoBehaviour:
     - YesNoPanel
     - GameUpdatePanel
     - AsyncPanel
+    - MainConfigGroup
