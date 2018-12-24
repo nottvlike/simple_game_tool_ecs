@@ -32,9 +32,9 @@ namespace Module
             if (jumpData.groundPosition.y != position.y || currentJump.y != 0)
             {
                 RaycastHit raycastHit;
-                if (Physics.Raycast(position, -Vector3.up, out raycastHit, 100, LayerMask.GetMask("Ground")))
+                if (Physics.Raycast(position, -Vector3.up, out raycastHit, 3, LayerMask.GetMask("Ground")))
                 {
-                    jumpData.groundPosition.y = raycastHit.transform.position.y;
+                    jumpData.groundPosition.y = raycastHit.transform.parent.position.y;
                 }
 
                 var jump = currentJump.y - jumpData.gravity;

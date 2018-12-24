@@ -17,5 +17,5 @@ MonoBehaviour:
     resourceName: Cube
     speed: 600
     friction: 10
-    jump: {x: 100, y: 200, z: 0}
-    airFriction: 30
+    jump: {x: 10, y: 40, z: 0}
+    airFriction: 3
