@@ -15,4 +15,7 @@ public partial class Constant
     public const int SPEED_BASE = 100;
     public const int SECOND_TO_MILLISECOND = 1000;
     public const int JOYSTICK_DELAY_FRAME_COUNT = 5;
+
+    public const int CAMERA_MOVE_SPEED = 600;
+    public const int CAMERA_FOLLOW_INTERVAL = 1000;
 }

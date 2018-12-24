@@ -27,7 +27,7 @@ namespace Module
             var resourceData = objData.GetData<ResourceData>();
             var followCameraData = objData.GetData<FollowCameraData>();
             followCameraData.interval += gameSystemData.unscaleDeltaTime;
-            if (followCameraData.interval >= 1000)
+            if (followCameraData.interval >= Constant.CAMERA_FOLLOW_INTERVAL)
             {
                 followCameraData.interval = 0;
                 followCameraData.targetPosition = resourceData.gameObject.transform.position;
@@ -55,32 +55,6 @@ namespace Module
                 }
                 Camera.main.transform.Translate(deltaX, deltaY, 0);
             }
-        }
-
-        public void Tick()
-        {
-            for (var i = 0; i < _objectIdList.Count; ++i)
-            {
-                var objId = _objectIdList[i];
-
-                var objData = WorldManager.Instance.GetObjectData(objId);
-                var resourceStateData = objData.GetData<ResourceStateData>();
-                if (!resourceStateData.isInstantiated)
-                {
-                    return;
-                }
-
-                var resourceData = objData.GetData<ResourceData>();
-                var transform = resourceData.gameObject.transform;
-
-                var targetPosition = transform.position;
-                var cameraPosition = Camera.main.transform.position;
-                var deltaX = (targetPosition.x - cameraPosition.x) * 0.4f;
-                var deltaY = (targetPosition.y - cameraPosition.y) * 0.4f;
-                Camera.main.transform.Translate(deltaX, deltaY, 0);
-            }
-
-
         }
     }
 }
