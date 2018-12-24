@@ -49,6 +49,7 @@ public partial class WorldManager : Singleton<WorldManager>
         Register(new Module.GameServer());
         Register(new Module.ActorController());
         Register(new Module.ActorMove());
+        Register(new Module.ActorJump());
         Register(new Module.ResourceLoader());
         Register(new Module.ResourcePreloader());
     }

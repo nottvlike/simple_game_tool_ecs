@@ -10,13 +10,22 @@ namespace Module
         protected override void InitRequiredDataType()
         {
             _requiredDataTypeList.Add(typeof(ActorData));
+            _requiredDataTypeList.Add(typeof(ActorJumpData));
             _requiredDataTypeList.Add(typeof(DirectionData));
             _requiredDataTypeList.Add(typeof(SpeedData));
             _requiredDataTypeList.Add(typeof(JoyStickData));
+            _requiredDataTypeList.Add(typeof(ResourceData));
+            _requiredDataTypeList.Add(typeof(ResourceStateData));
         }
 
         public override void Refresh(ObjectData objData)
         {
+            var resourceStateData = objData.GetData<ResourceStateData>();
+            if (!resourceStateData.isInstantiated)
+            {
+                return;
+            }
+
             var worldMgr = WorldManager.Instance;
 
             var gameSystemData = worldMgr.GameCore.GetData<GameSystemData>();
@@ -26,6 +35,9 @@ namespace Module
 
             var speedData = objData.GetData<SpeedData>();
             var directionData = objData.GetData<DirectionData>();
+
+            var jumpData = objData.GetData<ActorJumpData>();
+            var resourceData = objData.GetData<ResourceData>();
 
             var joyStickData = objData.GetData<JoyStickData>();
             var serverActionList = joyStickData.serverActionList;
@@ -43,6 +55,11 @@ namespace Module
                             break;
                         case JoyStickActionType.CancelRun:
                             speedData.friction = actorInfo.friction;
+                            break;
+                        case JoyStickActionType.Jump:
+                            jumpData.currentJump = actorInfo.jump;
+                            jumpData.fall = 0;
+                            jumpData.groundPosition = resourceData.gameObject.transform.position;
                             break;
                     }
 

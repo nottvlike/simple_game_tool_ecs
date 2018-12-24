@@ -10,7 +10,8 @@ public struct ActorInfo
     public string resourceName;
     public int speed;
     public int friction;
-    public int jump;
+    public Vector3 jump;
+    public int airFriction;
 }
 
 public class ActorConfig : ScriptableObject

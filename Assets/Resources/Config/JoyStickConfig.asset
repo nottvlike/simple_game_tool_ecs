@@ -24,7 +24,7 @@ MonoBehaviour:
     keyStateType: 2
     joyStickActionType: 2
     joyStickActionFaceType: 0
-  - keyCode: 
+  - keyCode: 20000000
     keyStateType: 1
     joyStickActionType: 3
     joyStickActionFaceType: 0

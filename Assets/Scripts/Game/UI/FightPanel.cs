@@ -27,7 +27,14 @@ public class FightPanel : Panel
         resourceStateData.name = actorInfo.actorName;
         resourceStateData.isGameObject = true;
 
-        player.SetDirty(resourceData, resourceStateData);
+        var jumpData = player.GetData<ActorJumpData>();
+        jumpData.friction = actorInfo.airFriction;
+        jumpData.gravity = 10;
+
+        var directionData = player.GetData<DirectionData>();
+        directionData.x = 1;
+
+        player.SetDirty(resourceData, resourceStateData, jumpData, directionData);
     }
 
     void OnExitClick()
