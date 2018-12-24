@@ -18,4 +18,11 @@ namespace Data
         public int gravity;
         public Vector3 groundPosition;
     }
+
+    public class FollowCameraData : Data
+    {
+        public int moveSpeed;
+        public int interval;
+        public Vector3 targetPosition;
+    }
 }

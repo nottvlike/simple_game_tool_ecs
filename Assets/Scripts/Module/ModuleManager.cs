@@ -50,6 +50,7 @@ public partial class WorldManager : Singleton<WorldManager>
         Register(new Module.ActorController());
         Register(new Module.ActorMove());
         Register(new Module.ActorJump());
+        Register(new Module.ActorFollowCamera());
         Register(new Module.ResourceLoader());
         Register(new Module.ResourcePreloader());
     }
