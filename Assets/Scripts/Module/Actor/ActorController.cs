@@ -58,8 +58,7 @@ namespace Module
                             break;
                         case JoyStickActionType.Jump:
                             jumpData.currentJump = actorInfo.jump;
-                            jumpData.fall = 0;
-                            jumpData.groundPosition = resourceData.gameObject.transform.position;
+                            actorData.ground = resourceData.gameObject.transform.position;
                             break;
                     }
 

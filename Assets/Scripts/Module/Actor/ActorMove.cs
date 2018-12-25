@@ -10,7 +10,7 @@ namespace Module
     {
         protected override void InitRequiredDataType()
         {
-            _requiredDataTypeList.Add(typeof(DirectionData));
+            _requiredDataTypeList.Add(typeof(ActorData));
             _requiredDataTypeList.Add(typeof(SpeedData));
             _requiredDataTypeList.Add(typeof(ResourceStateData));
         }
@@ -35,16 +35,8 @@ namespace Module
                 speedData.speed = 0;
             }
 
-            var directionData = objData.GetData<DirectionData>();
-            var deltaX = (float)directionData.x * speedData.speed / Constant.SPEED_BASE;
-            var deltaY = (float)directionData.y * speedData.speed / Constant.SPEED_BASE;
-            var deltaZ = (float)directionData.z * speedData.speed / Constant.SPEED_BASE;
-
-            var resourceData = objData.GetData<ResourceData>();
-            var transform = resourceData.gameObject.transform;
-            var gameSystemData = WorldManager.Instance.GameCore.GetData<GameSystemData>();
-            var deltaTime = (float)gameSystemData.unscaleDeltaTime / Constant.SECOND_TO_MILLISECOND;
-            transform.Translate(deltaX * deltaTime, deltaY * deltaTime, deltaZ * deltaTime);
+            var actorData = objData.GetData<ActorData>();
+            actorData.force.x = speedData.speed / (float)Constant.SPEED_BASE;
         }
     }
 }

@@ -79,7 +79,7 @@ public partial class WorldManager : Singleton<WorldManager>
                 _player.AddData(actorData);
 
                 var follow = new FollowCameraData();
-                follow.moveSpeed = Constant.CAMERA_MOVE_SPEED;
+                follow.speed = Constant.CAMERA_MOVE_SPEED;
                 _player.AddData(follow);
 
                 _player.AddData(new ActorJumpData());

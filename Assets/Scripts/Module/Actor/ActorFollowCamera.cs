@@ -41,8 +41,8 @@ namespace Module
                 var directionX = targetPosition.x > cameraPosition.x ? 1 : -1;
                 var directionY = targetPosition.y > cameraPosition.y ? 1 : -1;
                 var deltaTime = gameSystemData.unscaleDeltaTime / (float)Constant.SECOND_TO_MILLISECOND;
-                var deltaX = directionX * followCameraData.moveSpeed / Constant.SPEED_BASE * deltaTime;
-                var deltaY = directionY * followCameraData.moveSpeed / Constant.SPEED_BASE * deltaTime;
+                var deltaX = directionX * followCameraData.speed / Constant.SPEED_BASE * deltaTime;
+                var deltaY = directionY * followCameraData.speed / Constant.SPEED_BASE * deltaTime;
 
                 if (Mathf.Abs(deltaX) > Mathf.Abs(targetPosition.x - cameraPosition.x))
                 {

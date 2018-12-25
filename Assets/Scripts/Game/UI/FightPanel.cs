@@ -19,6 +19,8 @@ public class FightPanel : Panel
         var player = worldMgr.Player;
 
         var actorData = player.GetData<ActorData>();
+        actorData.gravity = 10;
+
         var actorInfo = worldMgr.ActorConfig.Get(actorData.actorId);
         var resourceData = player.GetData<ResourceData>();
         resourceData.resource = actorInfo.resourceName;
@@ -29,7 +31,6 @@ public class FightPanel : Panel
 
         var jumpData = player.GetData<ActorJumpData>();
         jumpData.friction = actorInfo.airFriction;
-        jumpData.gravity = 10;
 
         var directionData = player.GetData<DirectionData>();
         directionData.x = 1;
