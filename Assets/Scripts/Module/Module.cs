@@ -2,7 +2,8 @@
 using System.Collections.Generic;
 using System;
 
-namespace Module{
+namespace Module
+{
     public abstract class Module
     {
         public Module()
@@ -25,7 +26,7 @@ namespace Module{
             {
                 var data = dataList[i];
                 var type = data.GetType();
-                if (IsRequired(data) && _tmpList.IndexOf(type) == -1)
+                if (_requiredDataTypeList.IndexOf(data.GetType()) != -1 && _tmpList.IndexOf(type) == -1)
                 {
                     _tmpList.Add(type);
                 }
@@ -33,7 +34,7 @@ namespace Module{
             return _tmpList.Count > 0 && _tmpList.Count == _requiredDataTypeList.Count;
         }
 
-        public bool IsRequired(Data.Data data)
+        public virtual bool IsUpdateRequired(Data.Data data)
         {
             return _requiredDataTypeList.IndexOf(data.GetType()) != -1;
         }
@@ -43,17 +44,18 @@ namespace Module{
 
         protected List<int> _objectIdList = new List<int>();
 
-        public void Add(int objectDataId)
+        public virtual void Add(int objectDataId)
         {
             _objectIdList.Add(objectDataId);
 
             var objData = WorldManager.Instance.GetObjectData(objectDataId);
-            Refresh(objData);
+            SetDirty(objData);
         }
 
-        public void Remove(int objectDataId)
+        public virtual void Remove(int objectDataId)
         {
             _objectIdList.Remove(objectDataId);
+
             Enabled = _objectIdList.Count != 0;
         }
 
@@ -62,6 +64,12 @@ namespace Module{
             return _objectIdList.IndexOf(objectDataId) != -1;
         }
 
+        public virtual void SetDirty(ObjectData objData)
+        {
+            Enabled = true;
+
+            Refresh(objData);
+        }
 
         bool _enabled;
         public bool Enabled
@@ -89,7 +97,7 @@ namespace Module{
                 }
             }
         }
-        
+
         protected virtual void OnEnable() { }
         protected virtual void OnDisable() { }
     }

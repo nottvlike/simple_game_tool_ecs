@@ -89,7 +89,8 @@ public partial class WorldManager : Singleton<WorldManager>
                 _player.AddData(new ResourceData());
                 _player.AddData(new ResourceStateData());
 
-                _player.AddData(new JoyStickData());
+                _player.AddData(new ClientJoyStickData());
+                _player.AddData(new ServerJoyStickData());
                 _player.AddData(new ActorSyncData());
 
                 _objectDataList.Add(_player);

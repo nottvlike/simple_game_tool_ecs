@@ -15,6 +15,12 @@ namespace Module
             _requiredDataTypeList.Add(typeof(ResourceStateData));
         }
 
+        public override bool IsUpdateRequired(Data.Data data)
+        {
+            var type = data.GetType();
+            return type == typeof(ActorData) || type == typeof(DirectionData) || type == typeof(SpeedData) || type == typeof(ActorJumpData);
+        }
+
         public override void Refresh(ObjectData objData)
         {
             var resourceStateData = objData.GetData<ResourceStateData>();
@@ -35,6 +41,7 @@ namespace Module
 
             if (position.y == actorData.ground.y && actorData.force.x == 0 && actorData.force.y == 0)
             {
+                Stop(objData.ObjectId);
                 return;
             }
 

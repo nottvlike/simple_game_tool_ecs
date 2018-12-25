@@ -42,9 +42,7 @@ public partial class WorldManager : Singleton<WorldManager>
     void RegisterAllModule()
     {
         Register(new Module.GameSystem());
-#if UNITY_EDITOR
         Register(new Module.ActorJoyStick());
-#endif
         Register(new Module.ActorSyncClient());
         Register(new Module.GameServer());
         Register(new Module.ActorController());

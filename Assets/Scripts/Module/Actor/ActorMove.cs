@@ -15,6 +15,11 @@ namespace Module
             _requiredDataTypeList.Add(typeof(ResourceStateData));
         }
 
+        public override bool IsUpdateRequired(Data.Data data)
+        {
+            return data.GetType() == typeof(SpeedData);
+        }
+
         public override void Refresh(ObjectData objData)
         {
             var resourceStateData = objData.GetData<ResourceStateData>();
@@ -26,6 +31,7 @@ namespace Module
             var speedData = objData.GetData<SpeedData>();
             if (speedData.speed == 0)
             {
+                Stop(objData.ObjectId);
                 return;
             }
 

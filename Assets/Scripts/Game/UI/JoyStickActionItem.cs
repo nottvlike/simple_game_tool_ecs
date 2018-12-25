@@ -27,13 +27,14 @@ public class JoyStickActionItem : MonoBehaviour, IPointerDownHandler, IPointerUp
 
     void UpdateActionInfo(KeyStateType keyStateType)
     {
+        var player = WorldManager.Instance.Player;
         for (var i = 0; i < ActionInfo.Length; i++)
         {
             var actionInfo = ActionInfo[i];
             if (actionInfo.keyStateType == keyStateType)
             {
-                var joyStickData = WorldManager.Instance.Player.GetData<Data.JoyStickData>();
-                Module.ActorJoyStick.AddJoyStickActionData(joyStickData, actionInfo.actionType, actionInfo.faceType);
+                var joyStickData = player.GetData<Data.ClientJoyStickData>();
+                Module.ActorJoyStick.AddJoyStickActionData(player, joyStickData, actionInfo.actionType, actionInfo.faceType);
             }
         }
     }

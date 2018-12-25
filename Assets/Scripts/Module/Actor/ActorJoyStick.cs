@@ -2,19 +2,27 @@
 using UnityEngine;
 using Data;
 
-#if UNITY_EDITOR
 namespace Module
 {
     public class ActorJoyStick : UpdateModule
     {
         protected override void InitRequiredDataType()
         {
-            _requiredDataTypeList.Add(typeof(JoyStickData));
+            _requiredDataTypeList.Add(typeof(ClientJoyStickData));
+        }
+
+        public override bool IsUpdateRequired(Data.Data data)
+        {
+            return false;
         }
 
         public override void Refresh(ObjectData objData)
         {
-            var joyStickData = objData.GetData<JoyStickData>();
+#if !UNITY_EDITOR
+            Stop(objData.ObjectId);
+            return;
+#endif
+            var joyStickData = objData.GetData<ClientJoyStickData>();
 
             var joyStickMapDataList = WorldManager.Instance.JoyStickConfig.joyStickMapDataList;
             for (var j = 0; j < joyStickMapDataList.Length; j++)
@@ -27,7 +35,7 @@ namespace Module
                     {
                         if (Input.GetKeyDown(keyCodeList[k]))
                         {
-                            AddJoyStickActionData(joyStickData, joystickMapData.joyStickActionType, joystickMapData.joyStickActionFaceType);
+                            AddJoyStickActionData(objData, joyStickData, joystickMapData.joyStickActionType, joystickMapData.joyStickActionFaceType);
                         }
                     }
                 }
@@ -38,14 +46,14 @@ namespace Module
                     {
                         if (Input.GetKeyUp(keyCodeList[k]))
                         {
-                            AddJoyStickActionData(joyStickData, joystickMapData.joyStickActionType, joystickMapData.joyStickActionFaceType);
+                            AddJoyStickActionData(objData, joyStickData, joystickMapData.joyStickActionType, joystickMapData.joyStickActionFaceType);
                         }
                     }
                 }
             }
         }
 
-        public static void AddJoyStickActionData(JoyStickData joyStickData, JoyStickActionType actionType, JoyStickActionFaceType faceType)
+        public static void AddJoyStickActionData(ObjectData objData, ClientJoyStickData joyStickData, JoyStickActionType actionType, JoyStickActionFaceType faceType)
         {
             var gameSystemData = WorldManager.Instance.GameCore.GetData<GameSystemData>();
 
@@ -53,9 +61,9 @@ namespace Module
             joyStickActionData.frame = gameSystemData.clientFrame + Constant.JOYSTICK_DELAY_FRAME_COUNT;
             joyStickActionData.actionType = actionType;
             joyStickActionData.actionParam = faceType;
+            joyStickData.actionList.Add(joyStickActionData);
 
-            joyStickData.clientActionList.Add(joyStickActionData);
+            objData.SetDirty(joyStickData);
         }
     }
 }
-#endif

@@ -7,6 +7,100 @@ namespace Module
 {
     public abstract class UpdateModule : Module, IUpdateEvent
     {
+        public struct ModuleData
+        {
+            public int objId;
+            public bool isStop;
+        }
+
+        ModuleData _defaultModuleData;
+        List<ModuleData> _moduleDataList = new List<ModuleData>();
+
+        public UpdateModule()
+        {
+            _defaultModuleData.objId = -1;
+        }
+
+        public override void Add(int objectDataId)
+        {
+            var moduleData = new ModuleData();
+            moduleData.objId = objectDataId;
+            moduleData.isStop = false;
+            _moduleDataList.Add(moduleData);
+
+            base.Add(objectDataId);
+        }
+
+        public override void Remove(int objectDataId)
+        {
+            base.Remove(objectDataId);
+
+            var index = GetModuleDataIndex(objectDataId);
+            _moduleDataList.Remove(_moduleDataList[index]);
+
+            Enabled = !CheckAllAreStop();
+        }
+
+        int GetModuleDataIndex(int objectDataId)
+        {
+            for (var i = 0; i < _moduleDataList.Count; i++)
+            {
+                var moduleData = _moduleDataList[i];
+                if (moduleData.objId == objectDataId)
+                {
+                    return i;
+                }
+            }
+
+            LogUtil.E("Failed to find module data " + objectDataId);
+            return -1;
+        }
+
+        public override void SetDirty(ObjectData objData)
+        {
+            Start(objData.ObjectId);
+
+            base.SetDirty(objData);
+        }
+
+        void Start(int objectDataId)
+        {
+            var index = GetModuleDataIndex(objectDataId);
+            var moduleData = _moduleDataList[index];
+            moduleData.isStop = false;
+            _moduleDataList[index] = moduleData;
+
+            Enabled = true;
+        }
+
+        protected void Stop(int objectDataId)
+        {
+            var index = GetModuleDataIndex(objectDataId);
+            var moduleData = _moduleDataList[index];
+            moduleData.isStop = true;
+            _moduleDataList[index] = moduleData;
+
+            Enabled = !CheckAllAreStop();
+        }
+
+        bool CheckAllAreStop()
+        {
+            if (_moduleDataList.Count == 0)
+            {
+                return true;
+            }
+
+            for (var i = 0; i < _moduleDataList.Count; i++)
+            {
+                if (!_moduleDataList[i].isStop)
+                {
+                    return false;
+                }
+            }
+
+            return true;
+        }
+
         protected override void OnEnable()
         {
             WorldManager.Instance.UnityEventMgr.Add(this);

@@ -40,9 +40,13 @@ namespace Data
         }
     }
 
-    public class JoyStickData : Data
+    public class ClientJoyStickData : Data
     {
-        public List<JoyStickActionData> clientActionList = new List<JoyStickActionData>();
-        public List<JoyStickActionData> serverActionList = new List<JoyStickActionData>();
+        public List<JoyStickActionData> actionList = new List<JoyStickActionData>();
+    }
+
+    public class ServerJoyStickData : Data
+    {
+        public List<JoyStickActionData> actionList = new List<JoyStickActionData>();
     }
 }

@@ -15,6 +15,11 @@ namespace Module
             _requiredDataTypeList.Add(typeof(ResourceStateData));
         }
 
+        public override bool IsUpdateRequired(Data.Data data)
+        {
+            return data.GetType() == typeof(ActorJumpData);
+        }
+
         public override void Refresh(ObjectData objData)
         {
             var resourceStateData = objData.GetData<ResourceStateData>();
@@ -27,6 +32,7 @@ namespace Module
             var currentJump = jumpData.currentJump;
             if (currentJump.y == 0 && currentJump.x == 0)
             {
+                Stop(objData.ObjectId);
                 return;
             }
 

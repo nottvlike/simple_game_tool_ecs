@@ -13,9 +13,14 @@ namespace Module
             _requiredDataTypeList.Add(typeof(ActorJumpData));
             _requiredDataTypeList.Add(typeof(DirectionData));
             _requiredDataTypeList.Add(typeof(SpeedData));
-            _requiredDataTypeList.Add(typeof(JoyStickData));
+            _requiredDataTypeList.Add(typeof(ServerJoyStickData));
             _requiredDataTypeList.Add(typeof(ResourceData));
             _requiredDataTypeList.Add(typeof(ResourceStateData));
+        }
+
+        public override bool IsUpdateRequired(Data.Data data)
+        {
+            return data.GetType() == typeof(ServerJoyStickData);
         }
 
         public override void Refresh(ObjectData objData)
@@ -23,6 +28,14 @@ namespace Module
             var resourceStateData = objData.GetData<ResourceStateData>();
             if (!resourceStateData.isInstantiated)
             {
+                return;
+            }
+
+            var joyStickData = objData.GetData<ServerJoyStickData>();
+            var serverActionList = joyStickData.actionList;
+            if (serverActionList.Count == 0)
+            {
+                Stop(objData.ObjectId);
                 return;
             }
 
@@ -39,8 +52,6 @@ namespace Module
             var jumpData = objData.GetData<ActorJumpData>();
             var resourceData = objData.GetData<ResourceData>();
 
-            var joyStickData = objData.GetData<JoyStickData>();
-            var serverActionList = joyStickData.serverActionList;
             for (var i = 0; i < serverActionList.Count;)
             {
                 var serverAction = serverActionList[i];
@@ -52,13 +63,19 @@ namespace Module
                             speedData.speed = actorInfo.speed;
                             speedData.friction = 0;
                             directionData.x = serverAction.actionParam == JoyStickActionFaceType.Right ? 1 : -1;
+
+                            objData.SetDirty(speedData, directionData);
                             break;
                         case JoyStickActionType.CancelRun:
                             speedData.friction = actorInfo.friction;
+
+                            objData.SetDirty(speedData);
                             break;
                         case JoyStickActionType.Jump:
                             jumpData.currentJump = actorInfo.jump;
                             actorData.ground = resourceData.gameObject.transform.position;
+
+                            objData.SetDirty(actorData, jumpData);
                             break;
                     }
 

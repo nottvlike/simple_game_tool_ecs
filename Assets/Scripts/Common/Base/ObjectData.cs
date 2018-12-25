@@ -52,7 +52,7 @@ public class ObjectData
                 var needUpdate = false;
                 for (var j = 0; j < dataList.Length; j++)
                 {
-                    if (module.IsRequired(dataList[j]))
+                    if (module.IsUpdateRequired(dataList[j]))
                     {
                         needUpdate = true;
                         break;
@@ -61,7 +61,7 @@ public class ObjectData
 
                 if (needUpdate)
                 {
-                    module.Refresh(this);
+                    module.SetDirty(this);
                 }
             }
         }
