@@ -5,7 +5,7 @@ using Data;
 
 namespace Module
 {
-    public class ActorFollowCamera : UpdateModule
+    public class ActorFollowCamera : Module, ITimerObject
     {
         TimerEvent _timer;
         protected override void InitRequiredDataType()
@@ -13,6 +13,22 @@ namespace Module
             _requiredDataTypeList.Add(typeof(FollowCameraData));
             _requiredDataTypeList.Add(typeof(ResourceData));
             _requiredDataTypeList.Add(typeof(ResourceStateData));
+        }
+
+        public override bool IsUpdateRequired(Data.Data data)
+        {
+            return false;
+        }
+
+        protected override void OnEnable()
+        {
+            _timer = WorldManager.Instance.TimerMgr.AddEndLess(0, Constant.CAMERA_FOLLOW_INTERVAL, this);
+        }
+
+        protected override void OnDisable()
+        {
+            _timer.Clear();
+            _timer = null;
         }
 
         public override void Refresh(ObjectData objData)
@@ -23,37 +39,25 @@ namespace Module
                 return;
             }
 
-            var gameSystemData = WorldManager.Instance.GameCore.GetData<GameSystemData>();
             var resourceData = objData.GetData<ResourceData>();
-            var followCameraData = objData.GetData<FollowCameraData>();
-            followCameraData.interval += gameSystemData.unscaleDeltaTime;
-            if (followCameraData.interval >= Constant.CAMERA_FOLLOW_INTERVAL)
+            var endPosition = resourceData.gameObject.transform.localPosition;
+            var startPosition = Camera.main.transform.localPosition;
+            if (startPosition.x == endPosition.x && startPosition.y == endPosition.y)
             {
-                followCameraData.interval = 0;
-                followCameraData.targetPosition = resourceData.gameObject.transform.position;
+                return;
             }
 
-            var cameraPosition = Camera.main.transform.position;
-            var targetPosition = followCameraData.targetPosition;
-            if (cameraPosition.x != targetPosition.x 
-                || cameraPosition.y != targetPosition.y)
+            endPosition.z = startPosition.z;
+            TweenerUtil.Move(Camera.main.gameObject, 0, Constant.CAMERA_FOLLOW_INTERVAL, startPosition, endPosition);
+        }
+
+        public void Tick()
+        {
+            for (var i = 0; i < _objectIdList.Count; i++)
             {
-                var directionX = targetPosition.x > cameraPosition.x ? 1 : -1;
-                var directionY = targetPosition.y > cameraPosition.y ? 1 : -1;
-                var deltaTime = gameSystemData.unscaleDeltaTime / (float)Constant.SECOND_TO_MILLISECOND;
-                var deltaX = directionX * followCameraData.speed / Constant.SPEED_BASE * deltaTime;
-                var deltaY = directionY * followCameraData.speed / Constant.SPEED_BASE * deltaTime;
-
-                if (Mathf.Abs(deltaX) > Mathf.Abs(targetPosition.x - cameraPosition.x))
-                {
-                    deltaX = targetPosition.x - cameraPosition.x;
-                }
-
-                if (Mathf.Abs(deltaY) > Mathf.Abs(targetPosition.y - cameraPosition.y))
-                {
-                    deltaY = targetPosition.y - cameraPosition.y;
-                }
-                Camera.main.transform.Translate(deltaX, deltaY, 0);
+                var objId = _objectIdList[i];
+                var objData = WorldManager.Instance.GetObjectData(objId);
+                Refresh(objData);
             }
         }
     }

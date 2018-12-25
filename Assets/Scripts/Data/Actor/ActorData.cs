@@ -21,8 +21,5 @@ namespace Data
 
     public class FollowCameraData : Data
     {
-        public int speed;
-        public int interval;
-        public Vector3 targetPosition;
     }
 }

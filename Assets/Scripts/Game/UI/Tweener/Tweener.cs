@@ -8,7 +8,7 @@ public enum LoopType
 }
 
 [System.Serializable]
-public abstract class Tweener : ITimerObject
+public abstract class Tweener : ITimerObject, IPoolObject
 {
     public bool enabled;
     public AnimationCurve animationCurve;
@@ -42,6 +42,12 @@ public abstract class Tweener : ITimerObject
         {
             return enabled ? startDelay + duration : 0;
         }
+    }
+
+    public bool IsInUse
+    {
+        get;
+        set;
     }
 
     public Tweener()
@@ -87,9 +93,13 @@ public abstract class Tweener : ITimerObject
         _timerEvent = WorldManager.Instance.TimerMgr.AddEndLess(startDelay, 0, this);
     }
 
+    public virtual void OnAnimationFinished() { }
+
     void AnimationFinished()
     {
         Stop();
+
+        OnAnimationFinished();
 
         if (onFinished != null)
         {
@@ -152,6 +162,31 @@ public abstract class Tweener : ITimerObject
     }
 
     public abstract void Update(int deltaTime);
+
+    public void Clear()
+    {
+        if (_isPlaying)
+        {
+            Stop();
+        }
+
+        enabled = false;
+        startDelay = 0;
+        duration = 0;
+        isLoop = false;
+        loops = 0;
+        ignoreTimeScale = false;
+        target = null;
+
+        for (var i = 0; i < animationCurve.length;)
+        {
+            animationCurve.RemoveKey(i);
+        }
+
+        _duration = 0;
+        _loops = 0;
+        _direction = 0;
+	}
 }
 
 
@@ -170,9 +205,14 @@ public class Move : Tweener
     public override void Update(int deltaTime)
     {
         var tmp = Mathf.Clamp(_duration, 0, duration);
-        var curveValue = animationCurve.Evaluate((float)tmp / 1000);
+        var curveValue = animationCurve.Evaluate((float)tmp / Constant.SECOND_TO_MILLISECOND);
 
         target.transform.localPosition = startPosition + (targetPosition - startPosition) * curveValue;
+    }
+
+    public override void OnAnimationFinished()
+    {
+        target.transform.localPosition = targetPosition;
     }
 }
 
@@ -191,8 +231,13 @@ public class Rotate : Tweener
     public override void Update(int deltaTime)
     {
         var tmp = Mathf.Clamp(_duration, 0, duration);
-        var curveValue = animationCurve.Evaluate((float)tmp / 1000);
+        var curveValue = animationCurve.Evaluate((float)tmp / Constant.SECOND_TO_MILLISECOND);
         target.transform.localRotation = Quaternion.Euler(from + (to - from) * curveValue);
+    }
+
+    public override void OnAnimationFinished()
+    {
+        target.transform.localRotation = Quaternion.Euler(to);
     }
 }
 
@@ -211,8 +256,13 @@ public class Scale : Tweener
     public override void Update(int deltaTime)
     {
         var tmp = Mathf.Clamp(_duration, 0, duration);
-        var curveValue = animationCurve.Evaluate((float)tmp / 1000);
+        var curveValue = animationCurve.Evaluate((float)tmp / Constant.SECOND_TO_MILLISECOND);
         target.transform.localScale = from + (to - from) * curveValue;
+    }
+
+    public override void OnAnimationFinished()
+    {
+        target.transform.localScale = to;
     }
 }
 
@@ -239,11 +289,16 @@ public class Fade : Tweener
         }
 
         var tmp = Mathf.Clamp(_duration, 0, duration);
-        var curveValue = animationCurve.Evaluate((float)tmp / 1000);
+        var curveValue = animationCurve.Evaluate((float)tmp / Constant.SECOND_TO_MILLISECOND);
 
         if (_canvas != null)
         {
             _canvas.alpha = from + (to - from) * curveValue;
         }
+    }
+
+    public override void OnAnimationFinished()
+    {
+        _canvas.alpha = to;
     }
 }
