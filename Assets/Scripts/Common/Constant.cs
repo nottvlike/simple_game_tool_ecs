@@ -12,10 +12,11 @@ public partial class Constant
     public const int NOTIFICATION_TYPE_PLAYER   = 1001;
     public const int NOTIFICATION_TYPE_GAME_CORE = 1002;
 
-    public const int SPEED_BASE = 100;
     public const int SECOND_TO_MILLISECOND = 1000;
     public const int JOYSTICK_DELAY_FRAME_COUNT = 5;
 
     public const int CAMERA_MOVE_SPEED = 600;
     public const int CAMERA_FOLLOW_INTERVAL = 1000;
+
+    public const int UNITY_UNIT_TO_GAME_UNIT = 1000;
 }

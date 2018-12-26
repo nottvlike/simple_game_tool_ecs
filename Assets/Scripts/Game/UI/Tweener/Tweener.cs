@@ -7,6 +7,7 @@ public enum LoopType
     PingPang
 }
 
+[System.Serializable]
 public class TweenerFinished : UnityEvent<Tweener>
 {
 }

@@ -33,7 +33,7 @@ public class FightPanel : Panel
         jumpData.friction = actorInfo.airFriction;
 
         var directionData = player.GetData<DirectionData>();
-        directionData.x = 1;
+        directionData.direction.x = 1;
 
         player.SetDirty(resourceData, resourceStateData, jumpData, directionData);
     }

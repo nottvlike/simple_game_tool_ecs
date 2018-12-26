@@ -1,12 +1,15 @@
-﻿using System;
+﻿using UnityEngine;
 
 namespace Data
 {
+    public class PositionData : Data
+    {
+        public Vector3Int position;
+    }
+
     public class DirectionData : Data
     {
-        public int x;
-        public int y;
-        public int z;
+        public Vector3Int direction;
     }
 
     public class SpeedData : Data

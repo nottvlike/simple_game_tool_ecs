@@ -10,7 +10,7 @@ public struct ActorInfo
     public string resourceName;
     public int speed;
     public int friction;
-    public Vector3 jump;
+    public Vector3Int jump;
     public int airFriction;
 }
 

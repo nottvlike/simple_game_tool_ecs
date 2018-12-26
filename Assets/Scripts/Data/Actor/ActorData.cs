@@ -8,14 +8,14 @@ namespace Data
     {
         public int actorId;
         public int mass;
-        public Vector3 ground;
+        public Vector3Int ground;
         public int gravity;
-        public Vector3 force;
+        public Vector3Int force;
     }
 
     public class ActorJumpData : Data
     {
-        public Vector3 currentJump;
+        public Vector3Int currentJump;
         public int friction;
     }
 

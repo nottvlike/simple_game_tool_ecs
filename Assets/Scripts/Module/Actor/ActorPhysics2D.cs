@@ -29,42 +29,42 @@ namespace Module
                 return;
             }
 
+            var actorData = objData.GetData<ActorData>();
             var resourceData = objData.GetData<ResourceData>();
             var position = resourceData.gameObject.transform.position;
-
-            var actorData = objData.GetData<ActorData>();
             RaycastHit2D raycastHit2D = Physics2D.Raycast(position, -Vector3.up, 3, LayerMask.GetMask("Ground"));
             if (raycastHit2D)
             {
-                actorData.ground.y = raycastHit2D.transform.parent.position.y;
+                actorData.ground.y = Mathf.CeilToInt(raycastHit2D.transform.parent.position.y * Constant.UNITY_UNIT_TO_GAME_UNIT);
             }
 
-            if (position.y == actorData.ground.y && actorData.force.x == 0 && actorData.force.y == 0)
+            var positionData = objData.GetData<PositionData>();
+            if (positionData.position.y == actorData.ground.y && actorData.force.x == 0 && actorData.force.y == 0)
             {
                 Stop(objData.ObjectId);
                 return;
             }
 
             var forceY = actorData.force.y;
-            if (position.y != actorData.ground.y)
+            if (positionData.position.y != actorData.ground.y)
             {
                 forceY += -actorData.gravity;
             }
 
             var gameSystemData = WorldManager.Instance.GameCore.GetData<GameSystemData>();
-            var deltaTime = (float)gameSystemData.unscaleDeltaTime / Constant.SECOND_TO_MILLISECOND;
-
             var directionData = objData.GetData<DirectionData>();
-            var deltaX = directionData.x * actorData.force.x * deltaTime;
-            var deltaY = forceY * deltaTime;
+            var deltaX = directionData.direction.x * actorData.force.x * gameSystemData.unscaleDeltaTime;
+            var deltaY = forceY * gameSystemData.unscaleDeltaTime;
 
-            var distanceY = Mathf.Abs(actorData.ground.y - position.y);
+            var distanceY = Mathf.Abs(actorData.ground.y - positionData.position.y);
             if (distanceY != 0 && Mathf.Abs(deltaY) > distanceY)
             {
                 deltaY = deltaY > 0 ? distanceY : -distanceY;
             }
 
-            resourceData.gameObject.transform.Translate(deltaX, deltaY, 0);
+            positionData.position.x += deltaX;
+            positionData.position.y += deltaY;
+            resourceData.gameObject.transform.Translate((float)deltaX / Constant.UNITY_UNIT_TO_GAME_UNIT, (float)deltaY / Constant.UNITY_UNIT_TO_GAME_UNIT, 0);
         }
     }
 }

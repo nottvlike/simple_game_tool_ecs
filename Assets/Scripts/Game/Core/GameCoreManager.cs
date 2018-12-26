@@ -79,7 +79,7 @@ public partial class WorldManager : Singleton<WorldManager>
                 _player.AddData(actorData);
 
                 _player.AddData(new FollowCameraData());
-
+                _player.AddData(new PositionData());
                 _player.AddData(new ActorJumpData());
                 _player.AddData(new ServerData());
                 _player.AddData(new DirectionData());

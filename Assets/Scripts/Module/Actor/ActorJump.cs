@@ -11,7 +11,7 @@ namespace Module
         {
             _requiredDataTypeList.Add(typeof(ActorData));
             _requiredDataTypeList.Add(typeof(ActorJumpData));
-            _requiredDataTypeList.Add(typeof(ResourceData));
+            _requiredDataTypeList.Add(typeof(PositionData));
             _requiredDataTypeList.Add(typeof(ResourceStateData));
         }
 
@@ -29,6 +29,7 @@ namespace Module
             }
 
             var jumpData = objData.GetData<ActorJumpData>();
+
             var currentJump = jumpData.currentJump;
             if (currentJump.y == 0 && currentJump.x == 0)
             {
@@ -37,9 +38,8 @@ namespace Module
             }
 
             var actorData = objData.GetData<ActorData>();
-            var resourceData = objData.GetData<ResourceData>();
-            var position = resourceData.gameObject.transform.position;
-            if (position.y == actorData.ground.y && jumpData.currentJump.y == 0)
+            var positionData = objData.GetData<PositionData>();
+            if (positionData.position.y == actorData.ground.y && jumpData.currentJump.y == 0)
             {
                 jumpData.currentJump.x = 0;
 

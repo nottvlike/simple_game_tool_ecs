@@ -62,7 +62,7 @@ namespace Module
                         case JoyStickActionType.Run:
                             speedData.speed = actorInfo.speed;
                             speedData.friction = 0;
-                            directionData.x = serverAction.actionParam == JoyStickActionFaceType.Right ? 1 : -1;
+                            directionData.direction.x = serverAction.actionParam == JoyStickActionFaceType.Right ? 1 : -1;
 
                             objData.SetDirty(speedData, directionData);
                             break;
@@ -73,7 +73,11 @@ namespace Module
                             break;
                         case JoyStickActionType.Jump:
                             jumpData.currentJump = actorInfo.jump;
-                            actorData.ground = resourceData.gameObject.transform.position;
+
+                            var position = resourceData.gameObject.transform.position;
+                            actorData.ground.x = Mathf.CeilToInt(position.x * Constant.UNITY_UNIT_TO_GAME_UNIT);
+                            actorData.ground.y = Mathf.CeilToInt(position.y * Constant.UNITY_UNIT_TO_GAME_UNIT);
+                            actorData.ground.z = Mathf.CeilToInt(position.z * Constant.UNITY_UNIT_TO_GAME_UNIT);
 
                             objData.SetDirty(actorData, jumpData);
                             break;
