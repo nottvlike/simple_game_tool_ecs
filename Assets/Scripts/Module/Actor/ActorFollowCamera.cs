@@ -53,12 +53,8 @@ namespace Module
 
         public void Tick()
         {
-            for (var i = 0; i < _objectIdList.Count; i++)
-            {
-                var objId = _objectIdList[i];
-                var objData = WorldManager.Instance.GetObjectData(objId);
-                Refresh(objData);
-            }
+            var player = WorldManager.Instance.Player;
+            Refresh(player);
         }
     }
 }

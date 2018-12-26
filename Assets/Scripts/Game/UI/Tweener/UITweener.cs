@@ -77,7 +77,7 @@ public class UITweener : MonoBehaviour
             _tweenerList.Add(fadeTweener);
         }
 
-        void OnFinished()
+        void OnFinished(Tweener tweener)
         {
             if (onFinished != null)
             {

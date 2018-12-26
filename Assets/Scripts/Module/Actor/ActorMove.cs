@@ -35,14 +35,15 @@ namespace Module
                 return;
             }
 
-            speedData.speed = speedData.speed - speedData.friction;
+            var speed = speedData.speed;
+            speedData.speed = speed - speedData.friction;
             if (speedData.speed < 0)
             {
                 speedData.speed = 0;
             }
 
             var actorData = objData.GetData<ActorData>();
-            actorData.force.x = speedData.speed / (float)Constant.SPEED_BASE;
+            actorData.force.x = speed / (float)Constant.SPEED_BASE;
         }
     }
 }

@@ -7,6 +7,10 @@ public enum LoopType
     PingPang
 }
 
+public class TweenerFinished : UnityEvent<Tweener>
+{
+}
+
 [System.Serializable]
 public abstract class Tweener : ITimerObject, IPoolObject
 {
@@ -20,7 +24,7 @@ public abstract class Tweener : ITimerObject, IPoolObject
     public bool ignoreTimeScale;
     public GameObject target;
 
-    public UnityEvent onFinished;
+    public TweenerFinished onFinished;
 
     protected int _duration;
     protected int _loops;
@@ -103,7 +107,7 @@ public abstract class Tweener : ITimerObject, IPoolObject
 
         if (onFinished != null)
         {
-            onFinished.Invoke();
+            onFinished.Invoke(this);
             onFinished.RemoveAllListeners();
         }
     }
