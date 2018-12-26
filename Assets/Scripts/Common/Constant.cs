@@ -23,5 +23,5 @@ public partial class Constant
     public const int SCREEN_WIDTH = 960;
     public const int SCREEN_HEIGHT = 640;
 
-    public const float MAX_FOLLOW_REGION = 0.8f;
+    public const float MAX_FOLLOW_REGION = 0.6f;
 }

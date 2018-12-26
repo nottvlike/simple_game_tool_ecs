@@ -10,6 +10,7 @@ namespace Module
         protected override void InitRequiredDataType()
         {
             _requiredDataTypeList.Add(typeof(ActorData));
+            _requiredDataTypeList.Add(typeof(Physics2DData));
             _requiredDataTypeList.Add(typeof(ActorJumpData));
             _requiredDataTypeList.Add(typeof(PositionData));
             _requiredDataTypeList.Add(typeof(ResourceStateData));
@@ -38,28 +39,38 @@ namespace Module
             }
 
             var actorData = objData.GetData<ActorData>();
+            if (actorData.currentState != ActorStateType.Jump)
+            {
+                actorData.currentState = ActorStateType.Jump;
+                objData.SetDirty(actorData);
+            }
+
+            var physics2DData = objData.GetData<Physics2DData>();
             var positionData = objData.GetData<PositionData>();
-            if (positionData.position.y == actorData.ground.y && jumpData.currentJump.y == 0)
+            if (positionData.position.y == physics2DData.ground.y && jumpData.currentJump.y == 0)
             {
                 jumpData.currentJump.x = 0;
 
-                actorData.force.x = 0;
-                actorData.force.y = 0;
+                physics2DData.force.x = 0;
+                physics2DData.force.y = 0;
+
+                actorData.currentState = ActorStateType.Idle;
+                objData.SetDirty(actorData);
             }
             else
             {
-                jumpData.currentJump.y = currentJump.y - jumpData.friction;
+                jumpData.currentJump.y = currentJump.y - physics2DData.friction;
                 if (jumpData.currentJump.y < 0)
                 {
                     jumpData.currentJump.y = 0;
-                    actorData.force.y += -jumpData.friction;
+                    physics2DData.force.y += -physics2DData.friction;
                 }
                 else
                 {
-                    actorData.force.y = currentJump.y;
+                    physics2DData.force.y = currentJump.y;
                 }
 
-                actorData.force.x = jumpData.currentJump.x;
+                physics2DData.force.x = jumpData.currentJump.x;
             }
         }
     }

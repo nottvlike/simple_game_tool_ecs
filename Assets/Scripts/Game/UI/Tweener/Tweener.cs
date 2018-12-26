@@ -76,6 +76,7 @@ public abstract class Tweener : ITimerObject, IPoolObject
         _timerEvent.Clear();
         _timerEvent = null;
     }
+
     public void ForcePlay()
     {
         Stop();

@@ -4,19 +4,23 @@ using UnityEngine;
 
 namespace Data
 {
+    public enum ActorStateType
+    {
+        Idle,
+        Move,
+        Jump,
+        SkillDefault,
+        SkillCustom
+    }
+
     public class ActorData : Data
     {
         public int actorId;
-        public int mass;
-        public Vector3Int ground;
-        public int gravity;
-        public Vector3Int force;
+        public ActorStateType currentState;
     }
 
-    public class ActorJumpData : Data
+    public class ActorSyncData : Data
     {
-        public Vector3Int currentJump;
-        public int friction;
     }
 
     public class FollowCameraData : Data

@@ -7,8 +7,8 @@ namespace Data
     public enum JoyStickActionType
     {
         None = 0,
-        Run,
-        CancelRun,
+        Move,
+        CancelMove,
         Jump,
         SkillDefault,
         SkillCustom

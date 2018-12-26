@@ -10,6 +10,7 @@ namespace Module
         protected override void InitRequiredDataType()
         {
             _requiredDataTypeList.Add(typeof(ActorData));
+            _requiredDataTypeList.Add(typeof(Physics2DData));
             _requiredDataTypeList.Add(typeof(ActorJumpData));
             _requiredDataTypeList.Add(typeof(DirectionData));
             _requiredDataTypeList.Add(typeof(SpeedData));
@@ -46,9 +47,9 @@ namespace Module
             var actorData = objData.GetData<ActorData>();
             var actorInfo = worldMgr.ActorConfig.Get(actorData.actorId);
 
+            var physics2DData = objData.GetData<Physics2DData>();
             var speedData = objData.GetData<SpeedData>();
             var directionData = objData.GetData<DirectionData>();
-
             var jumpData = objData.GetData<ActorJumpData>();
             var resourceData = objData.GetData<ResourceData>();
 
@@ -59,15 +60,15 @@ namespace Module
                 {
                     switch (serverAction.actionType)
                     {
-                        case JoyStickActionType.Run:
+                        case JoyStickActionType.Move:
                             speedData.speed = actorInfo.speed;
-                            speedData.friction = 0;
+                            physics2DData.friction = 0;
                             directionData.direction.x = serverAction.actionParam == JoyStickActionFaceType.Right ? 1 : -1;
 
                             objData.SetDirty(speedData, directionData);
                             break;
-                        case JoyStickActionType.CancelRun:
-                            speedData.friction = actorInfo.friction;
+                        case JoyStickActionType.CancelMove:
+                            physics2DData.friction = actorInfo.friction;
 
                             objData.SetDirty(speedData);
                             break;
@@ -75,9 +76,9 @@ namespace Module
                             jumpData.currentJump = actorInfo.jump;
 
                             var position = resourceData.gameObject.transform.position;
-                            actorData.ground.x = Mathf.CeilToInt(position.x * Constant.UNITY_UNIT_TO_GAME_UNIT);
-                            actorData.ground.y = Mathf.CeilToInt(position.y * Constant.UNITY_UNIT_TO_GAME_UNIT);
-                            actorData.ground.z = Mathf.CeilToInt(position.z * Constant.UNITY_UNIT_TO_GAME_UNIT);
+                            physics2DData.ground.x = Mathf.CeilToInt(position.x * Constant.UNITY_UNIT_TO_GAME_UNIT);
+                            physics2DData.ground.y = Mathf.CeilToInt(position.y * Constant.UNITY_UNIT_TO_GAME_UNIT);
+                            physics2DData.ground.z = Mathf.CeilToInt(position.z * Constant.UNITY_UNIT_TO_GAME_UNIT);
 
                             objData.SetDirty(actorData, jumpData);
                             break;

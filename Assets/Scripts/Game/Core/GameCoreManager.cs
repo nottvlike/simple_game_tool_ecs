@@ -17,7 +17,6 @@ public partial class WorldManager : Singleton<WorldManager>
                 _gameCore.AddData(localizationData);
 
                 _gameCore.AddData(new ResourcePreloadData());
-
                 _gameCore.AddData(new PlayerBaseData());
 
                 _objectDataList.Add(_gameCore);
@@ -79,6 +78,7 @@ public partial class WorldManager : Singleton<WorldManager>
                 _player.AddData(actorData);
 
                 _player.AddData(new FollowCameraData());
+                _player.AddData(new Physics2DData());
                 _player.AddData(new PositionData());
                 _player.AddData(new ActorJumpData());
                 _player.AddData(new ServerData());
@@ -86,7 +86,6 @@ public partial class WorldManager : Singleton<WorldManager>
                 _player.AddData(new SpeedData());
                 _player.AddData(new ResourceData());
                 _player.AddData(new ResourceStateData());
-
                 _player.AddData(new ClientJoyStickData());
                 _player.AddData(new ServerJoyStickData());
                 _player.AddData(new ActorSyncData());

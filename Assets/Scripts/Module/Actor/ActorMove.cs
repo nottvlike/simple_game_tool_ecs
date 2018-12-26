@@ -11,6 +11,7 @@ namespace Module
         protected override void InitRequiredDataType()
         {
             _requiredDataTypeList.Add(typeof(ActorData));
+            _requiredDataTypeList.Add(typeof(Physics2DData));
             _requiredDataTypeList.Add(typeof(SpeedData));
             _requiredDataTypeList.Add(typeof(ResourceStateData));
         }
@@ -36,17 +37,27 @@ namespace Module
             }
 
             var actorData = objData.GetData<ActorData>();
+            if (actorData.currentState != ActorStateType.Move)
+            {
+                actorData.currentState = ActorStateType.Move;
+                objData.SetDirty(actorData);
+            }
+
+            var physics2DData = objData.GetData<Physics2DData>();
 
             var speed = speedData.speed;
-            speedData.speed = speed - speedData.friction;
+            speedData.speed = speed - physics2DData.friction;
             if (speedData.speed <= 0)
             {
                 speedData.speed = 0;
-                actorData.force.x = 0;
+                physics2DData.force.x = 0;
+
+                actorData.currentState = ActorStateType.Idle;
+                objData.SetDirty(actorData);
             }
             else
             {
-                actorData.force.x = speed;
+                physics2DData.force.x = speed;
             }
         }
     }
