@@ -5,7 +5,7 @@ using UnityEngine.Events;
 
 public class TweenerUtil
 {
-    public static void Move(GameObject target, int delay, int duration, Vector3 start, Vector3 end, UnityAction<Tweener> callback = null,
+    public static Tweener Move(GameObject target, int delay, int duration, Vector3 start, Vector3 end, UnityAction<Tweener> callback = null,
         bool isLoop = false, int loopCount = -1, LoopType loopType = LoopType.Loop)
     {
         var move = WorldManager.Instance.PoolMgr.Get<Move>();
@@ -13,9 +13,10 @@ public class TweenerUtil
         move.targetPosition = end;
 
         AddTweener(move, target, delay, duration, callback, isLoop, loopCount, loopType);
+        return move;
     }
 
-    public static void Rotate(GameObject target, int delay, int duration, Vector3 from, Vector3 to, UnityAction<Tweener> callback = null,
+    public static Tweener Rotate(GameObject target, int delay, int duration, Vector3 from, Vector3 to, UnityAction<Tweener> callback = null,
         bool isLoop = false, int loopCount = -1, LoopType loopType = LoopType.Loop)
     {
         var rotate = WorldManager.Instance.PoolMgr.Get<Rotate>();
@@ -23,9 +24,10 @@ public class TweenerUtil
         rotate.to = to;
 
         AddTweener(rotate, target, delay, duration, callback, isLoop, loopCount, loopType);
+        return rotate;
     }
 
-    public static void Scale(GameObject target, int delay, int duration, Vector3 from, Vector3 to, UnityAction<Tweener> callback = null,
+    public static Tweener Scale(GameObject target, int delay, int duration, Vector3 from, Vector3 to, UnityAction<Tweener> callback = null,
         bool isLoop = false, int loopCount = -1, LoopType loopType = LoopType.Loop)
     {
         var scale = WorldManager.Instance.PoolMgr.Get<Scale>();
@@ -33,9 +35,10 @@ public class TweenerUtil
         scale.to = to;
 
         AddTweener(scale, target, delay, duration, callback, isLoop, loopCount, loopType);
+        return scale;
     }
 
-    public static void Fade(GameObject target, int delay, int duration, float from, float to, UnityAction<Tweener> callback = null,
+    public static Tweener Fade(GameObject target, int delay, int duration, float from, float to, UnityAction<Tweener> callback = null,
         bool isLoop = false, int loopCount = -1, LoopType loopType = LoopType.Loop)
     {
         var fade = WorldManager.Instance.PoolMgr.Get<Fade>();
@@ -43,6 +46,7 @@ public class TweenerUtil
         fade.to = to;
 
         AddTweener(fade, target, delay, duration, callback, isLoop, loopCount, loopType);
+        return fade;
     }
 
     static void AddTweener(Tweener tweener, GameObject target, int delay, int duration, UnityAction<Tweener> callback,
@@ -53,7 +57,7 @@ public class TweenerUtil
         tweener.startDelay = delay;
         tweener.duration = duration;
         tweener.animationCurve.AddKey(0, 0);
-        tweener.animationCurve.AddKey(1, (float)duration / Constant.SECOND_TO_MILLISECOND);
+        tweener.animationCurve.AddKey((float)duration / Constant.SECOND_TO_MILLISECOND, 1);
         tweener.isLoop = isLoop;
         tweener.loops = loopCount;
         tweener.loopType = loopType;

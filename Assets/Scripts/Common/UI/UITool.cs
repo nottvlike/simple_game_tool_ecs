@@ -301,6 +301,8 @@ public class UITool : IUITool
 
     public void Destroy()
     {
+        _uiRoot = null;
+
         _panelDataDict.Clear();
         _showedPanelList.Clear();
     }

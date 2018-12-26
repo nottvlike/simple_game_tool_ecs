@@ -8,6 +8,8 @@ namespace Module
     public class ActorFollowCamera : Module, ITimerObject
     {
         TimerEvent _timer;
+        Tweener _tweener;
+
         protected override void InitRequiredDataType()
         {
             _requiredDataTypeList.Add(typeof(FollowCameraData));
@@ -22,7 +24,7 @@ namespace Module
 
         protected override void OnEnable()
         {
-            _timer = WorldManager.Instance.TimerMgr.AddEndLess(0, Constant.CAMERA_FOLLOW_INTERVAL, this);
+            _timer = WorldManager.Instance.TimerMgr.AddEndLess(0, 0, this);
         }
 
         protected override void OnDisable()
@@ -39,16 +41,28 @@ namespace Module
                 return;
             }
 
-            var resourceData = objData.GetData<ResourceData>();
-            var endPosition = resourceData.gameObject.transform.localPosition;
-            var startPosition = Camera.main.transform.localPosition;
-            if (startPosition.x == endPosition.x && startPosition.y == endPosition.y)
+            if (_tweener != null && _tweener.IsPlaying)
             {
                 return;
             }
 
-            endPosition.z = startPosition.z;
-            TweenerUtil.Move(Camera.main.gameObject, 0, Constant.CAMERA_FOLLOW_INTERVAL, startPosition, endPosition);
+            var resourceData = objData.GetData<ResourceData>();
+            var transform = resourceData.gameObject.transform;
+
+            var screenPosition = Camera.main.WorldToScreenPoint(transform.position);
+            var maxWidth = Constant.SCREEN_WIDTH * Constant.MAX_FOLLOW_REGION / 2 ;
+            var maxHeight = Constant.SCREEN_HEIGHT * Constant.MAX_FOLLOW_REGION / 2 ;
+
+            var width = Mathf.Abs(screenPosition.x - Constant.SCREEN_WIDTH / 2);
+            var height = Mathf.Abs(screenPosition.y - Constant.SCREEN_HEIGHT / 2);
+
+            if (width > maxWidth || height > maxHeight)
+            {
+                var startPosition = Camera.main.transform.localPosition;
+                var endPosition = transform.localPosition;
+                endPosition.z = startPosition.z;
+                _tweener = TweenerUtil.Move(Camera.main.gameObject, 0, Constant.CAMERA_FOLLOW_INTERVAL, startPosition, endPosition);
+            }
         }
 
         public void Tick()

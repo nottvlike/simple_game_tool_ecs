@@ -179,19 +179,20 @@ public abstract class Tweener : ITimerObject, IPoolObject
         startDelay = 0;
         duration = 0;
         isLoop = false;
-        loops = 0;
+        loops = -1;
+        loopType = LoopType.Loop;
         ignoreTimeScale = false;
         target = null;
 
-        for (var i = 0; i < animationCurve.length;)
+        for (var i = 0; i < animationCurve.keys.Length;)
         {
             animationCurve.RemoveKey(i);
         }
 
         _duration = 0;
         _loops = 0;
-        _direction = 0;
-	}
+        _direction = 1;
+    }
 }
 
 

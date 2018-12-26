@@ -19,4 +19,9 @@ public partial class Constant
     public const int CAMERA_FOLLOW_INTERVAL = 1000;
 
     public const int UNITY_UNIT_TO_GAME_UNIT = 1000;
+
+    public const int SCREEN_WIDTH = 960;
+    public const int SCREEN_HEIGHT = 640;
+
+    public const float MAX_FOLLOW_REGION = 0.8f;
 }
