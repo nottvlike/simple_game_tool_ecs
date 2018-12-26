@@ -62,6 +62,8 @@ namespace Module
                 deltaY = deltaY > 0 ? distanceY : -distanceY;
             }
 
+            actorData.ground.x += deltaX;
+
             positionData.position.x += deltaX;
             positionData.position.y += deltaY;
             resourceData.gameObject.transform.Translate((float)deltaX / Constant.UNITY_UNIT_TO_GAME_UNIT, (float)deltaY / Constant.UNITY_UNIT_TO_GAME_UNIT, 0);
