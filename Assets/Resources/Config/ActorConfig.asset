@@ -15,7 +15,7 @@ MonoBehaviour:
   - actorId: 1
     actorName: Test1
     resourceName: Cube
-    speed: 600
-    friction: 10
+    speed: 6
+    friction: 3
     jump: {x: 10, y: 40, z: 0}
     airFriction: 3
