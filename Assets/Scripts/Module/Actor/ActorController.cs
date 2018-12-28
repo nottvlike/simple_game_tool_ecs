@@ -10,6 +10,7 @@ namespace Module
         protected override void InitRequiredDataType()
         {
             _requiredDataTypeList.Add(typeof(ActorData));
+            _requiredDataTypeList.Add(typeof(PositionData));
             _requiredDataTypeList.Add(typeof(Physics2DData));
             _requiredDataTypeList.Add(typeof(ActorJumpData));
             _requiredDataTypeList.Add(typeof(DirectionData));
@@ -48,6 +49,7 @@ namespace Module
             var actorInfo = worldMgr.ActorConfig.Get(actorData.actorId);
 
             var physics2DData = objData.GetData<Physics2DData>();
+            var positionData = objData.GetData<PositionData>();
             var speedData = objData.GetData<SpeedData>();
             var directionData = objData.GetData<DirectionData>();
             var jumpData = objData.GetData<ActorJumpData>();
@@ -76,9 +78,9 @@ namespace Module
                             jumpData.currentJump = actorInfo.jump;
 
                             var position = resourceData.gameObject.transform.position;
-                            physics2DData.ground.x = Mathf.CeilToInt(position.x * Constant.UNITY_UNIT_TO_GAME_UNIT);
-                            physics2DData.ground.y = Mathf.CeilToInt(position.y * Constant.UNITY_UNIT_TO_GAME_UNIT);
-                            physics2DData.ground.z = Mathf.CeilToInt(position.z * Constant.UNITY_UNIT_TO_GAME_UNIT);
+                            positionData.ground.x = Mathf.CeilToInt(position.x * Constant.UNITY_UNIT_TO_GAME_UNIT);
+                            positionData.ground.y = Mathf.CeilToInt(position.y * Constant.UNITY_UNIT_TO_GAME_UNIT);
+                            positionData.ground.z = Mathf.CeilToInt(position.z * Constant.UNITY_UNIT_TO_GAME_UNIT);
 
                             objData.SetDirty(actorData, jumpData);
                             break;
