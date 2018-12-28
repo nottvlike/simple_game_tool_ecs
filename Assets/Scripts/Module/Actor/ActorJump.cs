@@ -47,7 +47,7 @@ namespace Module
 
             var physics2DData = objData.GetData<Physics2DData>();
             var positionData = objData.GetData<PositionData>();
-            var positionY = positionData.position.y - physics2DData.halfHeight;
+            var positionY = ActorPhysics2D.GetGround(positionData, physics2DData);
             if (positionData.ground.y == positionY && jumpData.currentJump.y == 0)
             {
                 jumpData.currentJump.x = 0;
