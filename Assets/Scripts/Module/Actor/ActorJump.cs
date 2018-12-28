@@ -47,7 +47,8 @@ namespace Module
 
             var physics2DData = objData.GetData<Physics2DData>();
             var positionData = objData.GetData<PositionData>();
-            if (positionData.position.y == positionData.ground.y && jumpData.currentJump.y == 0)
+            var positionY = positionData.position.y - physics2DData.halfHeight;
+            if (positionData.ground.y == positionY && jumpData.currentJump.y == 0)
             {
                 jumpData.currentJump.x = 0;
 
