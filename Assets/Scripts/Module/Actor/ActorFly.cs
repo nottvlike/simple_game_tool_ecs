@@ -43,9 +43,6 @@ namespace Module
 
             var worldMgr = WorldManager.Instance;
 
-            LogUtil.I("flyData.currentDuration " + flyData.currentDuration);
-            LogUtil.I("flyData.duration " + flyData.duration);
-            LogUtil.I("physics2DData.force.y " + flyData.duration);
             var physics2DData = objData.GetData<Physics2DData>();
             var positionData = objData.GetData<PositionData>();
             var actorGroundY = ActorPhysics2D.GetActorGroundY(positionData, physics2DData);
