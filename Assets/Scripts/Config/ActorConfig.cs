@@ -1,4 +1,5 @@
-﻿using System.Collections;
+﻿using Data;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -12,6 +13,8 @@ public struct ActorInfo
     public int friction;
     public Vector3Int jump;
     public int airFriction;
+    public SkillDefaultType defaultSkill;
+    public int defaultSkillDuration;
 }
 
 public class ActorConfig : ScriptableObject

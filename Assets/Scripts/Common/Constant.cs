@@ -15,7 +15,6 @@ public partial class Constant
     public const int SECOND_TO_MILLISECOND = 1000;
     public const int JOYSTICK_DELAY_FRAME_COUNT = 5;
 
-    public const int CAMERA_MOVE_SPEED = 600;
     public const int CAMERA_FOLLOW_INTERVAL = 1000;
 
     public const int UNITY_UNIT_TO_GAME_UNIT = 1000;
@@ -24,4 +23,8 @@ public partial class Constant
     public const int SCREEN_HEIGHT = 640;
 
     public const float MAX_FOLLOW_REGION = 0.6f;
+
+    public const int ACTOR_FLY_SHAKE_DURATION = 5; // 1 / 5 = 0.2s
+    public const int ACTOR_FLY_SHAKE_Y = 2;
+    public const int ACTOR_FLY_SPEED_X = 3;
 }

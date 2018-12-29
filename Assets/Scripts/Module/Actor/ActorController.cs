@@ -10,13 +10,11 @@ namespace Module
         protected override void InitRequiredDataType()
         {
             _requiredDataTypeList.Add(typeof(ActorData));
-            _requiredDataTypeList.Add(typeof(PositionData));
             _requiredDataTypeList.Add(typeof(Physics2DData));
             _requiredDataTypeList.Add(typeof(ActorJumpData));
             _requiredDataTypeList.Add(typeof(DirectionData));
             _requiredDataTypeList.Add(typeof(SpeedData));
             _requiredDataTypeList.Add(typeof(ServerJoyStickData));
-            _requiredDataTypeList.Add(typeof(ResourceData));
             _requiredDataTypeList.Add(typeof(ResourceStateData));
         }
 
@@ -49,11 +47,9 @@ namespace Module
             var actorInfo = worldMgr.ActorConfig.Get(actorData.actorId);
 
             var physics2DData = objData.GetData<Physics2DData>();
-            var positionData = objData.GetData<PositionData>();
             var speedData = objData.GetData<SpeedData>();
             var directionData = objData.GetData<DirectionData>();
             var jumpData = objData.GetData<ActorJumpData>();
-            var resourceData = objData.GetData<ResourceData>();
 
             for (var i = 0; i < serverActionList.Count;)
             {
@@ -77,12 +73,23 @@ namespace Module
                         case JoyStickActionType.Jump:
                             jumpData.currentJump = actorInfo.jump;
 
-                            var position = resourceData.gameObject.transform.position;
-                            positionData.ground.x = Mathf.CeilToInt(position.x * Constant.UNITY_UNIT_TO_GAME_UNIT);
-                            positionData.ground.y = Mathf.CeilToInt(position.y * Constant.UNITY_UNIT_TO_GAME_UNIT);
-                            positionData.ground.z = Mathf.CeilToInt(position.z * Constant.UNITY_UNIT_TO_GAME_UNIT);
-
                             objData.SetDirty(actorData, jumpData);
+                            break;
+                        case JoyStickActionType.SkillDefault:
+                            if (serverAction.skillDefaultType == SkillDefaultType.Fly)
+                            {
+                                var flyData = objData.GetData<ActorFlyData>();
+                                flyData.duration = actorInfo.defaultSkillDuration;
+                                flyData.currentDuration = 0;
+
+                                if (actorData.currentState == ActorStateType.Jump)
+                                {
+                                    jumpData.currentJump = Vector3Int.zero;
+                                    actorData.currentState = ActorStateType.Idle;
+                                }
+
+                                objData.SetDirty(flyData);
+                            }
                             break;
                     }
 

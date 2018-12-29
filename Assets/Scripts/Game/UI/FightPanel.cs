@@ -20,6 +20,12 @@ public class FightPanel : Panel
 
         var actorData = player.GetData<ActorData>();
         var actorInfo = worldMgr.ActorConfig.Get(actorData.actorId);
+        actorData.defaultSkill = actorInfo.defaultSkill;
+        if (actorData.defaultSkill == SkillDefaultType.Fly)
+        {
+            player.AddData(new ActorFlyData());
+        }
+
         var resourceData = player.GetData<ResourceData>();
         resourceData.resource = actorInfo.resourceName;
 

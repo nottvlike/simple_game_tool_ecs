@@ -24,6 +24,7 @@ namespace Module
             return;
 #endif
             var joyStickData = objData.GetData<ClientJoyStickData>();
+            var actorData = objData.GetData<ActorData>();
 
             var joyStickMapDataList = WorldManager.Instance.JoyStickConfig.joyStickMapDataList;
             for (var j = 0; j < joyStickMapDataList.Length; j++)
@@ -36,7 +37,8 @@ namespace Module
                     {
                         if (Input.GetKeyDown(keyCodeList[k]))
                         {
-                            AddJoyStickActionData(objData, joyStickData, joystickMapData.joyStickActionType, joystickMapData.joyStickActionFaceType);
+                            var defaultSkill = joystickMapData.joyStickActionType == JoyStickActionType.SkillDefault ? actorData.defaultSkill : SkillDefaultType.None;
+                            AddJoyStickActionData(objData, joyStickData, joystickMapData.joyStickActionType, joystickMapData.joyStickActionFaceType, defaultSkill);
                         }
                     }
                 }
@@ -54,11 +56,12 @@ namespace Module
             }
         }
 
-        public static void AddJoyStickActionData(ObjectData objData, ClientJoyStickData joyStickData, JoyStickActionType actionType, JoyStickActionFaceType faceType)
+        public static void AddJoyStickActionData(ObjectData objData, ClientJoyStickData joyStickData, JoyStickActionType actionType, JoyStickActionFaceType faceType, SkillDefaultType skillDefaultType = SkillDefaultType.None)
         {
             var actorData = objData.GetData<ActorData>();
             var currentState = actorData.currentState;
-            if (currentState == ActorStateType.Idle || (currentState == ActorStateType.Move && actionType == JoyStickActionType.CancelMove))
+            if (currentState == ActorStateType.Idle || (currentState == ActorStateType.Move && actionType == JoyStickActionType.CancelMove)
+                || (currentState != ActorStateType.SkillDefault && actionType == JoyStickActionType.SkillDefault))
             {
                 var gameSystemData = WorldManager.Instance.GameCore.GetData<GameSystemData>();
 
@@ -66,6 +69,7 @@ namespace Module
                 joyStickActionData.frame = gameSystemData.clientFrame + Constant.JOYSTICK_DELAY_FRAME_COUNT;
                 joyStickActionData.actionType = actionType;
                 joyStickActionData.actionParam = faceType;
+                joyStickActionData.skillDefaultType = skillDefaultType;
                 joyStickData.actionList.Add(joyStickActionData);
 
                 objData.SetDirty(joyStickData);
@@ -75,5 +79,5 @@ namespace Module
                 LogUtil.W("Failed to do action {0}, actor is not idle!", actionType);
             }
         }
+        }
     }
-}

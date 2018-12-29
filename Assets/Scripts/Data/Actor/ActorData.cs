@@ -17,6 +17,13 @@ namespace Data
     {
         public int actorId;
         public ActorStateType currentState;
+        public SkillDefaultType defaultSkill;
+    }
+
+    public class ActorFlyData : Data
+    {
+        public int duration;
+        public int currentDuration;
     }
 
     public class ActorSyncData : Data
