@@ -9,7 +9,6 @@ namespace Module
     {
         protected override void InitRequiredDataType()
         {
-            _requiredDataTypeList.Add(typeof(Collider2DData));
             _requiredDataTypeList.Add(typeof(Physics2DData));
             _requiredDataTypeList.Add(typeof(PositionData));
             _requiredDataTypeList.Add(typeof(DirectionData));
@@ -31,22 +30,21 @@ namespace Module
                 return;
             }
 
+            var resourceData = objData.GetData<ResourceData>();
             var positionData = objData.GetData<PositionData>();
-            var collider2DData = objData.GetData<Collider2DData>();
-            var position = collider2DData.ground.position;
+            var position = resourceData.gameObject.transform.position;
             RaycastHit2D raycastHit2D = Physics2D.Raycast(position, -Vector3.up, 3, LayerMask.GetMask("Ground"));
             if (raycastHit2D)
             {
-                positionData.ground.y = Mathf.CeilToInt(raycastHit2D.transform.parent.position.y * Constant.UNITY_UNIT_TO_GAME_UNIT);
+                positionData.ground.y = Mathf.CeilToInt(raycastHit2D.transform.position.y * Constant.UNITY_UNIT_TO_GAME_UNIT);
             }
 
             var directionData = objData.GetData<DirectionData>();
             var direction = directionData.direction.x > 0 ? Vector3.right : Vector3.left;
-            position = directionData.direction.x > 0 ? collider2DData.forward.position : collider2DData.back.position;
             raycastHit2D = Physics2D.Raycast(position, direction, 3, LayerMask.GetMask("Ground"));
             if (raycastHit2D)
             {
-                positionData.forward.x = Mathf.CeilToInt(raycastHit2D.transform.parent.position.x * Constant.UNITY_UNIT_TO_GAME_UNIT);
+                positionData.forward.x = Mathf.CeilToInt(raycastHit2D.transform.position.x * Constant.UNITY_UNIT_TO_GAME_UNIT);
             }
             else
             {
@@ -89,7 +87,6 @@ namespace Module
             positionData.position.x += deltaX;
             positionData.position.y += deltaY;
 
-            var resourceData = objData.GetData<ResourceData>();
             resourceData.gameObject.transform.Translate((float)deltaX / Constant.UNITY_UNIT_TO_GAME_UNIT, (float)deltaY / Constant.UNITY_UNIT_TO_GAME_UNIT, 0);
         }
 
