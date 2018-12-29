@@ -58,26 +58,16 @@ namespace Module
 
         public static void AddJoyStickActionData(ObjectData objData, ClientJoyStickData joyStickData, JoyStickActionType actionType, JoyStickActionFaceType faceType, SkillDefaultType skillDefaultType = SkillDefaultType.None)
         {
-            var actorData = objData.GetData<ActorData>();
-            var currentState = actorData.currentState;
-            if (currentState == ActorStateType.Idle || (currentState == ActorStateType.Move && actionType == JoyStickActionType.CancelMove)
-                || (currentState != ActorStateType.SkillDefault && actionType == JoyStickActionType.SkillDefault))
-            {
-                var gameSystemData = WorldManager.Instance.GameCore.GetData<GameSystemData>();
+            var gameSystemData = WorldManager.Instance.GameCore.GetData<GameSystemData>();
 
-                var joyStickActionData = WorldManager.Instance.PoolMgr.Get<JoyStickActionData>();
-                joyStickActionData.frame = gameSystemData.clientFrame + Constant.JOYSTICK_DELAY_FRAME_COUNT;
-                joyStickActionData.actionType = actionType;
-                joyStickActionData.actionParam = faceType;
-                joyStickActionData.skillDefaultType = skillDefaultType;
-                joyStickData.actionList.Add(joyStickActionData);
+            var joyStickActionData = WorldManager.Instance.PoolMgr.Get<JoyStickActionData>();
+            joyStickActionData.frame = gameSystemData.clientFrame + Constant.JOYSTICK_DELAY_FRAME_COUNT;
+            joyStickActionData.actionType = actionType;
+            joyStickActionData.actionParam = faceType;
+            joyStickActionData.skillDefaultType = skillDefaultType;
+            joyStickData.actionList.Add(joyStickActionData);
 
-                objData.SetDirty(joyStickData);
-            }
-            else
-            {
-                LogUtil.W("Failed to do action {0}, actor is not idle!", actionType);
-            }
-        }
+            objData.SetDirty(joyStickData);
         }
     }
+}
