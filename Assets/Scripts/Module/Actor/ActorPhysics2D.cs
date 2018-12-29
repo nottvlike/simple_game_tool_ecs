@@ -52,7 +52,7 @@ namespace Module
             }
 
             var physics2DData = objData.GetData<Physics2DData>();
-            var positionY = GetActorGroundY(positionData, physics2DData);
+            var positionY = GetActorFootY(positionData, physics2DData);
             if (positionY == positionData.ground.y && physics2DData.force.x == 0 && physics2DData.force.y == 0)
             {
                 Stop(objData.ObjectId);
@@ -90,7 +90,7 @@ namespace Module
             resourceData.gameObject.transform.Translate((float)deltaX / Constant.UNITY_UNIT_TO_GAME_UNIT, (float)deltaY / Constant.UNITY_UNIT_TO_GAME_UNIT, 0);
         }
 
-        public static int GetActorGroundY(PositionData positionData, Physics2DData physics2DData)
+        public static int GetActorFootY(PositionData positionData, Physics2DData physics2DData)
         {
             return positionData.position.y - physics2DData.halfHeight;
         }

@@ -45,7 +45,7 @@ namespace Module
 
             var physics2DData = objData.GetData<Physics2DData>();
             var positionData = objData.GetData<PositionData>();
-            var actorGroundY = ActorPhysics2D.GetActorGroundY(positionData, physics2DData);
+            var actorGroundY = ActorPhysics2D.GetActorFootY(positionData, physics2DData);
             if (positionData.ground.y == actorGroundY && flyData.currentDuration == flyData.duration)
             {
                 flyData.currentDuration = flyData.duration = 0;

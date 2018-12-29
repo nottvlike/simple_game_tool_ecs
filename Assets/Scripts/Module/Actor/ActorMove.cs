@@ -38,7 +38,7 @@ namespace Module
 
             var physics2DData = objData.GetData<Physics2DData>();
             var positionData = objData.GetData<PositionData>();
-            var positionY = ActorPhysics2D.GetActorGroundY(positionData, physics2DData);
+            var positionY = ActorPhysics2D.GetActorFootY(positionData, physics2DData);
             if (positionData.ground.y != positionY)
             {
                 speedData.speed = 0;
