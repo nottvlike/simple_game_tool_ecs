@@ -47,7 +47,7 @@ namespace Module
 
             var physics2DData = objData.GetData<Physics2DData>();
             var positionData = objData.GetData<PositionData>();
-            var positionY = ActorPhysics2D.GetGround(positionData, physics2DData);
+            var positionY = ActorPhysics2D.GetActorGroundY(positionData, physics2DData);
             if (positionData.ground.y == positionY && jumpData.currentJump.y == 0)
             {
                 jumpData.currentJump.x = 0;
@@ -60,11 +60,11 @@ namespace Module
             }
             else
             {
-                jumpData.currentJump.y = currentJump.y - physics2DData.friction;
+                jumpData.currentJump.y = currentJump.y - physics2DData.airFriction;
                 if (jumpData.currentJump.y < 0)
                 {
                     jumpData.currentJump.y = 0;
-                    physics2DData.force.y += -physics2DData.friction;
+                    physics2DData.force.y += -physics2DData.airFriction;
                 }
                 else
                 {

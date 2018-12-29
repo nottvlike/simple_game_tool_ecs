@@ -54,7 +54,7 @@ namespace Module
             }
 
             var physics2DData = objData.GetData<Physics2DData>();
-            var positionY = GetGround(positionData, physics2DData);
+            var positionY = GetActorGroundY(positionData, physics2DData);
             if (positionY == positionData.ground.y && physics2DData.force.x == 0 && physics2DData.force.y == 0)
             {
                 Stop(objData.ObjectId);
@@ -77,7 +77,7 @@ namespace Module
                 deltaY = deltaY > 0 ? distanceY : -distanceY;
             }
 
-            var positionX = GetForward(positionData, physics2DData, directionData);
+            var positionX = GetActorForwardX(positionData, physics2DData, directionData);
             var distanceX = Mathf.Abs(positionData.forward.x - positionX);
             if (Mathf.Abs(deltaX) > distanceX)
             {
@@ -93,12 +93,12 @@ namespace Module
             resourceData.gameObject.transform.Translate((float)deltaX / Constant.UNITY_UNIT_TO_GAME_UNIT, (float)deltaY / Constant.UNITY_UNIT_TO_GAME_UNIT, 0);
         }
 
-        public static int GetGround(PositionData positionData, Physics2DData physics2DData)
+        public static int GetActorGroundY(PositionData positionData, Physics2DData physics2DData)
         {
             return positionData.position.y - physics2DData.halfHeight;
         }
 
-        public static int GetForward(PositionData positionData, Physics2DData physics2DData, DirectionData directionData)
+        public static int GetActorForwardX(PositionData positionData, Physics2DData physics2DData, DirectionData directionData)
         {
             return positionData.position.x + physics2DData.halfWidth * directionData.direction.x;
         }
