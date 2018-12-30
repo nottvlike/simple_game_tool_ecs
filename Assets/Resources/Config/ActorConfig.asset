@@ -15,9 +15,10 @@ MonoBehaviour:
   - actorId: 1
     actorName: Test1
     resourceName: Cube
+    mass: 20
     speed: 6
     friction: 3
     jump: {x: 10, y: 40, z: 0}
     airFriction: 3
-    defaultSkill: 2
+    defaultSkill: 3
     defaultSkillDuration: 100
