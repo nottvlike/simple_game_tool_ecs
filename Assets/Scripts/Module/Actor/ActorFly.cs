@@ -37,16 +37,14 @@ namespace Module
             var actorData = objData.GetData<ActorData>();
             if (actorData.currentState != ActorStateType.SkillDefault)
             {
-                actorData.currentState = ActorStateType.SkillDefault;
-                objData.SetDirty(actorData);
+                flyData.currentDuration = flyData.duration = 0;
+                return;
             }
 
             var worldMgr = WorldManager.Instance;
 
             var physics2DData = objData.GetData<Physics2DData>();
-            var positionData = objData.GetData<PositionData>();
-            var actorGroundY = ActorPhysics2D.GetActorFootY(positionData, physics2DData);
-            if (positionData.ground.y == actorGroundY && flyData.currentDuration == flyData.duration)
+            if (flyData.currentDuration == flyData.duration)
             {
                 flyData.currentDuration = flyData.duration = 0;
 
@@ -70,11 +68,11 @@ namespace Module
                     var seconds = flyData.currentDuration * Constant.ACTOR_FLY_SHAKE_DURATION / Constant.SECOND_TO_MILLISECOND;
                     if (seconds % 2 == 0)
                     {
-                        physics2DData.force.y = physics2DData.gravity + Constant.ACTOR_FLY_SHAKE_Y;
+                        physics2DData.force.y = Constant.ACTOR_FLY_SHAKE_Y;
                     }
                     else
                     {
-                        physics2DData.force.y = physics2DData.gravity - Constant.ACTOR_FLY_SHAKE_Y;
+                        physics2DData.force.y = -Constant.ACTOR_FLY_SHAKE_Y;
                     }
                 }
 

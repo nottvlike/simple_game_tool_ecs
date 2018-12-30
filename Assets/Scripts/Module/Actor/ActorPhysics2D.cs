@@ -19,8 +19,7 @@ namespace Module
         public override bool IsUpdateRequired(Data.Data data)
         {
             var type = data.GetType();
-            return type == typeof(Physics2DData) || type == typeof(DirectionData) || type == typeof(SpeedData) || type == typeof(ActorJumpData) || type == typeof(ActorDashData)
-                || type == typeof(ActorStressData);
+            return type == typeof(Physics2DData) || type == typeof(DirectionData);
         }
 
         public override void Refresh(ObjectData objData)
@@ -60,8 +59,11 @@ namespace Module
                 return;
             }
 
+            var actorData = objData.GetData<ActorData>();
+            var currentState = actorData.currentState;
             var forceY = physics2DData.force.y;
-            if (positionY != positionData.ground.y)
+            if (positionY != positionData.ground.y && currentState != ActorStateType.SkillDefault 
+                && currentState != ActorStateType.SkillCustom)
             {
                 forceY += -physics2DData.gravity;
             }
@@ -70,7 +72,6 @@ namespace Module
             var deltaX = directionData.direction.x * physics2DData.force.x * gameSystemData.unscaleDeltaTime;
             var deltaY = forceY * gameSystemData.unscaleDeltaTime;
 
-            LogUtil.I("deltaY " + deltaY);
             var distanceY = Mathf.Abs(positionData.ground.y - positionY);
             if (((distanceY == 0 && deltaY < 0) || (distanceY != 0 && Mathf.Abs(deltaY) > distanceY)))
             {
@@ -83,8 +84,6 @@ namespace Module
             {
                 deltaX = deltaX > 0 ? distanceX : -distanceX;
             }
-
-            LogUtil.I("distanceY " + distanceY);
 
             positionData.ground.x += deltaX;
 

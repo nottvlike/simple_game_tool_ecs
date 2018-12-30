@@ -36,23 +36,14 @@ namespace Module
                 return;
             }
 
-            var physics2DData = objData.GetData<Physics2DData>();
-            var positionData = objData.GetData<PositionData>();
-            var actorFootY = ActorPhysics2D.GetActorFootY(positionData, physics2DData);
-
-            if (positionData.ground.y != actorFootY)
+            var actorData = objData.GetData<ActorData>();
+            if (actorData.currentState != ActorStateType.SkillDefault)
             {
                 dashData.currentDuration = dashData.duration = 0;
                 return;
             }
 
-            var actorData = objData.GetData<ActorData>();
-            if (actorData.currentState != ActorStateType.SkillDefault)
-            {
-                actorData.currentState = ActorStateType.SkillDefault;
-                objData.SetDirty(actorData);
-            }
-
+            var physics2DData = objData.GetData<Physics2DData>();
             if (dashData.currentDuration == dashData.duration)
             {
                 dashData.currentDuration = dashData.duration = 0;

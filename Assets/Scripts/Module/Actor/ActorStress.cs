@@ -39,16 +39,14 @@ namespace Module
             var actorData = objData.GetData<ActorData>();
             if (actorData.currentState != ActorStateType.SkillDefault)
             {
-                actorData.currentState = ActorStateType.SkillDefault;
-                objData.SetDirty(actorData);
+                stressData.currentDuration = stressData.duration = 0;
+                return;
             }
 
             var worldMgr = WorldManager.Instance;
 
             var physics2DData = objData.GetData<Physics2DData>();
-            var positionData = objData.GetData<PositionData>();
-            var actorGroundY = ActorPhysics2D.GetActorFootY(positionData, physics2DData);
-            if (positionData.ground.y == actorGroundY && stressData.currentDuration == stressData.duration)
+            if (stressData.currentDuration == stressData.duration)
             {
                 stressData.currentDuration = stressData.duration = 0;
                 physics2DData.force.y = 0;

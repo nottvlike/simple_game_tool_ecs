@@ -15,7 +15,7 @@ public partial class Constant
     public const int SECOND_TO_MILLISECOND = 1000;
     public const int JOYSTICK_DELAY_FRAME_COUNT = 5;
 
-    public const int CAMERA_FOLLOW_INTERVAL = 1000;
+    public const int CAMERA_FOLLOW_INTERVAL = 800;
 
     public const int UNITY_UNIT_TO_GAME_UNIT = 1000;
 

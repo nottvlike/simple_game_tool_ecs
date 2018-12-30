@@ -56,39 +56,50 @@ namespace Module
                 var serverAction = serverActionList[i];
                 if (serverAction.frame == gameSystemData.clientFrame)
                 {
+                    ResetDefaultSkill(objData, serverAction);
                     switch (serverAction.actionType)
                     {
                         case JoyStickActionType.Move:
-                            speedData.speed = actorInfo.speed;
+                            physics2DData.force = Vector3Int.zero;
                             physics2DData.friction = 0;
+                            speedData.speed = actorInfo.speed;
                             directionData.direction.x = serverAction.actionParam == JoyStickActionFaceType.Right ? 1 : -1;
 
-                            objData.SetDirty(speedData, directionData);
+                            actorData.currentState = ActorStateType.Move;
+
+                            objData.SetDirty(speedData, directionData, physics2DData, actorData);
                             break;
                         case JoyStickActionType.CancelMove:
+                            physics2DData.force = Vector3Int.zero;
                             physics2DData.friction = actorInfo.friction;
 
-                            objData.SetDirty(speedData);
+                            objData.SetDirty(speedData, physics2DData);
                             break;
                         case JoyStickActionType.Jump:
+                            speedData.speed = 0;
+                            physics2DData.friction = 0;
+                            physics2DData.force = Vector3Int.zero;
+
                             jumpData.currentJump = actorInfo.jump;
 
-                            objData.SetDirty(actorData, jumpData);
+                            actorData.currentState = ActorStateType.Jump;
+
+                            objData.SetDirty(jumpData, physics2DData, actorData);
                             break;
                         case JoyStickActionType.SkillDefault:
+                            speedData.speed = 0;
+                            physics2DData.friction = 0;
+                            physics2DData.force = Vector3Int.zero;
+
+                            actorData.currentState = ActorStateType.SkillDefault;
+
                             if (serverAction.skillDefaultType == SkillDefaultType.Fly)
                             {
                                 var flyData = objData.GetData<ActorFlyData>();
                                 flyData.duration = actorInfo.defaultSkillDuration;
                                 flyData.currentDuration = 0;
 
-                                if (actorData.currentState == ActorStateType.Jump)
-                                {
-                                    jumpData.currentJump = Vector3Int.zero;
-                                    actorData.currentState = ActorStateType.Idle;
-                                }
-
-                                objData.SetDirty(flyData);
+                                objData.SetDirty(flyData, physics2DData, actorData);
                             }
                             else if (serverAction.skillDefaultType == SkillDefaultType.Dash)
                             {
@@ -96,7 +107,7 @@ namespace Module
                                 dashData.duration = actorInfo.defaultSkillDuration;
                                 dashData.currentDuration = 0;
 
-                                objData.SetDirty(dashData);
+                                objData.SetDirty(dashData, physics2DData, actorData);
                             }
                             else if (serverAction.skillDefaultType == SkillDefaultType.Stress)
                             {
@@ -104,15 +115,7 @@ namespace Module
                                 stressData.duration = actorInfo.defaultSkillDuration;
                                 stressData.currentDuration = 0;
 
-                                if (actorData.currentState == ActorStateType.Jump)
-                                {
-                                    jumpData.currentJump = Vector3Int.zero;
-                                    physics2DData.force = Vector3Int.zero;
-                                    
-                                    actorData.currentState = ActorStateType.Idle;
-                                }
-
-                                objData.SetDirty(stressData);
+                                objData.SetDirty(stressData, physics2DData, actorData);
                             }
                             break;
                     }
@@ -124,6 +127,28 @@ namespace Module
                 {
                     i++;
                 }
+            }
+        }
+
+        void ResetDefaultSkill(ObjectData objData, JoyStickActionData serverAction)
+        {
+            if (serverAction.skillDefaultType == SkillDefaultType.Fly)
+            {
+                var flyData = objData.GetData<ActorFlyData>();
+                flyData.duration = 0;
+                flyData.currentDuration = 0;
+            }
+            else if (serverAction.skillDefaultType == SkillDefaultType.Dash)
+            {
+                var dashData = objData.GetData<ActorDashData>();
+                dashData.duration = 0;
+                dashData.currentDuration = 0;
+            }
+            else if (serverAction.skillDefaultType == SkillDefaultType.Stress)
+            {
+                var stressData = objData.GetData<ActorStressData>();
+                stressData.duration = 0;
+                stressData.currentDuration = 0;
             }
         }
     }

@@ -41,8 +41,8 @@ namespace Module
             var actorData = objData.GetData<ActorData>();
             if (actorData.currentState != ActorStateType.Jump)
             {
-                actorData.currentState = ActorStateType.Jump;
-                objData.SetDirty(actorData);
+                jumpData.currentJump = Vector3Int.zero;
+                return;
             }
 
             var physics2DData = objData.GetData<Physics2DData>();
