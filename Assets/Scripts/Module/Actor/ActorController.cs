@@ -98,6 +98,22 @@ namespace Module
 
                                 objData.SetDirty(dashData);
                             }
+                            else if (serverAction.skillDefaultType == SkillDefaultType.Stress)
+                            {
+                                var stressData = objData.GetData<ActorStressData>();
+                                stressData.duration = actorInfo.defaultSkillDuration;
+                                stressData.currentDuration = 0;
+
+                                if (actorData.currentState == ActorStateType.Jump)
+                                {
+                                    jumpData.currentJump = Vector3Int.zero;
+                                    physics2DData.force = Vector3Int.zero;
+                                    
+                                    actorData.currentState = ActorStateType.Idle;
+                                }
+
+                                objData.SetDirty(stressData);
+                            }
                             break;
                     }
 

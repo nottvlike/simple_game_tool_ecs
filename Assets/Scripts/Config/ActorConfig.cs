@@ -9,6 +9,7 @@ public struct ActorInfo
     public int actorId;
     public string actorName;
     public string resourceName;
+    public int mass;
     public int speed;
     public int friction;
     public Vector3Int jump;

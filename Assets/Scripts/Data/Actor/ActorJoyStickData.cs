@@ -8,7 +8,8 @@ namespace Data
     {
         None,
         Fly,
-        Dash
+        Dash,
+        Stress
     }
 
     public enum JoyStickActionType

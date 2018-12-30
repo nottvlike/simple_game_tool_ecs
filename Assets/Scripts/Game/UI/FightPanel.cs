@@ -29,6 +29,10 @@ public class FightPanel : Panel
         {
             player.AddData(new ActorDashData());
         }
+        else if (actorData.defaultSkill == SkillDefaultType.Stress)
+        {
+            player.AddData(new ActorStressData());
+        }
 
         var resourceData = player.GetData<ResourceData>();
         resourceData.resource = actorInfo.resourceName;
@@ -40,6 +44,7 @@ public class FightPanel : Panel
         var physics2DData = player.GetData<Physics2DData>();
         physics2DData.gravity = 10;
         physics2DData.airFriction = actorInfo.airFriction;
+        physics2DData.mass = actorInfo.mass;
 
         var directionData = player.GetData<DirectionData>();
         directionData.direction.x = 1;

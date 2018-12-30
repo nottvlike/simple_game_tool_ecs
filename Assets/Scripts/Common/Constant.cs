@@ -29,4 +29,5 @@ public partial class Constant
     public const int ACTOR_FLY_SPEED_X = 3;
 
     public const int ACTOR_DASH_SPEED_X = 40;
+    public const int ACTOR_STRESS_RATE_Y = 3;
 }
