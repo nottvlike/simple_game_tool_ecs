@@ -26,6 +26,12 @@ namespace Data
         public int currentDuration;
     }
 
+    public class ActorDashData : Data
+    {
+        public int duration;
+        public int currentDuration;
+    }
+
     public class ActorSyncData : Data
     {
     }

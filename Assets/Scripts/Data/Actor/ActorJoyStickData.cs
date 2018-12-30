@@ -7,7 +7,8 @@ namespace Data
     public enum SkillDefaultType
     {
         None,
-        Fly
+        Fly,
+        Dash
     }
 
     public enum JoyStickActionType

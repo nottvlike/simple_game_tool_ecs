@@ -25,6 +25,10 @@ public class FightPanel : Panel
         {
             player.AddData(new ActorFlyData());
         }
+        else if (actorData.defaultSkill == SkillDefaultType.Dash)
+        {
+            player.AddData(new ActorDashData());
+        }
 
         var resourceData = player.GetData<ResourceData>();
         resourceData.resource = actorInfo.resourceName;

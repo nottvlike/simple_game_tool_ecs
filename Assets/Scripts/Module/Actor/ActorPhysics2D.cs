@@ -19,7 +19,7 @@ namespace Module
         public override bool IsUpdateRequired(Data.Data data)
         {
             var type = data.GetType();
-            return type == typeof(Physics2DData) || type == typeof(DirectionData) || type == typeof(SpeedData) || type == typeof(ActorJumpData);
+            return type == typeof(Physics2DData) || type == typeof(DirectionData) || type == typeof(SpeedData) || type == typeof(ActorJumpData) || type == typeof(ActorDashData);
         }
 
         public override void Refresh(ObjectData objData)

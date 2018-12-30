@@ -90,6 +90,14 @@ namespace Module
 
                                 objData.SetDirty(flyData);
                             }
+                            else if (serverAction.skillDefaultType == SkillDefaultType.Dash)
+                            {
+                                var dashData = objData.GetData<ActorDashData>();
+                                dashData.duration = actorInfo.defaultSkillDuration;
+                                dashData.currentDuration = 0;
+
+                                objData.SetDirty(dashData);
+                            }
                             break;
                     }
 
