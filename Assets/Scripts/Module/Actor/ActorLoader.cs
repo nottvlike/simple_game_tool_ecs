@@ -46,13 +46,13 @@ namespace Module
 
                 var positionData = objData.GetData<PositionData>();
                 var position = transform.position;
-                positionData.position.x = Mathf.CeilToInt(position.x * Constant.UNITY_UNIT_TO_GAME_UNIT);
-                positionData.position.y = Mathf.CeilToInt(position.y * Constant.UNITY_UNIT_TO_GAME_UNIT);
-                positionData.position.z = Mathf.CeilToInt(position.z * Constant.UNITY_UNIT_TO_GAME_UNIT);
+                positionData.position.x = Mathf.RoundToInt(position.x * Constant.UNITY_UNIT_TO_GAME_UNIT);
+                positionData.position.y = Mathf.RoundToInt(position.y * Constant.UNITY_UNIT_TO_GAME_UNIT);
+                positionData.position.z = Mathf.RoundToInt(position.z * Constant.UNITY_UNIT_TO_GAME_UNIT);
 
                 var physics2DData = objData.GetData<Physics2DData>();
-                physics2DData.halfWidth = Mathf.CeilToInt((collider2DData.forward.position.x - position.x) * Constant.UNITY_UNIT_TO_GAME_UNIT);
-                physics2DData.halfHeight = Mathf.CeilToInt((position.y - collider2DData.ground.position.y) * Constant.UNITY_UNIT_TO_GAME_UNIT);
+                physics2DData.halfWidth = Mathf.RoundToInt((collider2DData.forward.position.x - position.x) * Constant.UNITY_UNIT_TO_GAME_UNIT);
+                physics2DData.halfHeight = Mathf.RoundToInt((position.y - collider2DData.ground.position.y) * Constant.UNITY_UNIT_TO_GAME_UNIT);
             });
         }
     }
