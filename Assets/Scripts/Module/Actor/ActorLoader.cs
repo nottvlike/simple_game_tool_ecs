@@ -10,10 +10,9 @@ namespace Module
         protected override void InitRequiredDataType()
         {
             _requiredDataTypeList.Add(typeof(Physics2DData));
-            _requiredDataTypeList.Add(typeof(Collider2DData));
-            _requiredDataTypeList.Add(typeof(PositionData));
             _requiredDataTypeList.Add(typeof(ResourceData));
             _requiredDataTypeList.Add(typeof(ResourceStateData));
+            _requiredDataTypeList.Add(typeof(ActorControllerData));
         }
 
         public override void Refresh(ObjectData objData)
@@ -38,21 +37,8 @@ namespace Module
                 resourceData.gameObject = Object.Instantiate(obj, Vector3.zero, Quaternion.identity) as GameObject;
                 resourceData.gameObject.name = resourceStateData.name;
 
-                var transform = resourceData.gameObject.transform;
-                var collider2DData = objData.GetData<Collider2DData>();
-                collider2DData.forward = transform.Find("forward");
-                collider2DData.ground = transform.Find("ground");
-                collider2DData.back = transform.Find("back");
-
-                var positionData = objData.GetData<PositionData>();
-                var position = transform.position;
-                positionData.position.x = Mathf.RoundToInt(position.x * Constant.UNITY_UNIT_TO_GAME_UNIT);
-                positionData.position.y = Mathf.RoundToInt(position.y * Constant.UNITY_UNIT_TO_GAME_UNIT);
-                positionData.position.z = Mathf.RoundToInt(position.z * Constant.UNITY_UNIT_TO_GAME_UNIT);
-
-                var physics2DData = objData.GetData<Physics2DData>();
-                physics2DData.halfWidth = Mathf.RoundToInt((collider2DData.forward.position.x - position.x) * Constant.UNITY_UNIT_TO_GAME_UNIT);
-                physics2DData.halfHeight = Mathf.RoundToInt((position.y - collider2DData.ground.position.y) * Constant.UNITY_UNIT_TO_GAME_UNIT);
+                var controller = objData.GetData<ActorControllerData>();
+                controller.controller = resourceData.gameObject.GetComponent<CharacterController>();
             });
         }
     }

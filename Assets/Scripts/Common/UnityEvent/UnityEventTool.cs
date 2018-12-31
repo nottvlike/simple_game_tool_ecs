@@ -4,6 +4,7 @@ using System.Collections.Generic;
 public class UnityEventTool : MonoSingleton<UnityEventTool>, IUnityEventTool
 {
 	List<IUpdateEvent> _updateEventList = new List<IUpdateEvent>();
+    List<IFixedUpdateEvent> _fixedUpdateEventList = new List<IFixedUpdateEvent>();
 
     void Awake()
     {
@@ -24,6 +25,14 @@ public class UnityEventTool : MonoSingleton<UnityEventTool>, IUnityEventTool
         for (var i = 0; i < _updateEventList.Count; i++)
         {
             _updateEventList[i].Update();
+        }
+    }
+
+    void FixedUpdate()
+    {
+        for (var i = 0; i < _fixedUpdateEventList.Count; i++)
+        {
+            _fixedUpdateEventList[i].FixedUpdate();
         }
     }
 
@@ -52,5 +61,32 @@ public class UnityEventTool : MonoSingleton<UnityEventTool>, IUnityEventTool
         }
 
         _updateEventList.Remove(updateEvent);
+    }
+
+    public bool IsAdded(IFixedUpdateEvent updateEvent)
+    {
+        return _fixedUpdateEventList.IndexOf(updateEvent) != -1;
+    }
+
+    public void Add(IFixedUpdateEvent updateEvent)
+    {
+        if (IsAdded(updateEvent))
+        {
+            LogUtil.W("UpdateEvent has been added!");
+            return;
+        }
+
+        _fixedUpdateEventList.Add(updateEvent);
+    }
+
+    public void Remove(IFixedUpdateEvent updateEvent)
+    {
+        if (!IsAdded(updateEvent))
+        {
+            LogUtil.W("UpdateEvent remove failed, not found!");
+            return;
+        }
+
+        _fixedUpdateEventList.Remove(updateEvent);
     }
 }

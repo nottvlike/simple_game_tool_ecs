@@ -20,6 +20,11 @@ namespace Data
         public SkillDefaultType defaultSkill;
     }
 
+    public class ActorControllerData : Data
+    {
+        public CharacterController controller;
+    }
+
     public class ActorFlyData : Data
     {
         public int duration;

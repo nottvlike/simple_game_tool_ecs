@@ -5,14 +5,16 @@ using Data;
 
 namespace Module
 {
-    public class ActorPhysics2D : UpdateModule
+    public class ActorPhysics2D : FixedUpdateModule
     {
+        Vector3 _movePosition = Vector3.zero;
+
         protected override void InitRequiredDataType()
         {
+            _requiredDataTypeList.Add(typeof(ActorControllerData));
+            _requiredDataTypeList.Add(typeof(ActorData));
             _requiredDataTypeList.Add(typeof(Physics2DData));
-            _requiredDataTypeList.Add(typeof(PositionData));
             _requiredDataTypeList.Add(typeof(DirectionData));
-            _requiredDataTypeList.Add(typeof(ResourceData));
             _requiredDataTypeList.Add(typeof(ResourceStateData));
         }
 
@@ -30,34 +32,9 @@ namespace Module
                 return;
             }
 
-            var resourceData = objData.GetData<ResourceData>();
-            var positionData = objData.GetData<PositionData>();
-            var position = resourceData.gameObject.transform.position;
-            RaycastHit2D raycastHit2D = Physics2D.Raycast(position, -Vector3.up, 3, LayerMask.GetMask("Ground"));
-            if (raycastHit2D)
-            {
-                positionData.ground.y = Mathf.RoundToInt(raycastHit2D.point.y * Constant.UNITY_UNIT_TO_GAME_UNIT);
-            }
-            else
-            {
-                positionData.ground.y = positionData.position.y + 1000;
-            }
-
-            var directionData = objData.GetData<DirectionData>();
-            var direction = directionData.direction.x > 0 ? Vector3.right : Vector3.left;
-            raycastHit2D = Physics2D.Raycast(position, direction, 3, LayerMask.GetMask("Ground"));
-            if (raycastHit2D)
-            {
-                positionData.forward.x = Mathf.RoundToInt(raycastHit2D.point.x * Constant.UNITY_UNIT_TO_GAME_UNIT);
-            }
-            else
-            {
-                positionData.forward.x = positionData.position.x + 1000;
-            }
-
             var physics2DData = objData.GetData<Physics2DData>();
-            var positionY = GetActorFootY(positionData, physics2DData);
-            if (positionY == positionData.ground.y && physics2DData.force.x == 0 && physics2DData.force.y == 0)
+            var controllerData = objData.GetData<ActorControllerData>();
+            if (IsGround(controllerData) && physics2DData.force.x == 0 && physics2DData.force.y == 0)
             {
                 Stop(objData.ObjectId);
                 return;
@@ -66,45 +43,27 @@ namespace Module
             var actorData = objData.GetData<ActorData>();
             var currentState = actorData.currentState;
             var forceY = physics2DData.force.y;
-            if (positionY != positionData.ground.y && currentState != ActorStateType.SkillDefault 
-                && currentState != ActorStateType.SkillCustom)
+
+            if (currentState != ActorStateType.SkillDefault && currentState != ActorStateType.SkillCustom)
             {
                 forceY += -physics2DData.gravity;
             }
 
+            var directionData = objData.GetData<DirectionData>();
             var gameSystemData = WorldManager.Instance.GameCore.GetData<GameSystemData>();
             var deltaX = directionData.direction.x * physics2DData.force.x * gameSystemData.unscaleDeltaTime;
             var deltaY = forceY * gameSystemData.unscaleDeltaTime;
 
-            var distanceY = Mathf.Abs(positionData.ground.y - positionY);
-            if (((distanceY == 0 && deltaY < 0) || (distanceY != 0 && Mathf.Abs(deltaY) > distanceY)))
-            {
-                deltaY = deltaY > 0 ? distanceY : -distanceY;
-            }
+            _movePosition.x = (float)deltaX / Constant.UNITY_UNIT_TO_GAME_UNIT;
+            _movePosition.y = (float)deltaY / Constant.UNITY_UNIT_TO_GAME_UNIT;
+            _movePosition.z = 0;
 
-            var positionX = GetActorForwardX(positionData, physics2DData, directionData);
-            var distanceX = Mathf.Abs(positionData.forward.x - positionX);
-            if (Mathf.Abs(deltaX) > distanceX)
-            {
-                deltaX = deltaX > 0 ? distanceX : -distanceX;
-            }
-
-            positionData.ground.x += deltaX;
-
-            positionData.position.x += deltaX;
-            positionData.position.y += deltaY;
-
-            resourceData.gameObject.transform.Translate((float)deltaX / Constant.UNITY_UNIT_TO_GAME_UNIT, (float)deltaY / Constant.UNITY_UNIT_TO_GAME_UNIT, 0);
+           controllerData.controller.Move(_movePosition); 
         }
 
-        public static int GetActorFootY(PositionData positionData, Physics2DData physics2DData)
+        public static bool IsGround(ActorControllerData controllerData)
         {
-            return positionData.position.y - physics2DData.halfHeight;
-        }
-
-        public static int GetActorForwardX(PositionData positionData, Physics2DData physics2DData, DirectionData directionData)
-        {
-            return positionData.position.x + physics2DData.halfWidth * directionData.direction.x;
+            return controllerData.controller.isGrounded;
         }
     }
 }

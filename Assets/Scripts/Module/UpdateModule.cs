@@ -5,7 +5,7 @@ using UnityEngine;
 
 namespace Module
 {
-    public abstract class UpdateModule : Module, IUpdateEvent
+    public abstract class BaseUpdateModule : Module
     {
         public struct ModuleData
         {
@@ -16,7 +16,7 @@ namespace Module
         ModuleData _defaultModuleData;
         List<ModuleData> _moduleDataList = new List<ModuleData>();
 
-        public UpdateModule()
+        public BaseUpdateModule()
         {
             _defaultModuleData.objId = -1;
         }
@@ -100,7 +100,10 @@ namespace Module
 
             return true;
         }
+    }
 
+    public abstract class UpdateModule : BaseUpdateModule, IUpdateEvent
+    {
         protected override void OnEnable()
         {
             WorldManager.Instance.UnityEventMgr.Add(this);

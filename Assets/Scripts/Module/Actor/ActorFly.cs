@@ -10,7 +10,6 @@ namespace Module
             _requiredDataTypeList.Add(typeof(ActorData));
             _requiredDataTypeList.Add(typeof(Physics2DData));
             _requiredDataTypeList.Add(typeof(ActorFlyData));
-            _requiredDataTypeList.Add(typeof(PositionData));
             _requiredDataTypeList.Add(typeof(ResourceStateData));
         }
 
