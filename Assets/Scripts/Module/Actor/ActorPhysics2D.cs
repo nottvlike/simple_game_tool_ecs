@@ -36,7 +36,11 @@ namespace Module
             RaycastHit2D raycastHit2D = Physics2D.Raycast(position, -Vector3.up, 3, LayerMask.GetMask("Ground"));
             if (raycastHit2D)
             {
-                positionData.ground.y = Mathf.CeilToInt(raycastHit2D.transform.position.y * Constant.UNITY_UNIT_TO_GAME_UNIT);
+                positionData.ground.y = Mathf.CeilToInt(raycastHit2D.point.y * Constant.UNITY_UNIT_TO_GAME_UNIT);
+            }
+            else
+            {
+                positionData.ground.y = positionData.position.y + 1000;
             }
 
             var directionData = objData.GetData<DirectionData>();
@@ -44,7 +48,7 @@ namespace Module
             raycastHit2D = Physics2D.Raycast(position, direction, 3, LayerMask.GetMask("Ground"));
             if (raycastHit2D)
             {
-                positionData.forward.x = Mathf.CeilToInt(raycastHit2D.transform.position.x * Constant.UNITY_UNIT_TO_GAME_UNIT);
+                positionData.forward.x = Mathf.CeilToInt(raycastHit2D.point.x * Constant.UNITY_UNIT_TO_GAME_UNIT);
             }
             else
             {
