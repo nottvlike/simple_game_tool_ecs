@@ -33,14 +33,14 @@ namespace Module
             }
 
             var controllerData = objData.GetData<ActorController2DData>();
-            var raycast2DHit = Physics2D.Raycast(controllerData.foot.position, -Vector2.up, 0.1f);
+            var raycast2DHit = Physics2D.Raycast(controllerData.foot.position, -Vector2.up, 0.1f, LayerMask.GetMask("Ground"));
             if (raycast2DHit.collider != null)
             {
                 controllerData.groundY = Mathf.RoundToInt(raycast2DHit.point.y * Constant.UNITY_UNIT_TO_GAME_UNIT);
             }
             else
             {
-                controllerData.groundY = controllerData.positionY - 100;
+                controllerData.groundY = controllerData.positionY - 1000;
             }
 
             var physics2DData = objData.GetData<Physics2DData>();
@@ -74,15 +74,15 @@ namespace Module
             _movePosition.x = (float)deltaX / Constant.UNITY_UNIT_TO_GAME_UNIT;
             _movePosition.y = (float)deltaY / Constant.UNITY_UNIT_TO_GAME_UNIT;
 
-            controllerData.positionY += deltaY;
-
+            controllerData.positionY = Mathf.RoundToInt(controllerData.foot.position.y * Constant.UNITY_UNIT_TO_GAME_UNIT);
             var rb2d = controllerData.rigidbody2D;
             rb2d.MovePosition(rb2d.position + _movePosition);
         }
 
         public static bool IsGround(ActorController2DData controllerData)
         {
-            return controllerData.groundY == controllerData.positionY;
+            // unity 碰撞体之间没有完全接触，这里把误差暂时定在20以内。
+            return Mathf.Abs(controllerData.groundY - controllerData.positionY) < Constant.ACTOR_COLLIDER_MAGIC_Y;
         }
     }
 }
