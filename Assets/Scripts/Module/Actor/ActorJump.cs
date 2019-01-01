@@ -10,7 +10,7 @@ namespace Module
         protected override void InitRequiredDataType()
         {
             _requiredDataTypeList.Add(typeof(ActorData));
-            _requiredDataTypeList.Add(typeof(ActorControllerData));
+            _requiredDataTypeList.Add(typeof(ActorController2DData));
             _requiredDataTypeList.Add(typeof(Physics2DData));
             _requiredDataTypeList.Add(typeof(ActorJumpData));
             _requiredDataTypeList.Add(typeof(ResourceStateData));
@@ -46,7 +46,7 @@ namespace Module
             }
 
             var physics2DData = objData.GetData<Physics2DData>();
-            var actorControllerData = objData.GetData<ActorControllerData>();
+            var actorControllerData = objData.GetData<ActorController2DData>();
             if (ActorPhysics2D.IsGround(actorControllerData) && jumpData.currentJump.y == 0)
             {
                 jumpData.currentJump.x = 0;

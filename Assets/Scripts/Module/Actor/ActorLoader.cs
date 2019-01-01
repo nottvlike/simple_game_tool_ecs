@@ -12,7 +12,7 @@ namespace Module
             _requiredDataTypeList.Add(typeof(Physics2DData));
             _requiredDataTypeList.Add(typeof(ResourceData));
             _requiredDataTypeList.Add(typeof(ResourceStateData));
-            _requiredDataTypeList.Add(typeof(ActorControllerData));
+            _requiredDataTypeList.Add(typeof(ActorController2DData));
         }
 
         public override void Refresh(ObjectData objData)
@@ -37,8 +37,11 @@ namespace Module
                 resourceData.gameObject = Object.Instantiate(obj, Vector3.zero, Quaternion.identity) as GameObject;
                 resourceData.gameObject.name = resourceStateData.name;
 
-                var controller = objData.GetData<ActorControllerData>();
-                controller.controller = resourceData.gameObject.GetComponent<CharacterController>();
+                var controller = objData.GetData<ActorController2DData>();
+                var rigidbody2D = resourceData.gameObject.GetComponent<Rigidbody2D>();
+                controller.rigidbody2D = rigidbody2D;
+                controller.foot = resourceData.gameObject.transform.Find("Foot");
+                controller.positionY = Mathf.RoundToInt(controller.foot.position.y);
             });
         }
     }

@@ -20,9 +20,12 @@ namespace Data
         public SkillDefaultType defaultSkill;
     }
 
-    public class ActorControllerData : Data
+    public class ActorController2DData : Data
     {
-        public CharacterController controller;
+        public Rigidbody2D rigidbody2D;
+        public Transform foot;
+        public int groundY;
+        public int positionY;
     }
 
     public class ActorFlyData : Data
