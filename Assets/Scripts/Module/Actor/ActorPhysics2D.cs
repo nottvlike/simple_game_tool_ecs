@@ -54,8 +54,7 @@ namespace Module
             var actorData = objData.GetData<ActorData>();
             var currentState = actorData.currentState;
             var forceY = physics2DData.force.y;
-
-            if (currentState != ActorStateType.SkillDefault && currentState != ActorStateType.SkillCustom)
+            if ((currentState & (int)ActorStateType.SkillDefault) == 0 && (currentState & (int)ActorStateType.SkillCustom) == 0)
             {
                 forceY += -physics2DData.gravity;
             }
@@ -75,6 +74,7 @@ namespace Module
             _movePosition.y = (float)deltaY / Constant.UNITY_UNIT_TO_GAME_UNIT;
 
             controllerData.positionY = Mathf.RoundToInt(controllerData.foot.position.y * Constant.UNITY_UNIT_TO_GAME_UNIT);
+
             var rb2d = controllerData.rigidbody2D;
             rb2d.MovePosition(rb2d.position + _movePosition);
         }

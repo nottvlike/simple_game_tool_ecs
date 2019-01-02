@@ -37,7 +37,12 @@ namespace Module
             }
 
             var actorData = objData.GetData<ActorData>();
-            if (actorData.currentState != ActorStateType.Move)
+            if (!ActorController.CanMove(actorData.currentState))
+            {
+                return;
+            }
+
+            if ((actorData.currentState & (int)ActorStateType.Move) == 0)
             {
                 speedData.speed = 0;
                 return;
@@ -51,12 +56,14 @@ namespace Module
                 speedData.speed = 0;
                 physics2DData.force.x = 0;
 
-                actorData.currentState = ActorStateType.Idle;
+                actorData.currentState &= ~(int)ActorStateType.Move;
                 objData.SetDirty(actorData);
             }
             else
             {
                 physics2DData.force.x = speed;
+
+                objData.SetDirty(physics2DData);
             }
         }
     }

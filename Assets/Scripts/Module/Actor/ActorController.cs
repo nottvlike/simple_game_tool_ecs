@@ -56,42 +56,31 @@ namespace Module
                 var serverAction = serverActionList[i];
                 if (serverAction.frame == gameSystemData.clientFrame)
                 {
-                    ResetDefaultSkill(objData, serverAction);
                     switch (serverAction.actionType)
                     {
                         case JoyStickActionType.Move:
-                            physics2DData.force = Vector3Int.zero;
                             physics2DData.friction = 0;
                             speedData.speed = actorInfo.speed;
                             directionData.direction.x = serverAction.actionParam == JoyStickActionFaceType.Right ? 1 : -1;
 
-                            actorData.currentState = ActorStateType.Move;
+                            actorData.currentState |= (int)ActorStateType.Move;
 
                             objData.SetDirty(speedData, directionData, physics2DData, actorData);
                             break;
                         case JoyStickActionType.CancelMove:
-                            physics2DData.force = Vector3Int.zero;
                             physics2DData.friction = actorInfo.friction;
 
                             objData.SetDirty(speedData, physics2DData);
                             break;
                         case JoyStickActionType.Jump:
-                            speedData.speed = 0;
-                            physics2DData.friction = 0;
-                            physics2DData.force = Vector3Int.zero;
-
                             jumpData.currentJump = actorInfo.jump;
 
-                            actorData.currentState = ActorStateType.Jump;
+                            actorData.currentState |= (int)ActorStateType.Jump;
 
                             objData.SetDirty(jumpData, physics2DData, actorData);
                             break;
                         case JoyStickActionType.SkillDefault:
-                            speedData.speed = 0;
-                            physics2DData.friction = 0;
-                            physics2DData.force = Vector3Int.zero;
-
-                            actorData.currentState = ActorStateType.SkillDefault;
+                            actorData.currentState |= (int)ActorStateType.SkillDefault;
 
                             if (serverAction.skillDefaultType == SkillDefaultType.Fly)
                             {
@@ -130,26 +119,37 @@ namespace Module
             }
         }
 
-        void ResetDefaultSkill(ObjectData objData, JoyStickActionData serverAction)
+        public static bool CanMove(int currentState)
         {
-            if (serverAction.skillDefaultType == SkillDefaultType.Fly)
-            {
-                var flyData = objData.GetData<ActorFlyData>();
-                flyData.duration = 0;
-                flyData.currentDuration = 0;
-            }
-            else if (serverAction.skillDefaultType == SkillDefaultType.Dash)
-            {
-                var dashData = objData.GetData<ActorDashData>();
-                dashData.duration = 0;
-                dashData.currentDuration = 0;
-            }
-            else if (serverAction.skillDefaultType == SkillDefaultType.Stress)
-            {
-                var stressData = objData.GetData<ActorStressData>();
-                stressData.duration = 0;
-                stressData.currentDuration = 0;
-            }
+            if ((currentState & (int)ActorStateType.Jump) != 0 && (currentState & (int)ActorStateType.SkillDefault) != 0 
+                && (currentState & (int)ActorStateType.SkillCustom) != 0)
+                return false;
+
+            return true;
+        }
+
+        public static bool CanJump(int currentState)
+        {
+            if ((currentState & (int)ActorStateType.SkillDefault) != 0 && (currentState & (int)ActorStateType.SkillCustom) != 0)
+                return false;
+
+            return true;
+        }
+
+        public static bool CanSkillDefault(int currentState)
+        {
+            if ((currentState & (int)ActorStateType.SkillCustom) != 0)
+                return false;
+
+            return true;
+        }
+
+        public static bool CanSkillCustom(int currentState)
+        {
+            if ((currentState & (int)ActorStateType.SkillDefault) != 0)
+                return false;
+
+            return true;
         }
     }
 }

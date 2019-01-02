@@ -39,7 +39,12 @@ namespace Module
             }
 
             var actorData = objData.GetData<ActorData>();
-            if (actorData.currentState != ActorStateType.Jump)
+            if (!ActorController.CanJump(actorData.currentState))
+            {
+                return;
+            }
+
+            if ((actorData.currentState & (int)ActorStateType.Jump) == 0)
             {
                 jumpData.currentJump = Vector3Int.zero;
                 return;
@@ -54,7 +59,7 @@ namespace Module
                 physics2DData.force.x = 0;
                 physics2DData.force.y = 0;
 
-                actorData.currentState = ActorStateType.Idle;
+                actorData.currentState &= ~(int)ActorStateType.Jump;
                 objData.SetDirty(actorData);
             }
             else
@@ -71,6 +76,8 @@ namespace Module
                 }
 
                 physics2DData.force.x = jumpData.currentJump.x;
+
+                objData.SetDirty(physics2DData);
             }
         }
     }

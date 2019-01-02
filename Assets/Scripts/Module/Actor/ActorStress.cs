@@ -36,7 +36,12 @@ namespace Module
             }
 
             var actorData = objData.GetData<ActorData>();
-            if (actorData.currentState != ActorStateType.SkillDefault)
+            if (!ActorController.CanSkillDefault(actorData.currentState))
+            {
+                return;
+            }
+
+            if ((actorData.currentState & (int)ActorStateType.SkillDefault) == 0)
             {
                 stressData.currentDuration = stressData.duration = 0;
                 return;
@@ -50,7 +55,7 @@ namespace Module
                 stressData.currentDuration = stressData.duration = 0;
                 physics2DData.force.y = 0;
 
-                actorData.currentState = ActorStateType.Idle;
+                actorData.currentState &= ~(int)ActorStateType.SkillDefault;
                 objData.SetDirty(actorData);
             }
             else
@@ -65,6 +70,8 @@ namespace Module
                 else
                 {
                     physics2DData.force.y = -physics2DData.mass * Constant.ACTOR_STRESS_RATE_Y;
+
+                    objData.SetDirty(physics2DData);
                 }
             }
         }

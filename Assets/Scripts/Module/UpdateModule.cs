@@ -59,28 +59,32 @@ namespace Module
         public override void SetDirty(ObjectData objData)
         {
             Start(objData.ObjectId);
-
-            base.SetDirty(objData);
         }
 
         void Start(int objectDataId)
         {
             var index = GetModuleDataIndex(objectDataId);
             var moduleData = _moduleDataList[index];
-            moduleData.isStop = false;
-            _moduleDataList[index] = moduleData;
+            if (moduleData.isStop)
+            {
+                moduleData.isStop = false;
+                _moduleDataList[index] = moduleData;
 
-            Enabled = true;
+                Enabled = true;
+            }
         }
 
         protected void Stop(int objectDataId)
         {
             var index = GetModuleDataIndex(objectDataId);
             var moduleData = _moduleDataList[index];
-            moduleData.isStop = true;
-            _moduleDataList[index] = moduleData;
+            if (!moduleData.isStop)
+            {
+                moduleData.isStop = true;
+                _moduleDataList[index] = moduleData;
 
-            Enabled = !CheckAllAreStop();
+                Enabled = !CheckAllAreStop();
+            }
         }
 
         bool CheckAllAreStop()

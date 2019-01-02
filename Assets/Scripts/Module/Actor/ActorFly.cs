@@ -34,7 +34,12 @@ namespace Module
             }
 
             var actorData = objData.GetData<ActorData>();
-            if (actorData.currentState != ActorStateType.SkillDefault)
+            if (!ActorController.CanSkillDefault(actorData.currentState))
+            {
+                return;
+            }
+
+            if ((actorData.currentState & (int)ActorStateType.SkillDefault) == 0)
             {
                 flyData.currentDuration = flyData.duration = 0;
                 return;
@@ -50,7 +55,7 @@ namespace Module
                 physics2DData.force.x = 0;
                 physics2DData.force.y = 0;
 
-                actorData.currentState = ActorStateType.Idle;
+                actorData.currentState &= ~(int)ActorStateType.SkillDefault;
                 objData.SetDirty(actorData);
             }
             else
@@ -76,6 +81,8 @@ namespace Module
                 }
 
                 physics2DData.force.x = Constant.ACTOR_FLY_SPEED_X;
+
+                objData.SetDirty(physics2DData);
             }
         }
     }
