@@ -33,7 +33,8 @@ namespace Module
             }
 
             var controllerData = objData.GetData<ActorController2DData>();
-            var raycast2DHit = Physics2D.Raycast(controllerData.foot.position, -Vector2.up, 0.1f, LayerMask.GetMask("Ground"));
+            var raycast2DHit = Physics2D.Raycast(controllerData.foot.position, -Vector2.up, Constant.ACTOR_RAYCAST_GROUND_DISTANCE, 
+                LayerMask.GetMask(Constant.LAYER_GROUND_NAME));
             if (raycast2DHit.collider != null)
             {
                 controllerData.groundY = Mathf.RoundToInt(raycast2DHit.point.y * Constant.UNITY_UNIT_TO_GAME_UNIT);
