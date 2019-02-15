@@ -141,15 +141,6 @@ public class ObjectData
 
     public T GetData<T>()  where T : Data.Data
     {
-        for (var i = 0; i < _dataList.Count; i++)
-        {
-            var data = _dataList[i];
-            if (data.GetType() == typeof(T))
-            {
-                return data as T;
-            }
-        }
-
-        return null;
+        return GetData(typeof(T)) as T;
     }
 }
