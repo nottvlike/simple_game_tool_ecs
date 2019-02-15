@@ -1,13 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 
-public enum ModuleChangeType
-{
-    Add,
-    Remove,
-    Clear
-}
-
 public class ObjectData
 {
     static int _idGenerate = 0;
@@ -69,12 +62,81 @@ public class ObjectData
 
     public void AddData(Data.Data data)
     {
+#if UNITY_EDITOR
+        var tmpData = GetData(data.GetType());
+        if (tmpData != null)
+        {
+            LogUtil.E("Type {0} has been added!", data.GetType());
+            return;
+        }
+#endif
+
         _dataList.Add(data);
     }
 
     public void RemoveData(Data.Data data)
     {
+#if UNITY_EDITOR
+        var tmpData = GetData(data.GetType());
+        if (tmpData == null)
+        {
+            LogUtil.E("Type {0} could not been found!", data.GetType());
+            return;
+        }
+#endif
+
         _dataList.Remove(data);
+    }
+
+    public Data.Data GetData(Type type)
+    {
+        for (var i = 0; i < _dataList.Count; i++)
+        {
+            var data = _dataList[i];
+            if (data.GetType() == type)
+            {
+                return data;
+            }
+        }
+
+        return null;
+    }
+
+    public T AddData<T>() where T : Data.Data, new()
+    {
+#if UNITY_EDITOR
+        T data = GetData<T>();
+        if (data != null)
+        {
+            LogUtil.E("Type {0} has been added!", typeof(T));
+            return data;
+        }
+#endif
+
+        data = new T();
+        _dataList.Add(data);
+
+        return data;
+    }
+
+    public void RemoveData<T>() where T : Data.Data
+    {
+#if UNITY_EDITOR
+        if (GetData<T>() == null)
+        {
+            LogUtil.E("Type {0} could not been found!", typeof(T));
+            return;
+        }
+#endif
+
+        for (var i = 0; i < _dataList.Count; i++)
+        {
+            var data = _dataList[i];
+            if (data.GetType() == typeof(T))
+            {
+                _dataList.Remove(data);
+            }
+        }
     }
 
     public T GetData<T>()  where T : Data.Data

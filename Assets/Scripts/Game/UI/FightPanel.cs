@@ -23,15 +23,15 @@ public class FightPanel : Panel
         actorData.defaultSkill = actorInfo.defaultSkill;
         if (actorData.defaultSkill == SkillDefaultType.Fly)
         {
-            player.AddData(new ActorFlyData());
+            player.AddData<ActorFlyData>();
         }
         else if (actorData.defaultSkill == SkillDefaultType.Dash)
         {
-            player.AddData(new ActorDashData());
+            player.AddData<ActorDashData>();
         }
         else if (actorData.defaultSkill == SkillDefaultType.Stress)
         {
-            player.AddData(new ActorStressData());
+            player.AddData<ActorStressData>();
         }
 
         var resourceData = player.GetData<ResourceData>();

@@ -10,14 +10,13 @@ public partial class WorldManager : Singleton<WorldManager>
             if (_gameCore == null)
             {
                 _gameCore = new ObjectData();
-                _gameCore.AddData(new GameSystemData());
+                _gameCore.AddData<GameSystemData>();
 
-                var localizationData = new GameLocalizationData();
+                var localizationData = _gameCore.AddData<GameLocalizationData>();
                 localizationData.zone = "zh-cn";
-                _gameCore.AddData(localizationData);
 
-                _gameCore.AddData(new ResourcePreloadData());
-                _gameCore.AddData(new PlayerBaseData());
+                _gameCore.AddData<ResourcePreloadData>();
+                _gameCore.AddData<PlayerBaseData>();
 
                 _objectDataList.Add(_gameCore);
 
@@ -36,7 +35,7 @@ public partial class WorldManager : Singleton<WorldManager>
             if (_gameServer == null)
             {
                 _gameServer = new ObjectData();
-                _gameServer.AddData(new GameNetworkData());
+                _gameServer.AddData<GameNetworkData>();
                 _objectDataList.Add(_gameServer);
 
                 _gameServer.SetDirty();
@@ -54,7 +53,7 @@ public partial class WorldManager : Singleton<WorldManager>
             if (_item == null)
             {
                 _item = new ObjectData();
-                _item.AddData(new ItemInfoData());
+                _item.AddData<ItemInfoData>();
                 _objectDataList.Add(_item);
 
                 _item.SetDirty();
@@ -73,22 +72,21 @@ public partial class WorldManager : Singleton<WorldManager>
             {
                 _player = new ObjectData();
 
-                var actorData = new ActorData();
+                var actorData = _player.AddData<ActorData>();
                 actorData.actorId = 1;
-                _player.AddData(actorData);
 
-                _player.AddData(new ActorController2DData());
-                _player.AddData(new FollowCameraData());
-                _player.AddData(new Physics2DData());
-                _player.AddData(new ActorJumpData());
-                _player.AddData(new ServerData());
-                _player.AddData(new DirectionData());
-                _player.AddData(new SpeedData());
-                _player.AddData(new ResourceData());
-                _player.AddData(new ResourceStateData());
-                _player.AddData(new ClientJoyStickData());
-                _player.AddData(new ServerJoyStickData());
-                _player.AddData(new ActorSyncData());
+                _player.AddData<ActorController2DData>();
+                _player.AddData<FollowCameraData>();
+                _player.AddData<Physics2DData>();
+                _player.AddData<ActorJumpData>();
+                _player.AddData<ServerData>();
+                _player.AddData<DirectionData>();
+                _player.AddData<SpeedData>();
+                _player.AddData<ResourceData>();
+                _player.AddData<ResourceStateData>();
+                _player.AddData<ClientJoyStickData>();
+                _player.AddData<ServerJoyStickData>();
+                _player.AddData<ActorSyncData>();
 
                 _objectDataList.Add(_player);
 
