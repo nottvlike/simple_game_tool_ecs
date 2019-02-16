@@ -8,7 +8,7 @@ public class GameConfigEditor
     [MenuItem("Config/Create ActorJoyStick Config")]
     static void CreateJoyStickConfig()
     {
-        JoyStickConfig gameConfig = ScriptableObject.CreateInstance<JoyStickConfig>();
+        var gameConfig = ScriptableObject.CreateInstance<JoyStickConfig>();
         string path = "Assets/Resources/Config/JoyStickConfig.asset";
         AssetDatabase.CreateAsset(gameConfig, path);
         AssetDatabase.SaveAssets();
@@ -17,7 +17,7 @@ public class GameConfigEditor
     [MenuItem("Config/Create Resource Config")]
     static void CreateResourceConfig()
     {
-        ResourceConfig resourceConfig = ScriptableObject.CreateInstance<ResourceConfig>();
+        var resourceConfig = ScriptableObject.CreateInstance<ResourceConfig>();
         string path = "Assets/Resources/Config/ResourceConfig.asset";
         AssetDatabase.CreateAsset(resourceConfig, path);
         AssetDatabase.SaveAssets();
@@ -26,7 +26,7 @@ public class GameConfigEditor
     [MenuItem("Config/Create Panel Config")]
     static void CreatePanelConfig()
     {
-        PanelConfig resourceConfig = ScriptableObject.CreateInstance<PanelConfig>();
+        var resourceConfig = ScriptableObject.CreateInstance<PanelConfig>();
         string path = "Assets/Resources/Config/PanelConfig.asset";
         AssetDatabase.CreateAsset(resourceConfig, path);
         AssetDatabase.SaveAssets();
@@ -35,7 +35,7 @@ public class GameConfigEditor
     [MenuItem("Config/Create Localization Config")]
     static void CreateLocalizationConfig()
     {
-        LocalizationConfig localizationConfig = ScriptableObject.CreateInstance<LocalizationConfig>();
+        var localizationConfig = ScriptableObject.CreateInstance<LocalizationConfig>();
         string path = "Assets/Resources/Config/LocalizationConfig.asset";
         AssetDatabase.CreateAsset(localizationConfig, path);
         AssetDatabase.SaveAssets();
@@ -44,7 +44,7 @@ public class GameConfigEditor
     [MenuItem("Config/Create Localization Config Group")]
     static void CreateLocalizationConfigGroup()
     {
-        LocalizationConfigGroup localizationConfigList = ScriptableObject.CreateInstance<LocalizationConfigGroup>();
+        var localizationConfigList = ScriptableObject.CreateInstance<LocalizationConfigGroup>();
         string path = "Assets/Resources/Config/LocalizationConfigGroup.asset";
         AssetDatabase.CreateAsset(localizationConfigList, path);
         AssetDatabase.SaveAssets();
@@ -53,7 +53,7 @@ public class GameConfigEditor
     [MenuItem("Config/Create Resource Preload Config")]
     static void CreateResourcePreloadConfig()
     {
-        ResourcePreloadConfig resourcePreloadConfig = ScriptableObject.CreateInstance<ResourcePreloadConfig>();
+        var resourcePreloadConfig = ScriptableObject.CreateInstance<ResourcePreloadConfig>();
         string path = "Assets/Resources/Config/ResourcePreloadConfig.asset";
         AssetDatabase.CreateAsset(resourcePreloadConfig, path);
         AssetDatabase.SaveAssets();
@@ -62,7 +62,7 @@ public class GameConfigEditor
     [MenuItem("Config/Create Actor Config")]
     static void CreateActorConfig()
     {
-        ActorConfig actorConfig = ScriptableObject.CreateInstance<ActorConfig>();
+        var actorConfig = ScriptableObject.CreateInstance<ActorConfig>();
         string path = "Assets/Resources/Config/ActorConfig.asset";
         AssetDatabase.CreateAsset(actorConfig, path);
         AssetDatabase.SaveAssets();
@@ -71,8 +71,8 @@ public class GameConfigEditor
     [MenuItem("Config/Create Preload Config Group")]
     static void CreatePreloadConfigGroup()
     {
-        ConfigGroup preloadConfigGroup = ScriptableObject.CreateInstance<ConfigGroup>();
-        string path = "Assets/Resources/Config/Group/PreloadConfigGroup.asset";
+        var preloadConfigGroup = ScriptableObject.CreateInstance<ConfigGroup>();
+        string path = "Assets/Resources/Config/PreloadConfigGroup.asset";
         AssetDatabase.CreateAsset(preloadConfigGroup, path);
         AssetDatabase.SaveAssets();
     }
@@ -80,9 +80,18 @@ public class GameConfigEditor
     [MenuItem("Config/Create Main Config Group")]
     static void CreateMainConfigGroup()
     {
-        ConfigGroup mainConfigGroup = ScriptableObject.CreateInstance<ConfigGroup>();
-        string path = "Assets/Resources/Config/Group/MainConfigGroup.asset";
+        var mainConfigGroup = ScriptableObject.CreateInstance<ConfigGroup>();
+        string path = "Assets/Resources/Config/MainConfigGroup.asset";
         AssetDatabase.CreateAsset(mainConfigGroup, path);
+        AssetDatabase.SaveAssets();
+    }
+
+    [MenuItem("Config/Create Buff Config")]
+    static void CreateBuffConfig()
+    {
+        var buffConfig = ScriptableObject.CreateInstance<BuffConfig>();
+        string path = "Assets/Resources/Config/BuffConfig.asset";
+        AssetDatabase.CreateAsset(buffConfig, path);
         AssetDatabase.SaveAssets();
     }
 }

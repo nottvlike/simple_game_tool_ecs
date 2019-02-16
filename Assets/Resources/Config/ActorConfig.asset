@@ -22,3 +22,8 @@ MonoBehaviour:
     airFriction: 3
     defaultSkill: 3
     defaultSkillDuration: 100
+    attributeInfo:
+      hp: 100
+      mp: 100
+      atk: 20
+      def: 5
