@@ -61,7 +61,7 @@ namespace Data
     }
 
     [System.Serializable]
-    public struct AttributeInfo
+    public struct BaseAttributeInfo
     {
         public int hp;
         public int mp;
@@ -69,9 +69,18 @@ namespace Data
         public int def;
     }
 
+    public struct ExtraAttributeInfo
+    {
+        public int hp;
+        public int hpMax;
+        public int mp;
+        public int atk;
+        public int def;
+    }
+
     public class ActorAttributeData : Data
     {
-        public AttributeInfo baseAttribute;
-        public AttributeInfo buffAttribute;
+        public BaseAttributeInfo baseAttribute;
+        public ExtraAttributeInfo extraAttribute;
     }
 }

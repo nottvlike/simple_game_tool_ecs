@@ -6,10 +6,11 @@ namespace Data
 {
     public enum BuffType
     {
-        NormalHurt,
+        NormalChangeHp,
+        ChangeHpMax,
     }
 
-    public enum ValueType
+    public enum BuffValueType
     {
         Normal,
         Percentage
@@ -21,8 +22,10 @@ namespace Data
         public int id;
 
         public BuffType buffType;
-        public ValueType valueType;
+        public BuffValueType valueType;
         public int[] value;
+
+        public int delay;
 
         public int time;
         public int count;

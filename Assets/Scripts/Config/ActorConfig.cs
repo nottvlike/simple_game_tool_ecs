@@ -17,7 +17,7 @@ public struct ActorInfo
     public SkillDefaultType defaultSkill;
     public int defaultSkillDuration;
 
-    public AttributeInfo attributeInfo;
+    public BaseAttributeInfo attributeInfo;
 }
 
 public class ActorConfig : ScriptableObject

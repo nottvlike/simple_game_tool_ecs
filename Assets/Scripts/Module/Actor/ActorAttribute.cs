@@ -28,10 +28,8 @@ namespace Module
             }
 
             var actorAttribute = objData.GetData<ActorAttributeData>();
-            if (actorAttribute.baseAttribute.hp <= 0)
-            {
-                LogUtil.I("actor {0} is dying!", resourceStateData.name);
-            }
+            var totalLeftHp = actorAttribute.baseAttribute.hp + actorAttribute.extraAttribute.hp;
+            LogUtil.I("current hp : " + totalLeftHp);
         }
     }
 }
