@@ -20,26 +20,6 @@ public class FightPanel : Panel
 
         var actorData = player.GetData<ActorData>();
         var actorInfo = worldMgr.ActorConfig.Get(actorData.actorId);
-        actorData.defaultSkill = actorInfo.defaultSkill;
-        if (actorData.defaultSkill == SkillDefaultType.Fly)
-        {
-            player.AddData<ActorFlyData>();
-        }
-        else if (actorData.defaultSkill == SkillDefaultType.Dash)
-        {
-            player.AddData<ActorDashData>();
-        }
-        else if (actorData.defaultSkill == SkillDefaultType.Stress)
-        {
-            player.AddData<ActorStressData>();
-        }
-
-        var resourceData = player.GetData<ResourceData>();
-        resourceData.resource = actorInfo.resourceName;
-
-        var resourceStateData = player.GetData<ResourceStateData>();
-        resourceStateData.name = actorInfo.actorName;
-        resourceStateData.isGameObject = true;
 
         var physics2DData = player.GetData<Physics2DData>();
         physics2DData.gravity = 10;
@@ -49,7 +29,9 @@ public class FightPanel : Panel
         var directionData = player.GetData<DirectionData>();
         directionData.direction.x = 1;
 
-        player.SetDirty(resourceData, resourceStateData, physics2DData, directionData);
+        player.SetDirty(physics2DData, directionData);
+
+        Module.ActorLoader.ReplaceActor(player, actorInfo.actorName, actorInfo.resourceName);
     }
 
     void OnExitClick()
