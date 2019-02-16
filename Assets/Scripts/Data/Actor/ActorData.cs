@@ -24,6 +24,7 @@ namespace Data
     {
         public Rigidbody2D rigidbody2D;
         public Transform foot;
+        public Transform hurt;
         public int groundY;
         public int positionY;
     }
@@ -52,5 +53,25 @@ namespace Data
 
     public class FollowCameraData : Data
     {
+    }
+
+    public class ActorBuffData : Data
+    {
+        public List<Buff> buffList = new List<Buff>();
+    }
+
+    [System.Serializable]
+    public struct AttributeInfo
+    {
+        public int hp;
+        public int mp;
+        public int atk;
+        public int def;
+    }
+
+    public class ActorAttributeData : Data
+    {
+        public AttributeInfo baseAttribute;
+        public AttributeInfo buffAttribute;
     }
 }

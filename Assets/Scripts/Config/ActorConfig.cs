@@ -16,6 +16,8 @@ public struct ActorInfo
     public int airFriction;
     public SkillDefaultType defaultSkill;
     public int defaultSkillDuration;
+
+    public AttributeInfo attributeInfo;
 }
 
 public class ActorConfig : ScriptableObject

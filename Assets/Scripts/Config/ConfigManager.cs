@@ -9,6 +9,7 @@ public partial class WorldManager : Singleton<WorldManager>
     PanelConfig _panelConfig;
     ResourcePreloadConfig _resourcePreloadConfig;
     LocalizationConfigGroup _localizationConfigGroup;
+    BuffConfig _buffConfig;
 
     public ActorConfig ActorConfig
     {
@@ -35,6 +36,11 @@ public partial class WorldManager : Singleton<WorldManager>
         get { return _localizationConfigGroup; }
     }
 
+    public BuffConfig BuffConfig
+    {
+        get { return _buffConfig; }
+    }
+
     public void LoadConfig()
     {
         ResourceMgr.LoadAsync("MainConfigGroup", delegate (Object obj)
@@ -44,6 +50,7 @@ public partial class WorldManager : Singleton<WorldManager>
             _actorConfig = configGroup.Get<ActorConfig>();
             _joyStickConfig = configGroup.Get<JoyStickConfig>();
             _localizationConfigGroup = configGroup.Get<LocalizationConfigGroup>();
+            _buffConfig = configGroup.Get<BuffConfig>();
         });
     }
 

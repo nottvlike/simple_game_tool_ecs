@@ -17,6 +17,7 @@ public partial class WorldManager : Singleton<WorldManager>
 
                 _gameCore.AddData<ResourcePreloadData>();
                 _gameCore.AddData<PlayerBaseData>();
+                _gameCore.AddData<BattleData>();
 
                 _objectDataList.Add(_gameCore);
 
@@ -87,6 +88,8 @@ public partial class WorldManager : Singleton<WorldManager>
                 _player.AddData<ClientJoyStickData>();
                 _player.AddData<ServerJoyStickData>();
                 _player.AddData<ActorSyncData>();
+                _player.AddData<ActorAttributeData>();
+                _player.AddData<ActorBuffData>();
 
                 _objectDataList.Add(_player);
 
