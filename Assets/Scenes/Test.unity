@@ -343,7 +343,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e120539f9089ba2409eaa9e3b55ffacd, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  buffIdList: 0100000002000000
+  buffList: 0100000002000000
+  buffRemoveWhenExitList: 03000000
 --- !u!61 &942964830
 BoxCollider2D:
   m_ObjectHideFlags: 0
