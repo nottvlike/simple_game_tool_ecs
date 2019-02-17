@@ -35,7 +35,7 @@ public class Pool : IPool
 
         WorldManager.Instance.ObjectDataList.Add(poolObjData);
 
-        return objData;
+        return poolObjData;
     }
 
     public void ReleaseObjData(ObjectData objData)
@@ -80,7 +80,7 @@ public class Pool : IPool
             for (var i = 0; i < poolObjectList.Count; i++)
             {
                 var tmp = poolObjectList[i];
-                if (!tmp.IsInUse)
+                if (!tmp.IsInUse && tmp.GetType() == objType)
                 {
                     tmp.IsInUse = true;
                     poolObject = tmp;
