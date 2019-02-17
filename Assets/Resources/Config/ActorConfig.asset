@@ -20,6 +20,21 @@ MonoBehaviour:
     friction: 3
     jump: {x: 10, y: 40, z: 0}
     airFriction: 3
+    defaultSkill: 2
+    defaultSkillDuration: 100
+    attributeInfo:
+      hp: 100
+      mp: 100
+      atk: 20
+      def: 5
+  - actorId: 2
+    actorName: Enemy
+    resourceName: Cube
+    mass: 20
+    speed: 6
+    friction: 3
+    jump: {x: 10, y: 40, z: 0}
+    airFriction: 3
     defaultSkill: 3
     defaultSkillDuration: 100
     attributeInfo:

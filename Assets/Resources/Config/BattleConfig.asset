@@ -23,5 +23,8 @@ MonoBehaviour:
         resourceType: 0
         resourceId: 1
       - preloadId: 2
-        resourceType: 1
+        resourceType: 2
         resourceId: 1
+      - preloadId: 3
+        resourceType: 1
+        resourceId: 2
