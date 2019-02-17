@@ -1,4 +1,5 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -14,6 +15,20 @@ namespace Data
     {
         Normal,
         Percentage
+    }
+
+    public enum BuffState
+    {
+        Init,
+        Start,
+        Stop,
+        Finished
+    }
+
+    public enum BuffAttribute
+    {
+        None = 0,
+        NeedRemove = 1,
     }
 
     [System.Serializable]
@@ -35,6 +50,11 @@ namespace Data
         public int interval;
         [System.NonSerialized]
         public int lastUpdateTime;
+
+        [System.NonSerialized]
+        public BuffState buffState;
+
+        public int buffAttribute;
     }
 
     public class BattleData : Data

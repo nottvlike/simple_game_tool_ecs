@@ -7,7 +7,7 @@ namespace Module
 {
     public class ActorBuff : UpdateModule
     {
-        public BaseAttributeInfo tmpAttribute;
+        public BaseAttributeInfo baseAttribute;
         public ExtraAttributeInfo extraAttribute;
 
         protected override void InitRequiredDataType()
@@ -39,88 +39,82 @@ namespace Module
                 return;
             }
 
-            ResetAttributeInfo();
-
-            var attributeData = objData.GetData<ActorAttributeData>();
-            ResetExtraAttributeInfo(attributeData);
+            ResetAttributeInfo(objData);
 
             var gameSystemData = WorldManager.Instance.GameCore.GetData<GameSystemData>();
-            var actorData = objData.GetData<ActorData>();
+
             var isDirty = false;
             for (var i = 0; i < buffList.Count;)
             {
                 var buff = buffList[i];
-
-                if ((buff.time > 0 || buff.count > 0) &&
-                    buff.lastUpdateTime + buff.interval < gameSystemData.unscaleTime)
+                if (buff.buffState != BuffState.Finished)
                 {
-                    if (buff.count > 0)
+                    if (buff.buffState == BuffState.Init)
                     {
-                        isDirty = true;
-
-                        var value = 0;
-                        if (buff.currentCount < buff.value.Length)
+                        if (buff.lastUpdateTime == 0)
                         {
-                            value = buff.value[buff.currentCount];
-                        }
-                        else
-                        {
-                            value = buff.value[0];
+                            buff.lastUpdateTime = gameSystemData.unscaleTime;
                         }
 
-                        switch (buff.buffType)
+                        if (buff.lastUpdateTime + buff.delay <= gameSystemData.unscaleTime)
                         {
-                            case BuffType.NormalChangeHp:
-                                {
-                                    var hurt = buff.valueType == BuffValueType.Normal ? value : Mathf.FloorToInt(attributeData.baseAttribute.hp * value * Constant.PERCENT);
-                                    if (hurt < 0)
-                                    {
-                                        hurt += attributeData.baseAttribute.def;
-                                    }
-
-                                    tmpAttribute.hp += hurt;
-                                }
-                                break;
-                            case BuffType.ChangeHpMax:
-                                {
-                                    var actorInfo = WorldManager.Instance.ActorConfig.Get(actorData.actorId);
-                                    extraAttribute.hpMax += value;
-
-                                    var extraHp = (float)value / (actorInfo.attributeInfo.hp + attributeData.extraAttribute.hpMax) * attributeData.baseAttribute.hp;
-                                    tmpAttribute.hp += Mathf.FloorToInt(extraHp);
-                                }
-                                break;
+                            buff.buffState = BuffState.Start;
                         }
-
-                        buff.count--;
-                        buff.currentCount++;
                     }
-
-                    if (buff.time > 0)
+                    else if (buff.buffState == BuffState.Stop)
                     {
-                        buff.time = Mathf.Max(0, buff.time - gameSystemData.unscaleDeltaTime);
+                        if (buff.lastUpdateTime + buff.interval <= gameSystemData.unscaleTime)
+                        {
+                            buff.buffState = BuffState.Start;
+                        }
                     }
+                    else if (buff.buffState == BuffState.Start)
+                    {
+                        if (buff.count > 0)
+                        {
+                            isDirty = true;
+                            AddBuffAttribute(objData, buff);
 
-                    buff.lastUpdateTime = gameSystemData.unscaleTime;
+                            buff.count--;
+                            buff.currentCount++;
+                        }
+
+                        if (buff.time > 0)
+                        {
+                            buff.time = Mathf.Max(0, buff.time - gameSystemData.unscaleDeltaTime);
+                        }
+
+                        if (buff.time == 0 && buff.count == 0)
+                        {
+                            buff.buffState = BuffState.Finished;
+                        }
+                        else if (buff.time == 0)
+                        {
+                            buff.buffState = BuffState.Stop;
+                        }
+
+                        buff.lastUpdateTime = gameSystemData.unscaleTime;
+                    }
 
                     buffList[i] = buff;
-                }
-
-                if (buff.time == 0 && buff.count == 0)
-                {
-                    buffList.RemoveAt(i);
+                    i++;
                 }
                 else
                 {
-                    i++;
+                    if ((buff.buffAttribute & (int)BuffAttribute.NeedRemove) != 0)
+                    {
+                        isDirty = true;
+                        RemoveBuffAttribute(objData, buff);
+                    }
+
+                    buffList.RemoveAt(i);
                 }
             }
 
             if (isDirty)
             {
-                UpdateExtraAttributeInfo(attributeData, extraAttribute);
-
-                UpdateBaseAttributeInfo(attributeData, tmpAttribute);
+                var attributeData = objData.GetData<ActorAttributeData>();
+                UpdateAttributeInfo(attributeData);
 
                 objData.SetDirty(attributeData);
             }
@@ -131,7 +125,7 @@ namespace Module
             for (var i = 0; i < buffList.Count; i++)
             {
                 var buff = buffList[i];
-                if (buff.count != 0 || buff.time > 0)
+                if (buff.count > 0 || buff.time > 0 || buff.buffState == BuffState.Finished)
                 {
                     return true;
                 }
@@ -140,16 +134,14 @@ namespace Module
             return false;
         }
 
-        public void ResetAttributeInfo()
+        public void ResetAttributeInfo(ObjectData objData)
         {
-            tmpAttribute.hp = 0;
-            tmpAttribute.mp = 0;
-            tmpAttribute.atk = 0;
-            tmpAttribute.def = 0;
-        }
+            baseAttribute.hp = 0;
+            baseAttribute.mp = 0;
+            baseAttribute.atk = 0;
+            baseAttribute.def = 0;
 
-        public void ResetExtraAttributeInfo(ActorAttributeData attributeData)
-        {
+            var attributeData = objData.GetData<ActorAttributeData>();
             extraAttribute.hp = attributeData.extraAttribute.hp;
             extraAttribute.hpMax = attributeData.extraAttribute.hpMax;
             extraAttribute.mp = attributeData.extraAttribute.mp;
@@ -157,80 +149,86 @@ namespace Module
             extraAttribute.def = attributeData.extraAttribute.def;
         }
 
-        public static void UpdateBaseAttributeInfo(ActorAttributeData attributeData, BaseAttributeInfo attribute)
+        public void UpdateAttributeInfo(ActorAttributeData attributeData)
         {
-            attributeData.baseAttribute.hp += attribute.hp;
-            attributeData.baseAttribute.mp += attribute.mp;
-            attributeData.baseAttribute.atk += attribute.atk;
-            attributeData.baseAttribute.def += attribute.def;
+            attributeData.baseAttribute.hp += baseAttribute.hp;
+            attributeData.baseAttribute.mp += baseAttribute.mp;
+            attributeData.baseAttribute.atk += baseAttribute.atk;
+            attributeData.baseAttribute.def += baseAttribute.def;
+
+            attributeData.extraAttribute.hp = extraAttribute.hp;
+            attributeData.extraAttribute.hpMax = extraAttribute.hpMax;
+            attributeData.extraAttribute.mp = extraAttribute.mp;
+            attributeData.extraAttribute.atk = extraAttribute.atk;
+            attributeData.extraAttribute.def = extraAttribute.def;
         }
 
-        public static void UpdateExtraAttributeInfo(ActorAttributeData attributeData, ExtraAttributeInfo attribute)
+        public void AddBuffAttribute(ObjectData objData, Buff buff)
         {
-            attributeData.extraAttribute.hp = attribute.hp;
-            attributeData.extraAttribute.hpMax = attribute.hpMax;
-            attributeData.extraAttribute.mp = attribute.mp;
-            attributeData.extraAttribute.atk = attribute.atk;
-            attributeData.extraAttribute.def = attribute.def;
-        }
-
-        public static void AddBuff(ActorBuffData buffData, int buffId)
-        {
-            var buffConfig = WorldManager.Instance.BuffConfig;
-            var buff = buffConfig.Get(buffId);
-
-            buffData.buffList.Add(buff);
-        }
-
-        public static void RemoveBuff(ObjectData objData, int buffId)
-        {
-            var worldMgr = WorldManager.Instance;
-
-            var buffConfig = worldMgr.BuffConfig;
-            var buff = buffConfig.Get(buffId);
-
-            var actorData = objData.GetData<ActorData>();
-            var actorInfo = worldMgr.ActorConfig.Get(actorData.actorId);
-
             var attributeData = objData.GetData<ActorAttributeData>();
-            if (buff.time < 0)
-            {
-                var value = 0;
-                if (buff.currentCount < buff.value.Length)
-                {
-                    value = buff.value[buff.currentCount];
-                }
-                else
-                {
-                    value = buff.value[0];
-                }
+            var actorData = objData.GetData<ActorData>();
 
-                switch (buff.buffType)
-                {
-                    case BuffType.ChangeHpMax:
+            var value = 0;
+            if (buff.currentCount < buff.value.Length)
+            {
+                value = buff.value[buff.currentCount];
+            }
+            else
+            {
+                value = buff.value[0];
+            }
+
+            switch (buff.buffType)
+            {
+                case BuffType.NormalChangeHp:
+                    {
+                        var hurt = buff.valueType == BuffValueType.Normal ? value : Mathf.FloorToInt(attributeData.baseAttribute.hp * value * Constant.PERCENT);
+                        if (hurt < 0)
                         {
-                            var extraHp = (float)value / (actorInfo.attributeInfo.hp + attributeData.extraAttribute.hpMax) * attributeData.baseAttribute.hp;
-                            attributeData.baseAttribute.hp -= Mathf.FloorToInt(extraHp);
-
-                            attributeData.extraAttribute.hpMax -= value;
+                            hurt += attributeData.baseAttribute.def;
                         }
-                        break;
-                }
-            }
 
-            var buffData = objData.GetData<ActorBuffData>();
-            var buffList = buffData.buffList;
-            for (var i = 0; i < buffList.Count; i++)
-            {
-                var tmp = buffList[i];
-                if (tmp.id == buffId)
-                {
-                    buffList.RemoveAt(i);
+                        baseAttribute.hp += hurt;
+                    }
                     break;
-                }
+                case BuffType.ChangeHpMax:
+                    {
+                        var actorInfo = WorldManager.Instance.ActorConfig.Get(actorData.actorId);
+                        extraAttribute.hpMax += value;
+
+                        var extraHp = (float)value / (actorInfo.attributeInfo.hp + attributeData.extraAttribute.hpMax) * attributeData.baseAttribute.hp;
+                        baseAttribute.hp += Mathf.FloorToInt(extraHp);
+                    }
+                    break;
+            }
+        }
+
+        public void RemoveBuffAttribute(ObjectData objData, Buff buff)
+        {
+            var attributeData = objData.GetData<ActorAttributeData>();
+            var actorData = objData.GetData<ActorData>();
+            var actorInfo = WorldManager.Instance.ActorConfig.Get(actorData.actorId);
+
+            var value = 0;
+            if (buff.currentCount < buff.value.Length)
+            {
+                value = buff.value[buff.currentCount];
+            }
+            else
+            {
+                value = buff.value[0];
             }
 
-            objData.SetDirty(buffData, attributeData);
+            switch (buff.buffType)
+            {
+                case BuffType.ChangeHpMax:
+                    {
+                        var extraHp = (float)value / (actorInfo.attributeInfo.hp + attributeData.extraAttribute.hpMax) * attributeData.baseAttribute.hp;
+                        baseAttribute.hp -= Mathf.FloorToInt(extraHp);
+                        extraAttribute.hpMax -= value;
+                    }
+                    break;
+            }
         }
 
         public static void Attack(GameObject hurt, int[] attackBuffList)
@@ -239,6 +237,7 @@ namespace Module
 
             var battleData = worldMgr.GameCore.GetData<BattleData>();
             var objId = 0;
+
             if (battleData.hurtDictionary.TryGetValue(hurt, out objId))
             {
                 var objData = worldMgr.GetObjectData(objId);
@@ -247,7 +246,9 @@ namespace Module
                 for (var i = 0; i < attackBuffList.Length; i++)
                 {
                     var buffId = attackBuffList[i];
-                    AddBuff(buffData, buffId);
+                    var buff = worldMgr.BuffConfig.Get(buffId);
+
+                    buffData.buffList.Add(buff);
                 }
 
                 objData.SetDirty(buffData);
@@ -263,11 +264,24 @@ namespace Module
             if (battleData.hurtDictionary.TryGetValue(hurt, out objId))
             {
                 var objData = worldMgr.GetObjectData(objId);
+                var buffData = objData.GetData<ActorBuffData>();
+                var buffList = buffData.buffList;
                 for (var i = 0; i < removeBuffList.Length; i++)
                 {
                     var buffId = removeBuffList[i];
-                    RemoveBuff(objData, buffId);
+                    for (var j = 0; j < buffList.Count; j++)
+                    {
+                        var buff = buffList[j];
+                        if (buff.id == buffId)
+                        {
+                            buff.buffState = BuffState.Finished;
+                            buffList[j] = buff;
+                            break;
+                        }
+                    }
                 }
+
+                objData.SetDirty(buffData);
             }
         }
     }
