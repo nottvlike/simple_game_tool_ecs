@@ -73,9 +73,7 @@ public partial class WorldManager : Singleton<WorldManager>
             {
                 _player = new ObjectData();
 
-                var actorData = _player.AddData<ActorData>();
-                actorData.actorId = 1;
-
+                _player.AddData<ActorData>();
                 _player.AddData<ActorController2DData>();
                 _player.AddData<FollowCameraData>();
                 _player.AddData<Physics2DData>();

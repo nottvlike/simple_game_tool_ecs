@@ -4,7 +4,8 @@ using UnityEngine;
 
 public enum BattleResourceType
 {
-    Actor,
+    Player,
+    Enemy,
     BattleItem
 }
 

@@ -11,12 +11,6 @@ namespace Data
         public Vector3 initialPosition;
     }
 
-    public class ResourcePoolData : Data
-    {
-        public string name;
-        public bool isInUse;
-    }
-
     [Serializable]
     public class ResourceStateData : Data
     {

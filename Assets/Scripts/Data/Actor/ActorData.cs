@@ -13,18 +13,29 @@ namespace Data
         SkillCustom = 16
     }
 
+    public enum ActorCampType
+    {
+        Player,
+        Friend,
+        Enemy,
+        Neutral
+    }
+
     public class ActorData : Data
     {
         public int actorId;
         public int currentState;
+        public ActorCampType camp;
         public SkillDefaultType defaultSkill;
     }
 
     public class ActorController2DData : Data
     {
         public Rigidbody2D rigidbody2D;
+        public Transform root;
         public Transform foot;
         public Transform hurt;
+        public GameObject attack;
         public int groundY;
         public int positionY;
     }

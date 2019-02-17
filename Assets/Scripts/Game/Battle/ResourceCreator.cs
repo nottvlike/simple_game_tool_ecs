@@ -14,8 +14,11 @@ public class ResourceCreator : MonoBehaviour
         var battlePreloadResourceInfo = GetBattlePreloadResourceInfo(battleInfo);
         switch (battlePreloadResourceInfo.resourceType)
         {
-            case BattleResourceType.Actor:
-                LoadActor(battlePreloadResourceInfo.resourceId);
+            case BattleResourceType.Player:
+                LoadActor(battlePreloadResourceInfo.resourceId, ActorCampType.Player);
+                break;
+            case BattleResourceType.Enemy:
+                LoadActor(battlePreloadResourceInfo.resourceId, ActorCampType.Enemy);
                 break;
             case BattleResourceType.BattleItem:
                 LoadBattleItem(battlePreloadResourceInfo.resourceId);
@@ -40,25 +43,39 @@ public class ResourceCreator : MonoBehaviour
         return _defaultBattlePreloadResourceInfo;
     }
 
-    void LoadActor(int actorId)
+    void LoadActor(int actorId, ActorCampType camp)
     {
         var worldMgr = WorldManager.Instance;
-        var player = worldMgr.Player;
+        ObjectData actor = null;
+        if (camp == ActorCampType.Enemy)
+        {
+            actor = worldMgr.PoolMgr.GetObjData(worldMgr.Player);
+            actor.RemoveData<ClientJoyStickData>();
+            actor.RemoveData<FollowCameraData>();
+        }
+        else
+        {
+            actor = worldMgr.Player;
+        }
+
+        var actorData = actor.GetData<ActorData>();
+        actorData.actorId = actorId;
+        actorData.camp = camp;
 
         var actorInfo = worldMgr.ActorConfig.Get(actorId);
 
-        var physics2DData = player.GetData<Physics2DData>();
+        var physics2DData = actor.GetData<Physics2DData>();
         physics2DData.gravity = 10;
         physics2DData.airFriction = actorInfo.airFriction;
         physics2DData.mass = actorInfo.mass;
 
-        var directionData = player.GetData<DirectionData>();
+        var directionData = actor.GetData<DirectionData>();
         directionData.direction.x = 1;
 
-        var resourceData = player.GetData<ResourceData>();
+        var resourceData = actor.GetData<ResourceData>();
         resourceData.initialPosition = transform.position;
 
-        Module.ActorLoader.ReplaceActor(player, actorInfo.actorName, actorInfo.resourceName, physics2DData, directionData);
+        Module.ActorLoader.ReplaceActor(actor, actorInfo.actorName, actorInfo.resourceName, physics2DData, directionData);
     }
 
     void LoadBattleItem(int battleItemId)

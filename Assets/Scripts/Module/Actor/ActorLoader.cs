@@ -42,16 +42,21 @@ namespace Module
                 resourceStateData.isInstantiated = true;
                 resourceData.gameObject = worldMgr.PoolMgr.GetGameObject(resourceData.resource, obj);
                 resourceData.gameObject.name = resourceStateData.name;
+                resourceData.gameObject.transform.position = resourceData.initialPosition;
 
                 var controller = objData.GetData<ActorController2DData>();
                 var rigidbody2D = resourceData.gameObject.GetComponent<Rigidbody2D>();
                 controller.rigidbody2D = rigidbody2D;
+                controller.root = resourceData.gameObject.transform;
                 controller.foot = resourceData.gameObject.transform.Find("Foot");
                 controller.positionY = Mathf.RoundToInt(controller.foot.position.y);
 
                 controller.hurt = resourceData.gameObject.transform.Find("Hurt");
                 var battleData = WorldManager.Instance.GameCore.GetData<BattleData>();
                 battleData.hurtDictionary.Add(controller.hurt.gameObject, objData.ObjectId);
+
+                controller.attack = resourceData.gameObject.transform.Find("Attack").gameObject;
+                controller.attack.SetActive(false);
             });
         }
 

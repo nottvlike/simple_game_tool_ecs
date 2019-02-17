@@ -29,7 +29,7 @@ namespace Module
 
             var actorAttribute = objData.GetData<ActorAttributeData>();
             var totalLeftHp = actorAttribute.baseAttribute.hp + actorAttribute.extraAttribute.hp;
-            LogUtil.I("current hp : " + totalLeftHp);
+            LogUtil.I("{0} hp : {1}!", resourceStateData.name, totalLeftHp);
         }
     }
 }
