@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using Data;
+using UnityEngine;
 
 public class Pool : IPool
 {
@@ -119,7 +120,60 @@ public class Pool : IPool
             LogUtil.W("PoolManager Can't find PoolName {0}!", poolType.ToString());
         }
     }
-    
+
+    Dictionary<string, List<GameObject>> _gameObjectDict = new Dictionary<string, List<GameObject>>();
+
+    public GameObject GetGameObject(string resourceName, UnityEngine.Object resource)
+    {
+        GameObject gameObject = null;
+        List<GameObject> gameObjectList = null;
+        if (!_gameObjectDict.TryGetValue(resourceName, out gameObjectList))
+        {
+            gameObjectList = new List<GameObject>();
+            _gameObjectDict.Add(resourceName, gameObjectList);
+        }
+        else
+        {
+            for (var i = 0; i < gameObjectList.Count; i++)
+            {
+                var tmp = gameObjectList[i];
+                if (!tmp.activeInHierarchy)
+                {
+                    gameObject = tmp;
+                    gameObject.SetActive(true);
+                }
+            }
+        }
+
+        if (gameObject == null)
+        {
+            gameObject = UnityEngine.Object.Instantiate(resource, Vector3.zero, Quaternion.identity) as GameObject;
+            gameObjectList.Add(gameObject);
+        }
+
+        return gameObject;
+    }
+
+    public void ReleaseGameObject(string resourceName, GameObject gameObject)
+    {
+        List<GameObject> poolObjectList = null;
+        if (_gameObjectDict.TryGetValue(resourceName, out poolObjectList))
+        {
+            if (poolObjectList.IndexOf(gameObject) != -1)
+            {
+                gameObject.SetActive(false);
+            }
+            else
+            {
+                LogUtil.W("PoolManager Can't find GameObject {0}!", gameObject.name);
+            }
+        }
+        else
+        {
+            LogUtil.W("PoolManager Can't find Gameobject Pool Name {0}!", resourceName);
+        }
+    }
+
     public void Destroy()
     {
     }

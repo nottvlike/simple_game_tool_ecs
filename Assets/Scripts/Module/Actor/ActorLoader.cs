@@ -36,10 +36,11 @@ namespace Module
 
         void LoadResource(ObjectData objData, ResourceStateData resourceStateData, ResourceData resourceData)
         {
-            WorldManager.Instance.ResourceMgr.LoadAsync(resourceData.resource, delegate (Object obj)
+            var worldMgr = WorldManager.Instance;
+            worldMgr.ResourceMgr.LoadAsync(resourceData.resource, delegate (Object obj)
             {
                 resourceStateData.isInstantiated = true;
-                resourceData.gameObject = Object.Instantiate(obj, Vector3.zero, Quaternion.identity) as GameObject;
+                resourceData.gameObject = worldMgr.PoolMgr.GetGameObject(resourceData.resource, obj);
                 resourceData.gameObject.name = resourceStateData.name;
 
                 var controller = objData.GetData<ActorController2DData>();
@@ -64,7 +65,11 @@ namespace Module
             resourceStateData.name = actorName;
 
             var resourceData = objData.GetData<ResourceData>();
-            resourceData.gameObject = null;
+            if (resourceData.gameObject != null)
+            {
+                worldMgr.PoolMgr.ReleaseGameObject(resourceData.resource, resourceData.gameObject);
+                resourceData.gameObject = null;
+            }
             resourceData.resource = newResource;
 
             var controller = objData.GetData<ActorController2DData>();

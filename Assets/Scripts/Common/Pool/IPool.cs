@@ -1,4 +1,5 @@
 ﻿using System;
+using UnityEngine;
 
 public interface IPoolObject
 {
@@ -17,6 +18,9 @@ public interface IPool
 
     T Get<T>() where T : IPoolObject;
     void Release(IPoolObject obj);
+
+    GameObject GetGameObject(string resourceName, UnityEngine.Object resource);
+    void ReleaseGameObject(string resourceName, GameObject gameObject);
 
     void Destroy();
 }
