@@ -16,10 +16,11 @@ MonoBehaviour:
     buffType: 0
     valueType: 0
     value: ceffffff
-    delay: 0
+    delay: 5000
     time: 0
     count: 1
     interval: 0
+    buffAttribute: 0
   - id: 2
     buffType: 0
     valueType: 0
@@ -28,6 +29,7 @@ MonoBehaviour:
     time: 0
     count: 11
     interval: 1000
+    buffAttribute: 0
   - id: 3
     buffType: 1
     valueType: 0
@@ -36,3 +38,4 @@ MonoBehaviour:
     time: -1
     count: 1
     interval: 0
+    buffAttribute: 1
