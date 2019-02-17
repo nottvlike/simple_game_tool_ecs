@@ -66,7 +66,7 @@ public class ObjectData
         var tmpData = GetData(data.GetType());
         if (tmpData != null)
         {
-            LogUtil.E("Type {0} has been added!", data.GetType());
+            LogUtil.W("Type {0} has been added!", data.GetType());
             return;
         }
 #endif
@@ -80,7 +80,7 @@ public class ObjectData
         var tmpData = GetData(data.GetType());
         if (tmpData == null)
         {
-            LogUtil.E("Type {0} could not been found!", data.GetType());
+            LogUtil.W("Type {0} could not been found!", data.GetType());
             return;
         }
 #endif
@@ -108,7 +108,7 @@ public class ObjectData
         T data = GetData<T>();
         if (data != null)
         {
-            LogUtil.E("Type {0} has been added!", typeof(T));
+            LogUtil.W("Type {0} has been added!", typeof(T));
             return data;
         }
 #endif
@@ -124,7 +124,7 @@ public class ObjectData
 #if UNITY_EDITOR
         if (GetData<T>() == null)
         {
-            LogUtil.E("Type {0} could not been found!", typeof(T));
+            LogUtil.W("Type {0} could not been found!", typeof(T));
             return;
         }
 #endif
