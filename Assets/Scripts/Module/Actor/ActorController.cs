@@ -54,7 +54,7 @@ namespace Module
             for (var i = 0; i < serverActionList.Count;)
             {
                 var serverAction = serverActionList[i];
-                if (serverAction.frame == gameSystemData.clientFrame)
+                if (serverAction.frame == gameSystemData.clientFrame && serverAction.actorId == actorData.actorId)
                 {
                     switch (serverAction.actionType)
                     {

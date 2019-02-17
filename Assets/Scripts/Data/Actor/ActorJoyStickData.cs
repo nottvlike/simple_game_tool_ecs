@@ -31,6 +31,7 @@ namespace Data
 
     public class JoyStickActionData : IPoolObject
     {
+        public int actorId;
         public int frame;
         public JoyStickActionType actionType;
         public JoyStickActionFaceType actionParam;

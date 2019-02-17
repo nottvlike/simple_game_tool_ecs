@@ -60,7 +60,10 @@ namespace Module
         {
             var gameSystemData = WorldManager.Instance.GameCore.GetData<GameSystemData>();
 
+            var actorData = objData.GetData<ActorData>();
+
             var joyStickActionData = WorldManager.Instance.PoolMgr.Get<JoyStickActionData>();
+            joyStickActionData.actorId = actorData.actorId;
             joyStickActionData.frame = gameSystemData.clientFrame + Constant.JOYSTICK_DELAY_FRAME_COUNT;
             joyStickActionData.actionType = actionType;
             joyStickActionData.actionParam = faceType;
