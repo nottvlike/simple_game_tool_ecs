@@ -16,22 +16,15 @@ public class FightPanel : Panel
     protected override void OnShow(params object[] args)
     {
         var worldMgr = WorldManager.Instance;
-        var player = worldMgr.Player;
+        var battleConfig = worldMgr.BattleConfig;
 
-        var actorData = player.GetData<ActorData>();
-        var actorInfo = worldMgr.ActorConfig.Get(actorData.actorId);
+        var battleId = battleConfig.GetFirstBattleId();
+        var chapterId = BattleConfig.GetChapterId(battleId);
+        var battleInfo = battleConfig.GetBattleInfo(chapterId, battleId);
 
-        var physics2DData = player.GetData<Physics2DData>();
-        physics2DData.gravity = 10;
-        physics2DData.airFriction = actorInfo.airFriction;
-        physics2DData.mass = actorInfo.mass;
-
-        var directionData = player.GetData<DirectionData>();
-        directionData.direction.x = 1;
-
-        player.SetDirty(physics2DData, directionData);
-
-        Module.ActorLoader.ReplaceActor(player, actorInfo.actorName, actorInfo.resourceName);
+        worldMgr.ResourceMgr.LoadAsync(battleInfo.battleResource, delegate (Object obj) {
+            Instantiate(obj);
+        });
     }
 
     void OnExitClick()

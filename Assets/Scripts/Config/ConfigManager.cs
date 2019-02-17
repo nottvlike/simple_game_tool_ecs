@@ -10,6 +10,8 @@ public partial class WorldManager : Singleton<WorldManager>
     ResourcePreloadConfig _resourcePreloadConfig;
     LocalizationConfigGroup _localizationConfigGroup;
     BuffConfig _buffConfig;
+    BattleConfig _battleConfig;
+    BattleItemConfig _battleItemConfig;
 
     public ActorConfig ActorConfig
     {
@@ -41,6 +43,16 @@ public partial class WorldManager : Singleton<WorldManager>
         get { return _buffConfig; }
     }
 
+    public BattleConfig BattleConfig
+    {
+        get { return _battleConfig; }
+    }
+
+    public BattleItemConfig BattleItemConfig
+    {
+        get { return _battleItemConfig; }
+    }
+
     public void LoadConfig()
     {
         ResourceMgr.LoadAsync("MainConfigGroup", delegate (Object obj)
@@ -51,6 +63,8 @@ public partial class WorldManager : Singleton<WorldManager>
             _joyStickConfig = configGroup.Get<JoyStickConfig>();
             _localizationConfigGroup = configGroup.Get<LocalizationConfigGroup>();
             _buffConfig = configGroup.Get<BuffConfig>();
+            _battleConfig = configGroup.Get<BattleConfig>();
+            _battleItemConfig = configGroup.Get<BattleItemConfig>();
         });
     }
 

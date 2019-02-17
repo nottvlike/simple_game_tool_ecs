@@ -8,6 +8,7 @@ namespace Data
     {
         public string resource;
         public GameObject gameObject;
+        public Vector3 initialPosition;
     }
 
     public class ResourcePoolData : Data

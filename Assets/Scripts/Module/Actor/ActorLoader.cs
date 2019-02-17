@@ -55,9 +55,11 @@ namespace Module
             });
         }
 
-        public static void ReplaceActor(ObjectData objData, string actorName, string newResource)
+        static List<Data.Data> _dataList = new List<Data.Data>();
+        public static void ReplaceActor(ObjectData objData, string actorName, string newResource, params Data.Data[] changedDataList)
         {
             var worldMgr = WorldManager.Instance;
+            _dataList.Clear();
 
             var resourceStateData = objData.GetData<ResourceStateData>();
             resourceStateData.isGameObject = true;
@@ -106,7 +108,13 @@ namespace Module
             var actorAttributeData = objData.GetData<ActorAttributeData>();
             actorAttributeData.baseAttribute = actorInfo.attributeInfo;
 
-            objData.SetDirty(resourceStateData, resourceData, controller, actorData);
+            _dataList.Add(resourceStateData);
+            _dataList.Add(resourceData);
+            _dataList.Add(controller);
+            _dataList.Add(actorData);
+            _dataList.AddRange(changedDataList);
+
+            objData.SetDirty(_dataList.ToArray());
         }
     }
 }
