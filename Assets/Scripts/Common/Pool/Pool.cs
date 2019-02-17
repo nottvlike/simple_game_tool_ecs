@@ -1,133 +1,78 @@
 ﻿using System;
 using System.Collections.Generic;
+using Data;
 
 public class Pool : IPool
 {
-	Dictionary<string, List<ObjectData>> _objectDataDict = new Dictionary<string, List<ObjectData>>();
+    Dictionary<Type, List<IPoolObject>> _poolObjectDict = new Dictionary<Type, List<IPoolObject>>();
 
-    public ObjectData Get(ObjectData data)
+    public Data.Data GetData(Type type)
     {
-        if (!CheckIsPoolObject(data))
-        {
-            return null;
-        }
-
-        var resourceStateData = data.GetData<Data.ResourceStateData>();
-
-        ObjectData poolObjectData = null;
-        List<ObjectData> objectDataList = null;
-        if (!_objectDataDict.TryGetValue(resourceStateData.name, out objectDataList))
-        {
-            objectDataList = new List<ObjectData>();
-            _objectDataDict.Add(resourceStateData.name, objectDataList);
-        }
-        else
-        {
-            for (var i = 0; i < objectDataList.Count; i++)
-            {
-                var tmpObjectData = objectDataList[i];
-                var resourcePoolData = tmpObjectData.GetData<Data.ResourcePoolData>();
-                if (!resourcePoolData.isInUse)
-                {
-                    resourcePoolData.isInUse = true;
-                    poolObjectData = tmpObjectData;
-                    break;
-                }
-            }
-        }
-
-        if (poolObjectData == null)
-        {
-            poolObjectData = DeepClone(data);
-            var resourcePoolData = poolObjectData.GetData<Data.ResourcePoolData>();
-            resourcePoolData.isInUse = true;
-
-            objectDataList.Add(poolObjectData);
-        }
-
-        return poolObjectData;
+        return Get(typeof(Data.Data), type) as Data.Data;
     }
 
-    bool CheckIsPoolObject(ObjectData objData)
+    public void ReleaseData(Data.Data data)
     {
-        var poolData = objData.GetData<Data.ResourcePoolData>();
-        if (poolData == null)
-        {
-            LogUtil.W("Not a pool object {0}!", objData.ObjectId);
-            return false;
-        }
-
-        var resourceData = objData.GetData<Data.ResourceData>();
-        if (resourceData == null)
-        {
-            LogUtil.W("ResourceData not exist {0}!", objData.ObjectId);
-            return false;
-        }
-
-        return true;
+        Release(typeof(Data.Data), data);
     }
 
-    ObjectData DeepClone(ObjectData cloneObjData)
+    public ObjectData GetObjData()
     {
-        var objData = new ObjectData();
+        return Get(typeof(ObjectData), typeof(ObjectData)) as ObjectData;
+    }
 
-        var dataList = cloneObjData.DataList;
+    public ObjectData GetObjData(ObjectData objData)
+    {
+        var poolObjData = GetObjData();
+
+        var dataList = objData.DataList;
         for (var i = 0; i < dataList.Count; i++)
         {
             var data = dataList[i];
-            objData.AddData(data.Clone());
+            poolObjData.AddData(GetData(data.GetType()));
         }
 
-        var resourceStateData = objData.GetData<Data.ResourceStateData>();
-        if (resourceStateData != null)
-        {
-            resourceStateData.isInstantiated = false;
-        }
+        WorldManager.Instance.ObjectDataList.Add(poolObjData);
 
-        WorldManager.Instance.ObjectDataList.Add(objData);
-
-        objData.SetDirty();
         return objData;
     }
-	
-	public void Release(ObjectData objData)
-	{
-        if (!CheckIsPoolObject(objData))
+
+    public void ReleaseObjData(ObjectData objData)
+    {
+        var dataList = objData.DataList;
+        for (var i = 0; i < dataList.Count; i++)
         {
-            return;
+            var data = dataList[i];
+            ReleaseData(data);
         }
 
-        var poolData = objData.GetData<Data.ResourcePoolData>();
-        List<ObjectData> poolObjectList = null;
-		if (_objectDataDict.TryGetValue(poolData.name, out poolObjectList))
-		{   
-            if (poolObjectList.IndexOf(objData) != -1)
-            {
-                poolData.isInUse = false;
-            }
-            else
-            {
-                LogUtil.W("PoolManager Can't find PoolObject {0}!", objData.ObjectId);
-            }
-		}
-		else
-		{
-			LogUtil.W("PoolManager Can't find PoolName {0}!", poolData.name);
-		}
-	}
+        dataList.Clear();
 
-    Dictionary<Type, List<IPoolObject>> _poolObjectDict = new Dictionary<Type, List<IPoolObject>>();
+        objData.SetDirty();
 
-    public T Get<T>() where T : IPoolObject, new()
+        WorldManager.Instance.ObjectDataList.Remove(objData);
+
+        Release(typeof(ObjectData), objData);
+    }
+
+    public T Get<T>() where T : IPoolObject
     {
-        var type = typeof(T);
+        return (T)Get(typeof(T), typeof(T));
+    }
 
+    public void Release(IPoolObject poolObject)
+    {
+        Release(poolObject.GetType(), poolObject);
+    }
+
+    IPoolObject Get(Type poolType, Type objType)
+    {
         IPoolObject poolObject = null;
         List<IPoolObject> poolObjectList = null;
-        if (!_poolObjectDict.TryGetValue(type, out poolObjectList))
+        if (!_poolObjectDict.TryGetValue(poolType, out poolObjectList))
         {
             poolObjectList = new List<IPoolObject>();
-            _poolObjectDict.Add(type, poolObjectList);
+            _poolObjectDict.Add(poolType, poolObjectList);
         }
         else
         {
@@ -145,38 +90,36 @@ public class Pool : IPool
 
         if (poolObject == null)
         {
-            poolObject = new T();
+            poolObject = Activator.CreateInstance(objType) as IPoolObject;
             poolObject.IsInUse = true;
 
             poolObjectList.Add(poolObject);
         }
 
-        return (T)poolObject;
+        return poolObject;
     }
 
-    public void Release(IPoolObject obj)
+    void Release(Type poolType, IPoolObject poolObject)
     {
-        var type = obj.GetType();
-
         List<IPoolObject> poolObjectList = null;
-        if (_poolObjectDict.TryGetValue(type, out poolObjectList))
+        if (_poolObjectDict.TryGetValue(poolType, out poolObjectList))
         {
-            if (poolObjectList.IndexOf(obj) != -1)
+            if (poolObjectList.IndexOf(poolObject) != -1)
             {
-                obj.Clear();
-                obj.IsInUse = false;
+                poolObject.Clear();
+                poolObject.IsInUse = false;
             }
             else
             {
-                LogUtil.W("PoolManager Can't find PoolObject {0}!", obj.ToString());
+                LogUtil.W("PoolManager Can't find PoolObject {0}!", poolObject.ToString());
             }
         }
         else
         {
-            LogUtil.W("PoolManager Can't find PoolName {0}!", type.ToString());
+            LogUtil.W("PoolManager Can't find PoolName {0}!", poolType.ToString());
         }
     }
-
+    
     public void Destroy()
     {
     }

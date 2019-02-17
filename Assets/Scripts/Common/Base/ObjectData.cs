@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 
-public class ObjectData
+public class ObjectData : IPoolObject
 {
     static int _idGenerate = 0;
 
@@ -86,6 +86,7 @@ public class ObjectData
 #endif
 
         _dataList.Remove(data);
+        WorldManager.Instance.PoolMgr.ReleaseData(data);
     }
 
     public Data.Data GetData(Type type)
@@ -113,7 +114,7 @@ public class ObjectData
         }
 #endif
 
-        data = new T();
+        data = WorldManager.Instance.PoolMgr.GetData(typeof(T)) as T;
         _dataList.Add(data);
 
         return data;
@@ -135,6 +136,7 @@ public class ObjectData
             if (data.GetType() == typeof(T))
             {
                 _dataList.Remove(data);
+                WorldManager.Instance.PoolMgr.ReleaseData(data);
             }
         }
     }
@@ -142,5 +144,15 @@ public class ObjectData
     public T GetData<T>()  where T : Data.Data
     {
         return GetData(typeof(T)) as T;
+    }
+
+    public bool IsInUse
+    {
+        get;
+        set;
+    }
+
+    public void Clear()
+    {
     }
 }
