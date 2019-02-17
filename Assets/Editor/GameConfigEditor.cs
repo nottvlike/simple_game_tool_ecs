@@ -94,4 +94,22 @@ public class GameConfigEditor
         AssetDatabase.CreateAsset(buffConfig, path);
         AssetDatabase.SaveAssets();
     }
+
+    [MenuItem("Config/Create Battle Config")]
+    static void CreateBattleConfig()
+    {
+        var battleConfig = ScriptableObject.CreateInstance<BattleConfig>();
+        string path = "Assets/Resources/Config/BattleConfig.asset";
+        AssetDatabase.CreateAsset(battleConfig, path);
+        AssetDatabase.SaveAssets();
+    }
+
+    [MenuItem("Config/Create Battle Item Config")]
+    static void CreateBattleItemConfig()
+    {
+        var battleItemConfig = ScriptableObject.CreateInstance<BattleItemConfig>();
+        string path = "Assets/Resources/Config/BattleItemConfig.asset";
+        AssetDatabase.CreateAsset(battleItemConfig, path);
+        AssetDatabase.SaveAssets();
+    }
 }
