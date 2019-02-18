@@ -52,7 +52,6 @@ namespace Module
             }
 
             var physics2DData = objData.GetData<Physics2DData>();
-            var actorControllerData = objData.GetData<ActorController2DData>();
             if (hurtData.hurt.force.y == 0 && hurtData.hurt.duration == 0)
             {
                 hurtData.hurt.force.x = 0;
