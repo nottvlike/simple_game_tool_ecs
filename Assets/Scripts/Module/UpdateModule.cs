@@ -69,9 +69,9 @@ namespace Module
             {
                 moduleData.isStop = false;
                 _moduleDataList[index] = moduleData;
-
-                Enabled = true;
             }
+
+            Enabled = true;
         }
 
         protected void Stop(int objectDataId)
