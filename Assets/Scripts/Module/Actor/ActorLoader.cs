@@ -26,7 +26,6 @@ namespace Module
             var resourceData = objData.GetData<ResourceData>();
             if (!string.IsNullOrEmpty(resourceData.resource) && resourceStateData.isGameObject)
             {
-                resourceStateData.isLoaded = WorldManager.Instance.ResourceMgr.IsResourceLoaded(resourceData.resource);
                 if (!resourceStateData.isInstantiated)
                 {
                     LoadResource(objData, resourceStateData, resourceData);
@@ -83,6 +82,7 @@ namespace Module
             var controller = objData.GetData<ActorController2DData>();
             controller.rigidbody2D = null;
             controller.foot = null;
+            controller.root = null;
 
             var battleData = worldMgr.GameCore.GetData<BattleData>();
             if (controller.hurt)
@@ -126,6 +126,40 @@ namespace Module
             _dataList.AddRange(changedDataList);
 
             objData.SetDirty(_dataList.ToArray());
+        }
+
+        public static void DestroyActor(ObjectData objData)
+        {
+            var worldMgr = WorldManager.Instance;
+
+            var actorData = objData.GetData<ActorData>();
+            var actorId = actorData.actorId;
+
+            var resourceData = objData.GetData<ResourceData>();
+            if (resourceData.gameObject != null)
+            {
+                worldMgr.PoolMgr.ReleaseGameObject(resourceData.resource, resourceData.gameObject);
+                resourceData.gameObject = null;
+            }
+
+            var controller = objData.GetData<ActorController2DData>();
+            controller.rigidbody2D = null;
+            controller.foot = null;
+            controller.root = null;
+
+            var battleData = worldMgr.GameCore.GetData<BattleResourceData>();
+            if (controller.hurt)
+            {
+                battleData.hurtDictionary.Remove(controller.hurt.gameObject);
+                controller.hurt = null;
+            }
+            if (controller.attack)
+            {
+                battleData.attackDictionary.Remove(controller.attack.gameObject);
+                controller.attack = null;
+            }
+
+            worldMgr.PoolMgr.ReleaseObjData(objData);
         }
     }
 }

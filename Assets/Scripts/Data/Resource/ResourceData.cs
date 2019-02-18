@@ -16,7 +16,6 @@ namespace Data
     {
         public string name;
         public bool isGameObject;
-        public bool isLoaded;
         public bool isInstantiated;
 
         public override Data Clone()
