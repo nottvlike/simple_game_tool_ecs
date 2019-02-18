@@ -42,7 +42,7 @@ public class FightResultPanel : Panel
         worldMgr.PoolMgr.Clear();
 
         var battleData = worldMgr.GameCore.GetData<BattleData>();
-        Destroy(battleData.battleInitialize);
+        Destroy(battleData.battleInitialize.gameObject);
         battleData.battleInitialize = null;
 
         System.GC.Collect();
