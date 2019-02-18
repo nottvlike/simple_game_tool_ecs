@@ -22,5 +22,7 @@ public interface IPool
     GameObject GetGameObject(string resourceName, UnityEngine.Object resource);
     void ReleaseGameObject(string resourceName, GameObject gameObject);
 
+    void Clear();
+
     void Destroy();
 }

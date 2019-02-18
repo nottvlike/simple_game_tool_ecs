@@ -141,6 +141,7 @@ public class Pool : IPool
                 {
                     gameObject = tmp;
                     gameObject.SetActive(true);
+                    break;
                 }
             }
         }
@@ -171,6 +172,43 @@ public class Pool : IPool
         else
         {
             LogUtil.W("PoolManager Can't find Gameobject Pool Name {0}!", resourceName);
+        }
+    }
+
+    public void Clear()
+    {
+        foreach(var gameObjectListObject in _gameObjectDict)
+        {
+            var gameObjectList = gameObjectListObject.Value;
+            for (var i = 0; i < gameObjectList.Count;)
+            {
+                var gameObject = gameObjectList[i];
+                if (!gameObject.activeInHierarchy)
+                {
+                    UnityEngine.Object.Destroy(gameObject);
+                    gameObjectList.RemoveAt(i);
+                }
+                else
+                {
+                    i++;
+                }
+            }
+        }
+
+        foreach (var poolObjectListObject in _poolObjectDict)
+        {
+            var poolObjectList = poolObjectListObject.Value;
+            for (var i = 0; i < poolObjectList.Count;)
+            {
+                if (!poolObjectList[i].IsInUse)
+                {
+                    poolObjectList.RemoveAt(i);
+                }
+                else
+                {
+                    i++;
+                }
+            }
         }
     }
 
