@@ -17,6 +17,7 @@ public partial class WorldManager : Singleton<WorldManager>
 
                 _gameCore.AddData<ResourcePreloadData>();
                 _gameCore.AddData<PlayerBaseData>();
+                _gameCore.AddData<BattleResourceData>();
                 _gameCore.AddData<BattleData>();
 
                 _objectDataList.Add(_gameCore);

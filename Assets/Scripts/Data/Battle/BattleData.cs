@@ -58,7 +58,32 @@ namespace Data
         public int buffAttribute;
     }
 
+    [System.Serializable]
+    public struct ActorConditionInfo
+    {
+        public int preloadId;
+        [System.NonSerialized]
+        public bool isDied;
+    }
+
+    [System.Serializable]
+    public struct BattleVictoryContidion
+    {
+        public int limitTime;
+        public ActorConditionInfo[] needDieActorInfoList;
+    }
+
     public class BattleData : Data
+    {
+        public BattleInitialize battleInitialize;
+
+        public override void Clear()
+        {
+            battleInitialize = null;
+        }
+    }
+
+    public class BattleResourceData : Data
     {
         public Dictionary<GameObject, int> hurtDictionary = new Dictionary<GameObject, int>();
         public Dictionary<GameObject, int> attackDictionary = new Dictionary<GameObject, int>();

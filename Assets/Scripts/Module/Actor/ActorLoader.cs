@@ -51,7 +51,7 @@ namespace Module
                 controller.positionY = Mathf.RoundToInt(controller.foot.position.y);
 
                 controller.hurt = resourceData.gameObject.transform.Find("Hurt");
-                var battleData = WorldManager.Instance.GameCore.GetData<BattleData>();
+                var battleData = WorldManager.Instance.GameCore.GetData<BattleResourceData>();
                 battleData.hurtDictionary.Add(controller.hurt.gameObject, objData.ObjectId);
 
                 controller.attack = resourceData.gameObject.transform.Find("Attack").gameObject;
@@ -84,7 +84,7 @@ namespace Module
             controller.foot = null;
             controller.root = null;
 
-            var battleData = worldMgr.GameCore.GetData<BattleData>();
+            var battleData = worldMgr.GameCore.GetData<BattleResourceData>();
             if (controller.hurt)
             {
                 battleData.hurtDictionary.Remove(controller.hurt.gameObject);
@@ -131,9 +131,6 @@ namespace Module
         public static void DestroyActor(ObjectData objData)
         {
             var worldMgr = WorldManager.Instance;
-
-            var actorData = objData.GetData<ActorData>();
-            var actorId = actorData.actorId;
 
             var resourceData = objData.GetData<ResourceData>();
             if (resourceData.gameObject != null)

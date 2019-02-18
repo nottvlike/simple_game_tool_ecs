@@ -30,6 +30,14 @@ namespace Module
             var actorAttribute = objData.GetData<ActorAttributeData>();
             var totalLeftHp = actorAttribute.baseAttribute.hp + actorAttribute.extraAttribute.hp;
             LogUtil.I("{0} hp : {1}!", resourceStateData.name, totalLeftHp);
+
+            if (totalLeftHp <= 0)
+            {
+                ActorLoader.DestroyActor(objData);
+
+                var battleData = WorldManager.Instance.GameCore.GetData<BattleData>();
+                battleData.battleInitialize.OnActorDied(objData.ObjectId);
+            }
         }
     }
 }

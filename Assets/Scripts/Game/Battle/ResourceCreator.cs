@@ -1,27 +1,33 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
+﻿using UnityEngine;
 using Data;
 
 public class ResourceCreator : MonoBehaviour
 {
     public int preloadId;
 
+    BattlePreloadResourceInfo _battlePreloadResourceInfo;
+
+    Object _resource;
+    ObjectData _objData;
+    public ObjectData Actor
+    {
+        get { return _objData; }
+    }
+
     public void Init(int battleId)
     {
-        var chapterId = BattleConfig.GetChapterId(battleId);
-        var battleInfo = WorldManager.Instance.BattleConfig.GetBattleInfo(chapterId, battleId);
-        var battlePreloadResourceInfo = GetBattlePreloadResourceInfo(battleInfo);
-        switch (battlePreloadResourceInfo.resourceType)
+        var battleInfo = WorldManager.Instance.BattleConfig.GetBattleInfo(battleId);
+        _battlePreloadResourceInfo = GetBattlePreloadResourceInfo(battleInfo);
+        switch (_battlePreloadResourceInfo.resourceType)
         {
             case BattleResourceType.Player:
-                LoadActor(battlePreloadResourceInfo.resourceId, ActorCampType.Player);
+                _objData = LoadActor(_battlePreloadResourceInfo.resourceId, ActorCampType.Player);
                 break;
             case BattleResourceType.Enemy:
-                LoadActor(battlePreloadResourceInfo.resourceId, ActorCampType.Enemy);
+                _objData = LoadActor(_battlePreloadResourceInfo.resourceId, ActorCampType.Enemy);
                 break;
             case BattleResourceType.BattleItem:
-                LoadBattleItem(battlePreloadResourceInfo.resourceId);
+                LoadBattleItem(_battlePreloadResourceInfo.resourceId);
                 break;
         }
     }
@@ -43,7 +49,7 @@ public class ResourceCreator : MonoBehaviour
         return _defaultBattlePreloadResourceInfo;
     }
 
-    void LoadActor(int actorId, ActorCampType camp)
+    ObjectData LoadActor(int actorId, ActorCampType camp)
     {
         var worldMgr = WorldManager.Instance;
         ObjectData actor = null;
@@ -76,15 +82,21 @@ public class ResourceCreator : MonoBehaviour
         resourceData.initialPosition = transform.position;
 
         Module.ActorLoader.ReplaceActor(actor, actorInfo.actorName, actorInfo.resourceName, physics2DData, directionData);
+
+        return actor;
     }
 
     void LoadBattleItem(int battleItemId)
     {
-        var worldMgr = WorldManager.Instance;
-        var battleItemInfo = worldMgr.BattleItemConfig.Get(battleItemId);
+        if (_resource != null)
+        {
+            var worldMgr = WorldManager.Instance;
+            var battleItemInfo = worldMgr.BattleItemConfig.Get(battleItemId);
 
-        worldMgr.ResourceMgr.LoadAsync(battleItemInfo.resource, delegate (Object obj) {
-            var gameObject = Instantiate(obj, transform.position, Quaternion.identity, transform);
-        });
+            worldMgr.ResourceMgr.LoadAsync(battleItemInfo.resource, delegate (UnityEngine.Object obj)
+            {
+                _resource = Instantiate(obj, transform.position, Quaternion.identity, transform);
+            });
+        }
     }
 }

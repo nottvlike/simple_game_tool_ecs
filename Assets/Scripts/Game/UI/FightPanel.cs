@@ -19,12 +19,15 @@ public class FightPanel : Panel
         var battleConfig = worldMgr.BattleConfig;
 
         var battleId = battleConfig.GetFirstBattleId();
-        var chapterId = BattleConfig.GetChapterId(battleId);
-        var battleInfo = battleConfig.GetBattleInfo(chapterId, battleId);
+        var battleInfo = battleConfig.GetBattleInfo(battleId);
 
-        worldMgr.ResourceMgr.LoadAsync(battleInfo.battleResource, delegate (Object obj) {
-            Instantiate(obj);
-        });
+        var battleData = worldMgr.GameCore.GetData<BattleData>();
+        if (battleData.battleInitialize == null)
+        {
+            worldMgr.ResourceMgr.LoadAsync(battleInfo.battleResource, delegate (Object obj) {
+                Instantiate(obj);
+            });
+        }
     }
 
     void OnExitClick()

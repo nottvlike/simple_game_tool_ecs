@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using Data;
 
 public enum BattleResourceType
 {
@@ -24,6 +25,7 @@ public struct BattleInfo
     public string battleName;
     public string battleResource;
     public BattlePreloadResourceInfo[] battlePreloadResourceInfoList;
+    public BattleVictoryContidion battleVictoryCondition;
 }
 
 [System.Serializable]
@@ -56,8 +58,9 @@ public class BattleConfig : ScriptableObject
         return _defaultChapterInfo;
     }
 
-    public BattleInfo GetBattleInfo(int chapterId, int battleId)
+    public BattleInfo GetBattleInfo(int battleId)
     {
+        var chapterId = GetChapterId(battleId);
         for (var i = 0; i < chapterInfoList.Length; i++)
         {
             var chapterInfo = chapterInfoList[i];
@@ -84,8 +87,8 @@ public class BattleConfig : ScriptableObject
         return chapterInfoList[0].battleInfoList[0].battleId;
     }
 
-    public static int GetChapterId(int chapterId)
+    public static int GetChapterId(int battleId)
     {
-        return chapterId / 1000 * 1000;
+        return battleId / 1000 * 1000;
     }
 }
