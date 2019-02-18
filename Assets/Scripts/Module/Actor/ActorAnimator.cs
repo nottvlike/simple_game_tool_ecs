@@ -38,7 +38,11 @@ namespace Module
             actorController2DData.root.localScale = scale;
 
             var actorData = objData.GetData<ActorData>();
-            if ((actorData.currentState & (int)ActorStateType.SkillCustom) != 0)
+            if ((actorData.currentState & (int)ActorStateType.Hurt) != 0)
+            {
+                // play hurt animation;
+            }
+            else if ((actorData.currentState & (int)ActorStateType.SkillCustom) != 0)
             {
                 // play custom skill animation;
             }

@@ -122,7 +122,7 @@ namespace Module
         public static bool CanMove(int currentState)
         {
             if ((currentState & (int)ActorStateType.Jump) != 0 && (currentState & (int)ActorStateType.SkillDefault) != 0 
-                && (currentState & (int)ActorStateType.SkillCustom) != 0)
+                && (currentState & (int)ActorStateType.SkillCustom) != 0 && (currentState & (int)ActorStateType.Hurt) != 0)
                 return false;
 
             return true;
@@ -130,7 +130,8 @@ namespace Module
 
         public static bool CanJump(int currentState)
         {
-            if ((currentState & (int)ActorStateType.SkillDefault) != 0 && (currentState & (int)ActorStateType.SkillCustom) != 0)
+            if ((currentState & (int)ActorStateType.SkillDefault) != 0 && (currentState & (int)ActorStateType.SkillCustom) != 0
+                && (currentState & (int)ActorStateType.Hurt) != 0)
                 return false;
 
             return true;
@@ -138,7 +139,7 @@ namespace Module
 
         public static bool CanSkillDefault(int currentState)
         {
-            if ((currentState & (int)ActorStateType.SkillCustom) != 0)
+            if ((currentState & (int)ActorStateType.SkillCustom) != 0 && (currentState & (int)ActorStateType.Hurt) != 0)
                 return false;
 
             return true;
@@ -146,9 +147,14 @@ namespace Module
 
         public static bool CanSkillCustom(int currentState)
         {
-            if ((currentState & (int)ActorStateType.SkillDefault) != 0)
+            if ((currentState & (int)ActorStateType.SkillDefault) != 0 && (currentState & (int)ActorStateType.Hurt) != 0)
                 return false;
 
+            return true;
+        }
+
+        public static bool CanHurt(int currentState)
+        {
             return true;
         }
     }

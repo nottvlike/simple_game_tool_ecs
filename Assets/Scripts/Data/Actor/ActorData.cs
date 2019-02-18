@@ -10,7 +10,8 @@ namespace Data
         Move = 2,
         Jump = 4,
         SkillDefault = 8,
-        SkillCustom = 16
+        SkillCustom = 16,
+        Hurt = 32
     }
 
     public enum ActorCampType
@@ -93,5 +94,19 @@ namespace Data
     {
         public BaseAttributeInfo baseAttribute;
         public ExtraAttributeInfo extraAttribute;
+    }
+
+    [System.Serializable]
+    public struct ActorHurtInfo
+    {
+        public int id;
+        public Vector3Int force;
+        public int duration;
+    }
+
+    public class ActorHurtData : Data
+    {
+        public int attackObjDataId;
+        public ActorHurtInfo hurt;
     }
 }

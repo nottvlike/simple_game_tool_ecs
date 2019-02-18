@@ -88,6 +88,7 @@ public partial class WorldManager : Singleton<WorldManager>
                 _player.AddData<ActorSyncData>();
                 _player.AddData<ActorAttributeData>();
                 _player.AddData<ActorBuffData>();
+                _player.AddData<ActorHurtData>();
 
                 _objectDataList.Add(_player);
 

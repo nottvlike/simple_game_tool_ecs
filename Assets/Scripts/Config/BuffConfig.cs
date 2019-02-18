@@ -6,8 +6,10 @@ using Data;
 public class BuffConfig : ScriptableObject
 {
     public Buff[] buffList;
+    public ActorHurtInfo[] hurtList;
 
     Buff _defaultBuff;
+    ActorHurtInfo _defaultHurtInfo;
 
     public Buff Get(int buffId)
     {
@@ -20,5 +22,19 @@ public class BuffConfig : ScriptableObject
             }
         }
         return _defaultBuff;
+    }
+
+    public ActorHurtInfo GetHurtInfo(int hurtId)
+    {
+        for (var i = 0; i < hurtList.Length; i++)
+        {
+            var hurt = hurtList[i];
+            if (hurt.id == hurtId)
+            {
+                return hurt;
+            }
+        }
+
+        return _defaultHurtInfo;
     }
 }

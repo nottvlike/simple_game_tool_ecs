@@ -9,12 +9,14 @@ namespace Module
     {
         public BaseAttributeInfo baseAttribute;
         public ExtraAttributeInfo extraAttribute;
+        public ActorHurtInfo hurtInfo;
 
         protected override void InitRequiredDataType()
         {
             _requiredDataTypeList.Add(typeof(ActorData));
             _requiredDataTypeList.Add(typeof(ActorAttributeData));
             _requiredDataTypeList.Add(typeof(ActorBuffData));
+            _requiredDataTypeList.Add(typeof(ActorHurtData));
             _requiredDataTypeList.Add(typeof(ResourceStateData));
         }
 
@@ -113,10 +115,7 @@ namespace Module
 
             if (isDirty)
             {
-                var attributeData = objData.GetData<ActorAttributeData>();
-                UpdateAttributeInfo(attributeData);
-
-                objData.SetDirty(attributeData);
+                UpdateAttributeInfo(objData);
             }
         }
 
@@ -147,10 +146,14 @@ namespace Module
             extraAttribute.mp = attributeData.extraAttribute.mp;
             extraAttribute.atk = attributeData.extraAttribute.atk;
             extraAttribute.def = attributeData.extraAttribute.def;
+
+            hurtInfo.force = Vector3Int.zero;
+            hurtInfo.duration = 0;
         }
 
-        public void UpdateAttributeInfo(ActorAttributeData attributeData)
+        public void UpdateAttributeInfo(ObjectData objData)
         {
+            var attributeData = objData.GetData<ActorAttributeData>();
             attributeData.baseAttribute.hp += baseAttribute.hp;
             attributeData.baseAttribute.mp += baseAttribute.mp;
             attributeData.baseAttribute.atk += baseAttribute.atk;
@@ -161,12 +164,23 @@ namespace Module
             attributeData.extraAttribute.mp = extraAttribute.mp;
             attributeData.extraAttribute.atk = extraAttribute.atk;
             attributeData.extraAttribute.def = extraAttribute.def;
+
+            var actorHurtData = objData.GetData<ActorHurtData>();
+            actorHurtData.hurt.force = hurtInfo.force;
+            actorHurtData.hurt.duration = hurtInfo.duration;
+
+            var actorData = objData.GetData<ActorData>();
+            actorData.currentState |= (int)ActorStateType.Hurt;
+            objData.SetDirty(actorData, attributeData, actorHurtData);
         }
 
         public void AddBuffAttribute(ObjectData objData, Buff buff)
         {
+            var worldMgr = WorldManager.Instance;
+
             var attributeData = objData.GetData<ActorAttributeData>();
             var actorData = objData.GetData<ActorData>();
+            var hurtData = objData.GetData<ActorHurtData>();
 
             var value = 0;
             if (buff.currentCount < buff.value.Length)
@@ -193,11 +207,25 @@ namespace Module
                     break;
                 case BuffType.ChangeHpMax:
                     {
-                        var actorInfo = WorldManager.Instance.ActorConfig.Get(actorData.actorId);
+                        var actorInfo = worldMgr.ActorConfig.Get(actorData.actorId);
                         extraAttribute.hpMax += value;
 
                         var extraHp = (float)value / (actorInfo.attributeInfo.hp + attributeData.extraAttribute.hpMax) * attributeData.baseAttribute.hp;
                         baseAttribute.hp += Mathf.FloorToInt(extraHp);
+                    }
+                    break;
+                case BuffType.AddForce:
+                    {
+                        var hurt = worldMgr.BuffConfig.GetHurtInfo(value);
+                        if (hurtData.attackObjDataId != 0)
+                        {
+                            var attackObjData = worldMgr.GetObjectData(hurtData.attackObjDataId);
+                            var directionData = attackObjData.GetData<DirectionData>();
+                            hurt.force.x *= directionData.direction.x;
+                        }
+ 
+                        hurtInfo.force += hurt.force;
+                        hurtInfo.duration += hurt.duration;
                     }
                     break;
             }
@@ -231,16 +259,23 @@ namespace Module
             }
         }
 
-        public static void Attack(GameObject hurt, int[] attackBuffList)
+        public static void Attack(GameObject attack, GameObject hurt, int[] attackBuffList)
         {
             var worldMgr = WorldManager.Instance;
 
             var battleData = worldMgr.GameCore.GetData<BattleData>();
             var objId = 0;
 
+            var attackObjId = 0;
+            battleData.attackDictionary.TryGetValue(attack, out attackObjId);
+
             if (battleData.hurtDictionary.TryGetValue(hurt, out objId))
             {
                 var objData = worldMgr.GetObjectData(objId);
+
+                var hurtData = objData.GetData<ActorHurtData>();
+                hurtData.attackObjDataId = attackObjId;
+
                 var buffData = objData.GetData<ActorBuffData>();
 
                 for (var i = 0; i < attackBuffList.Length; i++)

@@ -56,6 +56,7 @@ namespace Module
                 battleData.hurtDictionary.Add(controller.hurt.gameObject, objData.ObjectId);
 
                 controller.attack = resourceData.gameObject.transform.Find("Attack").gameObject;
+                battleData.attackDictionary.Add(controller.attack.gameObject, objData.ObjectId);
                 controller.attack.SetActive(false);
             });
         }
@@ -88,6 +89,11 @@ namespace Module
             {
                 battleData.hurtDictionary.Remove(controller.hurt.gameObject);
                 controller.hurt = null;
+            }
+            if (controller.attack)
+            {
+                battleData.attackDictionary.Remove(controller.attack.gameObject);
+                controller.attack = null;
             }
 
             objData.RemoveData<ActorFlyData>();

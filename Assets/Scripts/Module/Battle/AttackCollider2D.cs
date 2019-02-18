@@ -9,8 +9,8 @@ public class AttackCollider2D : MonoBehaviour
 
     private void OnTriggerEnter2D(Collider2D collision)
     {
-        Module.ActorBuff.Attack(collision.gameObject, buffList);
-        Module.ActorBuff.Attack(collision.gameObject, buffRemoveWhenExitList);
+        Module.ActorBuff.Attack(gameObject, collision.gameObject, buffList);
+        Module.ActorBuff.Attack(gameObject, collision.gameObject, buffRemoveWhenExitList);
     }
 
     private void OnTriggerStay2D(Collider2D collision)

@@ -58,5 +58,6 @@ public partial class WorldManager : Singleton<WorldManager>
         Register(new Module.ActorBuff());
         Register(new Module.ActorAttribute());
         Register(new Module.ActorAnimator());
+        Register(new Module.ActorHurt());
     }
 }

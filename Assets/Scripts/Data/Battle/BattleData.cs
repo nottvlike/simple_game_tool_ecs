@@ -9,6 +9,7 @@ namespace Data
     {
         NormalChangeHp,
         ChangeHpMax,
+        AddForce
     }
 
     public enum BuffValueType
@@ -60,5 +61,6 @@ namespace Data
     public class BattleData : Data
     {
         public Dictionary<GameObject, int> hurtDictionary = new Dictionary<GameObject, int>();
+        public Dictionary<GameObject, int> attackDictionary = new Dictionary<GameObject, int>();
     }
 }
