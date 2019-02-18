@@ -19,6 +19,8 @@ namespace Module
         public BaseUpdateModule()
         {
             _defaultModuleData.objId = -1;
+
+            Enabled = false;
         }
 
         public override void Add(int objectDataId)
