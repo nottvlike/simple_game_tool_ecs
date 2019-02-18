@@ -9,6 +9,13 @@ namespace Data
         public string resource;
         public GameObject gameObject;
         public Vector3 initialPosition;
+
+        public override void Clear()
+        {
+            resource = string.Empty;
+            gameObject = null;
+            initialPosition = Vector3.zero;
+        }
     }
 
     [Serializable]
@@ -18,11 +25,11 @@ namespace Data
         public bool isGameObject;
         public bool isInstantiated;
 
-        public override Data Clone()
+        public override void Clear()
         {
-            var data = base.Clone() as ResourceStateData;
-            data.name = string.Copy(name);
-            return data;
+            name = string.Empty;
+            isGameObject = false;
+            isInstantiated = false;
         }
     }
 
@@ -30,5 +37,11 @@ namespace Data
     {
         public ResourcePreloadType preloadType;
         public int preloadCount;
+
+        public override void Clear()
+        {
+            preloadType = ResourcePreloadType.GameInit;
+            preloadCount = 0;
+        }
     }
 }

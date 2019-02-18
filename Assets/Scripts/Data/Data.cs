@@ -12,13 +12,8 @@ namespace Data
             set;
         }
 
-        public void Clear()
+        public virtual void Clear()
         {
-        }
-
-        public virtual Data Clone()
-        {
-            return (Data)MemberwiseClone();
         }
     }
 }

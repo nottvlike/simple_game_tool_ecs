@@ -14,5 +14,11 @@ namespace Data
     {
         public List<ItemInfo> itemInfoList = new List<ItemInfo>();
         public ItemNotification notification = new ItemNotification();
+
+        public override void Clear()
+        {
+            itemInfoList.Clear();
+            notification = null;
+        }
     }
 }

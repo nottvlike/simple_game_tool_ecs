@@ -62,5 +62,11 @@ namespace Data
     {
         public Dictionary<GameObject, int> hurtDictionary = new Dictionary<GameObject, int>();
         public Dictionary<GameObject, int> attackDictionary = new Dictionary<GameObject, int>();
+
+        public override void Clear()
+        {
+            hurtDictionary.Clear();
+            attackDictionary.Clear();
+        }
     }
 }

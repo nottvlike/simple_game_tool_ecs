@@ -28,6 +28,14 @@ namespace Data
         public int currentState;
         public ActorCampType camp;
         public SkillDefaultType defaultSkill;
+
+        public override void Clear()
+        {
+            actorId = 0;
+            currentState = 0;
+            camp = ActorCampType.Player;
+            defaultSkill = SkillDefaultType.None;
+        }
     }
 
     public class ActorController2DData : Data
@@ -39,24 +47,53 @@ namespace Data
         public GameObject attack;
         public int groundY;
         public int positionY;
+
+        public override void Clear()
+        {
+            rigidbody2D = null;
+            root = null;
+            foot = null;
+            hurt = null;
+            attack = null;
+            groundY = 0;
+            positionY = 0;
+        }
     }
 
     public class ActorFlyData : Data
     {
         public int duration;
         public int currentDuration;
+
+        public override void Clear()
+        {
+            duration = 0;
+            currentDuration = 0;
+        }
     }
 
     public class ActorDashData : Data
     {
         public int duration;
         public int currentDuration;
+
+        public override void Clear()
+        {
+            duration = 0;
+            currentDuration = 0;
+        }
     }
 
     public class ActorStressData : Data
     {
         public int duration;
         public int currentDuration;
+
+        public override void Clear()
+        {
+            duration = 0;
+            currentDuration = 0;
+        }
     }
 
     public class ActorSyncData : Data
@@ -70,6 +107,11 @@ namespace Data
     public class ActorBuffData : Data
     {
         public List<Buff> buffList = new List<Buff>();
+
+        public override void Clear()
+        {
+            buffList.Clear();
+        }
     }
 
     [System.Serializable]
@@ -94,6 +136,19 @@ namespace Data
     {
         public BaseAttributeInfo baseAttribute;
         public ExtraAttributeInfo extraAttribute;
+
+        public override void Clear()
+        {
+            baseAttribute.hp = 0;
+            baseAttribute.mp = 0;
+            baseAttribute.atk = 0;
+            baseAttribute.def = 0;
+            extraAttribute.hp = 0;
+            extraAttribute.hpMax = 0;
+            extraAttribute.mp = 0;
+            extraAttribute.atk = 0;
+            extraAttribute.def = 0;
+        }
     }
 
     [System.Serializable]
@@ -108,5 +163,13 @@ namespace Data
     {
         public int attackObjDataId;
         public ActorHurtInfo hurt;
+
+        public override void Clear()
+        {
+            attackObjDataId = 0;
+            hurt.id = 0;
+            hurt.force = Vector3Int.zero;
+            hurt.duration = 0;
+        }
     }
 }

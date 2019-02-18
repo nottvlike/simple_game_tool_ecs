@@ -54,10 +54,20 @@ namespace Data
     public class ClientJoyStickData : Data
     {
         public List<JoyStickActionData> actionList = new List<JoyStickActionData>();
+
+        public override void Clear()
+        {
+            actionList.Clear();
+        }
     }
 
     public class ServerJoyStickData : Data
     {
         public List<JoyStickActionData> actionList = new List<JoyStickActionData>();
+
+        public override void Clear()
+        {
+            actionList.Clear();
+        }
     }
 }

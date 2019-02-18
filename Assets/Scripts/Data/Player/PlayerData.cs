@@ -27,6 +27,19 @@ namespace Data
         public List<RoleInfoLite> roleInfoLiteList = new List<RoleInfoLite>();
         public RoleInfo roleInfo;
         public PlayerNotification notification = new PlayerNotification();
+
+        public override void Clear()
+        {
+            accountId = string.Empty;
+            roleInfoLiteList.Clear();
+
+            roleInfo.roleId = string.Empty;
+            roleInfo.roleName = string.Empty;
+            roleInfo.roleLevel = 0;
+            roleInfo.serverId = 0;
+
+            notification = null;
+        }
     }
 
     [System.Serializable]
@@ -42,5 +55,15 @@ namespace Data
     {
         public List<ServerInfo> serverInfoList = new List<ServerInfo>();
         public ServerInfo serverInfo;
+
+        public override void Clear()
+        {
+            serverInfoList.Clear();
+
+            serverInfo.serverId = 0;
+            serverInfo.serverName = string.Empty;
+            serverInfo.serverAddress = string.Empty;
+            serverInfo.serverPort = 0;
+        }
     }
 }
