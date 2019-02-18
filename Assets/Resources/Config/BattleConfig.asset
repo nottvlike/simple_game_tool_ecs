@@ -28,3 +28,7 @@ MonoBehaviour:
       - preloadId: 3
         resourceType: 1
         resourceId: 2
+      battleVictoryCondition:
+        limitTime: -1
+        needDieActorInfoList:
+        - preloadId: 3

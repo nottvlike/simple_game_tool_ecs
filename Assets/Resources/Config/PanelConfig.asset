@@ -62,3 +62,8 @@ MonoBehaviour:
     panelGroup: 2
     rootPanelType: 0
     resourceName: YesNoPanel
+  - panelType: 8
+    panelMode: 1
+    panelGroup: 3
+    rootPanelType: 0
+    resourceName: FightResultPanel

@@ -76,3 +76,7 @@ MonoBehaviour:
     resourcePath: Prefab/Battle/Battle_1001
     assetbundlePath: 
     isFromAssetBundle: 0
+  - resourceName: FightResultPanel
+    resourcePath: Prefab/UI/FightResultPanel
+    assetbundlePath: 
+    isFromAssetBundle: 0
