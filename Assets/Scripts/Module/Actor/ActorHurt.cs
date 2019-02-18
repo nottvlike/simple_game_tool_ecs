@@ -53,7 +53,7 @@ namespace Module
 
             var physics2DData = objData.GetData<Physics2DData>();
             var actorControllerData = objData.GetData<ActorController2DData>();
-            if (ActorPhysics2D.IsGround(actorControllerData) && hurtData.hurt.force.y == 0)
+            if (hurtData.hurt.force.y == 0 && hurtData.hurt.duration == 0)
             {
                 hurtData.hurt.force.x = 0;
                 hurtData.hurt.duration = 0;
