@@ -28,6 +28,7 @@ public enum PanelType
     CreateRolePanel,
     MainPanel,
     FightPanel,
+    FightResultPanel,
 
     AsyncPanel = 1000,
     SimpleTipsPanel,
