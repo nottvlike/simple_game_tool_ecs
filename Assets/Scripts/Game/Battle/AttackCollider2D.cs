@@ -9,8 +9,8 @@ public class AttackCollider2D : MonoBehaviour
 
     private void OnTriggerEnter2D(Collider2D collision)
     {
-        Module.ActorBuff.Attack(gameObject, collision.gameObject, buffList);
-        Module.ActorBuff.Attack(gameObject, collision.gameObject, buffRemoveWhenExitList);
+        Module.ActorAttack.Attack(gameObject, collision.gameObject, buffList);
+        Module.ActorAttack.Attack(gameObject, collision.gameObject, buffRemoveWhenExitList);
     }
 
     private void OnTriggerStay2D(Collider2D collision)
@@ -20,6 +20,6 @@ public class AttackCollider2D : MonoBehaviour
 
     private void OnTriggerExit2D(Collider2D collision)
     {
-        Module.ActorBuff.Clear(collision.gameObject, buffRemoveWhenExitList);
+        Module.ActorAttack.Clear(collision.gameObject, buffRemoveWhenExitList);
     }
 }
