@@ -34,7 +34,7 @@ namespace Module
             {
                 var objData = worldMgr.GetObjectData(objId);
 
-                var hurtData = objData.GetData<ActorHurtData>();
+                var hurtData = objData.GetData<ResourceHurtData>();
                 hurtData.attackObjDataId = attackObjId;
 
                 var buffData = objData.GetData<ActorBuffData>();

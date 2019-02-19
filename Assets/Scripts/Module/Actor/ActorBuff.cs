@@ -9,14 +9,14 @@ namespace Module
     {
         public BaseAttributeInfo baseAttribute;
         public ExtraAttributeInfo extraAttribute;
-        public ActorHurtInfo hurtInfo;
+        public ResourceHurtInfo hurtInfo;
 
         protected override void InitRequiredDataType()
         {
             _requiredDataTypeList.Add(typeof(ActorData));
             _requiredDataTypeList.Add(typeof(ActorAttributeData));
             _requiredDataTypeList.Add(typeof(ActorBuffData));
-            _requiredDataTypeList.Add(typeof(ActorHurtData));
+            _requiredDataTypeList.Add(typeof(ResourceHurtData));
             _requiredDataTypeList.Add(typeof(ResourceStateData));
         }
 
@@ -165,9 +165,9 @@ namespace Module
             attributeData.extraAttribute.atk = extraAttribute.atk;
             attributeData.extraAttribute.def = extraAttribute.def;
 
-            var actorHurtData = objData.GetData<ActorHurtData>();
-            actorHurtData.hurt.force = hurtInfo.force;
-            actorHurtData.hurt.duration = hurtInfo.duration;
+            var actorHurtData = objData.GetData<ResourceHurtData>();
+            actorHurtData.hurtInfo.force = hurtInfo.force;
+            actorHurtData.hurtInfo.duration = hurtInfo.duration;
 
             var actorData = objData.GetData<ActorData>();
             actorData.currentState |= (int)ActorStateType.Hurt;
@@ -180,7 +180,7 @@ namespace Module
 
             var attributeData = objData.GetData<ActorAttributeData>();
             var actorData = objData.GetData<ActorData>();
-            var hurtData = objData.GetData<ActorHurtData>();
+            var hurtData = objData.GetData<ResourceHurtData>();
 
             var value = 0;
             if (buff.currentCount < buff.value.Length)

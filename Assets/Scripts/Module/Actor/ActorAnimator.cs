@@ -30,12 +30,12 @@ namespace Module
                 return;
             }
 
-            var actorController2DData = objData.GetData<ActorController2DData>();
+            var resourceData = objData.GetData<ResourceData>();
 
             var directionData = objData.GetData<DirectionData>();
-            Vector3 scale = actorController2DData.root.localScale;
+            Vector3 scale = resourceData.gameObject.transform.localScale;
             scale.x = Mathf.Abs(scale.x) * directionData.direction.x;
-            actorController2DData.root.localScale = scale;
+            resourceData.gameObject.transform.localScale = scale;
 
             var actorData = objData.GetData<ActorData>();
             if ((actorData.currentState & (int)ActorStateType.Hurt) != 0)
@@ -49,7 +49,8 @@ namespace Module
             else if ((actorData.currentState & (int)ActorStateType.SkillDefault) != 0)
             {
                 // play default skill animation;
-                actorController2DData.attack.SetActive(true);
+                var attackData = objData.GetData<ResourceAttackData>();
+                attackData.attack.SetActive(true);
             }
             else if ((actorData.currentState & (int)ActorStateType.Jump) != 0)
             {

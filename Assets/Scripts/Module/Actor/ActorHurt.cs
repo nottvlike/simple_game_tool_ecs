@@ -12,13 +12,13 @@ namespace Module
             _requiredDataTypeList.Add(typeof(ActorData));
             _requiredDataTypeList.Add(typeof(ActorController2DData));
             _requiredDataTypeList.Add(typeof(Physics2DData));
-            _requiredDataTypeList.Add(typeof(ActorHurtData));
+            _requiredDataTypeList.Add(typeof(ResourceHurtData));
             _requiredDataTypeList.Add(typeof(ResourceStateData));
         }
 
         public override bool IsUpdateRequired(Data.Data data)
         {
-            return data.GetType() == typeof(ActorHurtData);
+            return data.GetType() == typeof(ResourceHurtData);
         }
 
         public override void Refresh(ObjectData objData)
@@ -29,10 +29,10 @@ namespace Module
                 return;
             }
 
-            var hurtData = objData.GetData<ActorHurtData>();
+            var hurtData = objData.GetData<ResourceHurtData>();
 
-            var force = hurtData.hurt.force;
-            if (force.y == 0 && force.x == 0 && hurtData.hurt.duration == 0)
+            var force = hurtData.hurtInfo.force;
+            if (force.y == 0 && force.x == 0 && hurtData.hurtInfo.duration == 0)
             {
                 Stop(objData.ObjectId);
                 return;
@@ -46,16 +46,16 @@ namespace Module
 
             if ((actorData.currentState & (int)ActorStateType.Hurt) == 0)
             {
-                hurtData.hurt.force = Vector3Int.zero;
-                hurtData.hurt.duration = 0;
+                hurtData.hurtInfo.force = Vector3Int.zero;
+                hurtData.hurtInfo.duration = 0;
                 return;
             }
 
             var physics2DData = objData.GetData<Physics2DData>();
-            if (hurtData.hurt.force.y == 0 && hurtData.hurt.duration == 0)
+            if (hurtData.hurtInfo.force.y == 0 && hurtData.hurtInfo.duration == 0)
             {
-                hurtData.hurt.force.x = 0;
-                hurtData.hurt.duration = 0;
+                hurtData.hurtInfo.force.x = 0;
+                hurtData.hurtInfo.duration = 0;
 
                 physics2DData.force.x = 0;
                 physics2DData.force.y = 0;
@@ -65,10 +65,10 @@ namespace Module
             }
             else
             {
-                hurtData.hurt.force.y = force.y - physics2DData.airFriction;
-                if (hurtData.hurt.force.y < 0)
+                hurtData.hurtInfo.force.y = force.y - physics2DData.airFriction;
+                if (hurtData.hurtInfo.force.y < 0)
                 {
-                    hurtData.hurt.force.y = 0;
+                    hurtData.hurtInfo.force.y = 0;
                     physics2DData.force.y += -physics2DData.airFriction;
                 }
                 else
@@ -76,13 +76,13 @@ namespace Module
                     physics2DData.force.y = force.y;
                 }
 
-                if (hurtData.hurt.duration > 0)
+                if (hurtData.hurtInfo.duration > 0)
                 {
                     var gameSystemData = WorldManager.Instance.GameCore.GetData<GameSystemData>();
-                    hurtData.hurt.duration = Mathf.Max(0, hurtData.hurt.duration - gameSystemData.unscaleDeltaTime);
+                    hurtData.hurtInfo.duration = Mathf.Max(0, hurtData.hurtInfo.duration - gameSystemData.unscaleDeltaTime);
                 }
 
-                physics2DData.force.x = hurtData.hurt.force.x;
+                physics2DData.force.x = hurtData.hurtInfo.force.x;
 
                 objData.SetDirty(physics2DData);
             }

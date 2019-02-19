@@ -54,8 +54,8 @@ namespace Module
 
                 physics2DData.force.x = 0;
 
-                var actorController2DData = objData.GetData<ActorController2DData>();
-                actorController2DData.attack.SetActive(false);
+                var attackData = objData.GetData<ResourceAttackData>();
+                attackData.attack.SetActive(false);
 
                 actorData.currentState &= ~(int)ActorStateType.SkillDefault;
                 objData.SetDirty(actorData);
