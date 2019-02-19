@@ -7,6 +7,8 @@ public struct BattleItemInfo
 {
     public int id;
     public string resource;
+    public string itemName;
+    public int attackId;
 }
 
 public class BattleItemConfig : ScriptableObject

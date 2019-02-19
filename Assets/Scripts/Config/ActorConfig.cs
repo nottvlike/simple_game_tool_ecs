@@ -16,6 +16,7 @@ public struct ActorInfo
     public int airFriction;
     public SkillDefaultType defaultSkill;
     public int defaultSkillDuration;
+    public int defulttSkillAttackId;
 
     public BaseAttributeInfo attributeInfo;
 }

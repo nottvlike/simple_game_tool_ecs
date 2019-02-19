@@ -6,10 +6,12 @@ using Data;
 public class BuffConfig : ScriptableObject
 {
     public Buff[] buffList;
-    public ActorHurtInfo[] hurtList;
+    public ResourceHurtInfo[] hurtList;
+    public ResourceAttackInfo[] attackList;
 
     Buff _defaultBuff;
-    ActorHurtInfo _defaultHurtInfo;
+    ResourceHurtInfo _defaultHurtInfo;
+    ResourceAttackInfo _defaultAttackInfo;
 
     public Buff Get(int buffId)
     {
@@ -24,7 +26,7 @@ public class BuffConfig : ScriptableObject
         return _defaultBuff;
     }
 
-    public ActorHurtInfo GetHurtInfo(int hurtId)
+    public ResourceHurtInfo GetHurtInfo(int hurtId)
     {
         for (var i = 0; i < hurtList.Length; i++)
         {
@@ -36,5 +38,19 @@ public class BuffConfig : ScriptableObject
         }
 
         return _defaultHurtInfo;
+    }
+
+    public ResourceAttackInfo GetAttackInfo(int attackId)
+    {
+        for (var i = 0; i < attackList.Length; i++)
+        {
+            var attack = attackList[i];
+            if (attack.id == attackId)
+            {
+                return attack;
+            }
+        }
+
+        return _defaultAttackInfo;
     }
 }

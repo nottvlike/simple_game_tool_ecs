@@ -3,18 +3,12 @@ using System.Collections.Generic;
 using UnityEngine;
 using Data;
 
-public enum BattleResourceType
-{
-    Player,
-    Enemy,
-    BattleItem
-}
-
 [System.Serializable]
 public struct BattlePreloadResourceInfo
 {
     public int preloadId;
-    public BattleResourceType resourceType;
+    public ResourceType resourceType;
+    public ResourceCampType campType;
     public int resourceId;
 }
 
