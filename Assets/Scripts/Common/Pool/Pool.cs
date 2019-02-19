@@ -19,7 +19,10 @@ public class Pool : IPool
 
     public ObjectData GetObjData()
     {
-        return Get(typeof(ObjectData), typeof(ObjectData)) as ObjectData;
+        var objData = Get(typeof(ObjectData), typeof(ObjectData)) as ObjectData;
+        WorldManager.Instance.ObjectDataList.Add(objData);
+
+        return objData;
     }
 
     public ObjectData GetObjData(ObjectData objData)
@@ -32,8 +35,6 @@ public class Pool : IPool
             var data = dataList[i];
             poolObjData.AddData(GetData(data.GetType()));
         }
-
-        WorldManager.Instance.ObjectDataList.Add(poolObjData);
 
         return poolObjData;
     }
