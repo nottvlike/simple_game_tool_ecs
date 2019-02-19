@@ -35,7 +35,7 @@ public class BattleInitialize : MonoBehaviour
         for (var i = 0; i < resourceCreatorList.Length; i++)
         {
             var resourceCreator = resourceCreatorList[i];
-            if (resourceCreator.Actor != null && resourceCreator.Actor.ObjectId == objDataId)
+            if (resourceCreator.ObjData != null && resourceCreator.ObjData.ObjectId == objDataId)
             {
                 resourceId = resourceCreator.preloadId;
             }

@@ -33,7 +33,7 @@ namespace Module
 
             if (totalLeftHp <= 0)
             {
-                ActorLoader.DestroyActor(objData);
+                ResourceLoader.DestroyResource(objData);
 
                 var battleData = WorldManager.Instance.GameCore.GetData<BattleData>();
                 battleData.battleInitialize.OnActorDied(objData.ObjectId);

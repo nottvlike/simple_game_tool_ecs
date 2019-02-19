@@ -39,11 +39,27 @@ public class FightResultPanel : Panel
     void OnExitClick()
     {
         var worldMgr = WorldManager.Instance;
-        worldMgr.PoolMgr.Clear();
+
+        var objDataList = worldMgr.ObjectDataList;
+        for (var i = 0; i < objDataList.Count;)
+        {
+            var objData = objDataList[i];
+            var resourceData = objData.GetData<ResourceData>();
+            if (resourceData != null)
+            {
+                Module.ResourceLoader.DestroyResource(objData);
+            }
+            else
+            {
+                i++;
+            }
+        }
 
         var battleData = worldMgr.GameCore.GetData<BattleData>();
         Destroy(battleData.battleInitialize.gameObject);
         battleData.battleInitialize = null;
+
+        worldMgr.PoolMgr.Clear();
 
         System.GC.Collect();
 
