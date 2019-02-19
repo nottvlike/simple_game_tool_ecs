@@ -20,13 +20,16 @@ MonoBehaviour:
       battleResource: Battle_1001
       battlePreloadResourceInfoList:
       - preloadId: 1
-        resourceType: 0
+        resourceType: 1
+        campType: 1
         resourceId: 1
       - preloadId: 2
         resourceType: 2
+        campType: 3
         resourceId: 1
       - preloadId: 3
         resourceType: 1
+        campType: 3
         resourceId: 2
       battleVictoryCondition:
         limitTime: -1

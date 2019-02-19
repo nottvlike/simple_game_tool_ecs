@@ -14,3 +14,5 @@ MonoBehaviour:
   battleItemInfoList:
   - id: 1
     resource: Attack
+    itemName: Attack
+    attackId: 2

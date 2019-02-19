@@ -22,6 +22,7 @@ MonoBehaviour:
     airFriction: 3
     defaultSkill: 2
     defaultSkillDuration: 100
+    defulttSkillAttackId: 1
     attributeInfo:
       hp: 100
       mp: 100
@@ -37,6 +38,7 @@ MonoBehaviour:
     airFriction: 3
     defaultSkill: 3
     defaultSkillDuration: 100
+    defulttSkillAttackId: 1
     attributeInfo:
       hp: 100
       mp: 100

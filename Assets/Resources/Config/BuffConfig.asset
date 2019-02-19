@@ -51,7 +51,7 @@ MonoBehaviour:
   - id: 5
     buffType: 0
     valueType: 0
-    value: f6ffffff
+    value: d8ffffff
     delay: 0
     time: 0
     count: 1
@@ -61,3 +61,10 @@ MonoBehaviour:
   - id: 1
     force: {x: 8, y: 30, z: 0}
     duration: 0
+  attackList:
+  - id: 1
+    buffList: 0400000005000000
+    initial: 0
+  - id: 2
+    buffList: 010000000200000003000000
+    initial: 1
