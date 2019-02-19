@@ -14,26 +14,16 @@ namespace Data
         Hurt = 32
     }
 
-    public enum ActorCampType
-    {
-        Player,
-        Friend,
-        Enemy,
-        Neutral
-    }
-
     public class ActorData : Data
     {
         public int actorId;
         public int currentState;
-        public ActorCampType camp;
         public SkillDefaultType defaultSkill;
 
         public override void Clear()
         {
             actorId = 0;
             currentState = 0;
-            camp = ActorCampType.Player;
             defaultSkill = SkillDefaultType.None;
         }
     }
@@ -41,20 +31,14 @@ namespace Data
     public class ActorController2DData : Data
     {
         public Rigidbody2D rigidbody2D;
-        public Transform root;
         public Transform foot;
-        public Transform hurt;
-        public GameObject attack;
         public int groundY;
         public int positionY;
 
         public override void Clear()
         {
             rigidbody2D = null;
-            root = null;
             foot = null;
-            hurt = null;
-            attack = null;
             groundY = 0;
             positionY = 0;
         }
@@ -148,28 +132,6 @@ namespace Data
             extraAttribute.mp = 0;
             extraAttribute.atk = 0;
             extraAttribute.def = 0;
-        }
-    }
-
-    [System.Serializable]
-    public struct ActorHurtInfo
-    {
-        public int id;
-        public Vector3Int force;
-        public int duration;
-    }
-
-    public class ActorHurtData : Data
-    {
-        public int attackObjDataId;
-        public ActorHurtInfo hurt;
-
-        public override void Clear()
-        {
-            attackObjDataId = 0;
-            hurt.id = 0;
-            hurt.force = Vector3Int.zero;
-            hurt.duration = 0;
         }
     }
 }

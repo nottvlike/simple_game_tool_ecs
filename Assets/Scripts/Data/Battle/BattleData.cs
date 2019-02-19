@@ -94,4 +94,49 @@ namespace Data
             attackDictionary.Clear();
         }
     }
+
+    [System.Serializable]
+    public struct ResourceHurtInfo
+    {
+        public int id;
+        public Vector3Int force;
+        public int duration;
+    }
+
+    public class ResourceHurtData : Data
+    {
+        public int attackObjDataId;
+        public ResourceHurtInfo hurtInfo;
+        public GameObject hurt;
+
+        public override void Clear()
+        {
+            attackObjDataId = 0;
+            hurtInfo.id = 0;
+            hurtInfo.force = Vector3Int.zero;
+            hurtInfo.duration = 0;
+        }
+    }
+
+    [System.Serializable]
+    public struct ResourceAttackInfo
+    {
+        public int id;
+        public int[] buffList;
+        public bool initial;
+    }
+
+    public class ResourceAttackData : Data
+    {
+        public GameObject attack;
+        public ResourceAttackInfo attackInfo;
+
+        public override void Clear()
+        {
+            attack = null;
+            attackInfo.id = 0;
+            attackInfo.buffList = null;
+            attackInfo.initial = false;
+        }
+    }
 }

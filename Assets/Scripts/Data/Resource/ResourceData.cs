@@ -3,6 +3,22 @@ using UnityEngine;
 
 namespace Data
 {
+    public enum ResourceType
+    {
+        None,
+        Actor,
+        BattleItem
+    }
+
+    public enum ResourceCampType
+    {
+        None,
+        Player,
+        Friend,
+        Enemy,
+        Neutral
+    }
+
     [Serializable]
     public class ResourceData : Data
     {
@@ -24,12 +40,16 @@ namespace Data
         public string name;
         public bool isGameObject;
         public bool isInstantiated;
+        public ResourceType resourceType;
+        public ResourceCampType campType;
 
         public override void Clear()
         {
             name = string.Empty;
             isGameObject = false;
             isInstantiated = false;
+            resourceType = ResourceType.None;
+            campType = ResourceCampType.None;
         }
     }
 
