@@ -38,6 +38,7 @@ public partial class WorldManager : Singleton<WorldManager>
             {
                 _gameServer = new ObjectData();
                 _gameServer.AddData<GameNetworkData>();
+                _gameServer.AddData<ServerData>();
                 _objectDataList.Add(_gameServer);
 
                 _gameServer.SetDirty();
@@ -62,41 +63,6 @@ public partial class WorldManager : Singleton<WorldManager>
             }
 
             return _item;
-        }
-    }
-
-    ObjectData _player;
-    public ObjectData Player
-    {
-        get
-        {
-            if (_player == null)
-            {
-                _player = new ObjectData();
-
-                _player.AddData<ActorData>();
-                _player.AddData<ActorController2DData>();
-                _player.AddData<FollowCameraData>();
-                _player.AddData<Physics2DData>();
-                _player.AddData<ActorJumpData>();
-                _player.AddData<ServerData>();
-                _player.AddData<DirectionData>();
-                _player.AddData<SpeedData>();
-                _player.AddData<ResourceData>();
-                _player.AddData<ResourceStateData>();
-                _player.AddData<ClientJoyStickData>();
-                _player.AddData<ServerJoyStickData>();
-                _player.AddData<ActorSyncData>();
-                _player.AddData<ActorAttributeData>();
-                _player.AddData<ActorBuffData>();
-                _player.AddData<ActorHurtData>();
-
-                _objectDataList.Add(_player);
-
-                _player.SetDirty();
-            }
-
-            return _player;
         }
     }
 }

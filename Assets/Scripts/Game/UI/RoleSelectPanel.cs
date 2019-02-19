@@ -174,7 +174,7 @@ public class RoleSelectPanel : Panel
 
     public Data.ServerInfo GetServerInfo(int serverId)
     {
-        var serverData = WorldManager.Instance.Player.GetData<Data.ServerData>();
+        var serverData = WorldManager.Instance.GameServer.GetData<Data.ServerData>();
         var serverInfoList = serverData.serverInfoList;
         for (var i = 0; i < serverInfoList.Count; i++)
         {
@@ -205,7 +205,7 @@ public class RoleSelectPanel : Panel
 
         _selectedServer = serverId;
 
-        var serverData = WorldManager.Instance.Player.GetData<Data.ServerData>();
+        var serverData = WorldManager.Instance.GameServer.GetData<Data.ServerData>();
         serverData.serverInfo = GetServerInfo(_selectedServer);
         currentServer.text = serverData.serverInfo.serverName;
     }

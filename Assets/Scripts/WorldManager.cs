@@ -17,7 +17,6 @@ public class ResourcePreloadNotification : BaseNotification
         if (type == (int)ResourcePreloadType.GameInit)
         {
             var worldMgr = WorldManager.Instance;
-            var player = worldMgr.Player;
             var item = worldMgr.Item;
 
             GetServerList();
@@ -39,7 +38,7 @@ public class ResourcePreloadNotification : BaseNotification
             if (resultType == WebRequestResultType.Success)
             {
                 var serverInfoResult = JsonUtility.FromJson<GetServerInfoResult>(serverInfoStr);
-                var serverData = worldMgr.Player.GetData<Data.ServerData>();
+                var serverData = worldMgr.GameServer.GetData<Data.ServerData>();
                 var result = serverInfoResult.result;
                 if (result == 0)
                 {

@@ -26,7 +26,7 @@ public class ServerPanel : Panel
 
     protected override void OnShow(params object[] args)
     {
-        var serverData = WorldManager.Instance.Player.GetData<Data.ServerData>();
+        var serverData = WorldManager.Instance.GameServer.GetData<Data.ServerData>();
         var serverInfoList = serverData.serverInfoList;
         var selectServerInfo = serverData.serverInfo;
         for (var i = 0; i < serverInfoList.Count; i++)
