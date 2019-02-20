@@ -5,31 +5,37 @@ using Data;
 
 public class AttackCollider2D : MonoBehaviour
 {
-    ResourceAttackInfo _attackInfo;
+    Effect _attackEffect;
+    int _lastEnterTime;
 
-    bool GetAttackInfo()
+    List<Buff> _buffList = new List<Buff>();
+
+    public void Init(ObjectData objData)
     {
-        var worldMgr = WorldManager.Instance;
-        var battleData = worldMgr.GameCore.GetData<BattleResourceData>();
-        var objId = 0;
-        if (battleData.attackDictionary.TryGetValue(gameObject, out objId))
-        {
-            var objData = worldMgr.GetObjectData(objId);
-
-            var attackData = objData.GetData<ResourceAttackData>();
-            _attackInfo = attackData.attackInfo;
-
-            return true;
-        }
-
-        return false;
+        var attackData = objData.GetData<ResourceAttackData>();
+        _attackEffect = attackData.attackEffect;
     }
 
     private void OnTriggerEnter2D(Collider2D collision)
     {
-        if (GetAttackInfo())
+        var worldMgr = WorldManager.Instance;
+        var gameSystemTime = worldMgr.GameCore.GetData<GameSystemData>();
+
+        if (_lastEnterTime + _attackEffect.duration < gameSystemTime.unscaleTime)
         {
-            Module.ActorAttack.Attack(gameObject, collision.gameObject, _attackInfo.buffList);
+            _lastEnterTime = gameSystemTime.unscaleTime;
+
+            _buffList.Clear();
+
+            var enemyBuffIdList = _attackEffect.enemyBuffIdList;
+            for (var i = 0; i < enemyBuffIdList.Length; i++)
+            {
+                var buffId = enemyBuffIdList[i];
+                var buff = worldMgr.BuffConfig.GetBuff(buffId);
+                _buffList.Add(buff);
+            }
+
+            Module.ActorAttack.Attack(gameObject, collision.gameObject, _buffList.ToArray());
         }
     }
 
@@ -38,29 +44,22 @@ public class AttackCollider2D : MonoBehaviour
         
     }
 
-    [HideInInspector]
-    public List<int> removedBuffList = new List<int>();
     private void OnTriggerExit2D(Collider2D collision)
     {
-        removedBuffList.Clear();
+        var buffConfig = WorldManager.Instance.BuffConfig;
+        _buffList.Clear();
 
-        if (GetAttackInfo())
+        var enemyBuffIdList = _attackEffect.enemyBuffIdList;
+        for (var i = 0; i < enemyBuffIdList.Length; i++)
         {
-            var buffList = _attackInfo.buffList;
-            for (var i = 0; i < buffList.Length; i++)
+            var buffId = enemyBuffIdList[i];
+            var buff = buffConfig.GetBuff(buffId);
+            if ((buff.buffAttribute & (int)BuffAttribute.NeedRemove) != 0)
             {
-                var buffId = buffList[i];
-                var buff = WorldManager.Instance.BuffConfig.Get(buffId);
-                if ((buff.buffAttribute & (int)BuffAttribute.NeedRemove) != 0)
-                {
-                    removedBuffList.Add(buffId);
-                }
-            }
-
-            if (removedBuffList.Count > 0)
-            {
-                Module.ActorAttack.Clear(collision.gameObject, removedBuffList.ToArray());
+                _buffList.Add(buff);
             }
         }
+
+        Module.ActorAttack.Clear(collision.gameObject, _buffList.ToArray());
     }
 }

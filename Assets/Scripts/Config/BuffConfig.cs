@@ -3,17 +3,26 @@ using System.Collections.Generic;
 using UnityEngine;
 using Data;
 
+[System.Serializable]
+public struct Effect
+{
+    public int id;
+    public int[] selfBuffIdList;
+    public int[] friendBuffIdList;
+    public int[] enemyBuffIdList;
+    public int duration;
+    public bool initial;
+}
+
 public class BuffConfig : ScriptableObject
 {
     public Buff[] buffList;
-    public ResourceHurtInfo[] hurtList;
-    public ResourceAttackInfo[] attackList;
+    public Effect[] effectList;
 
     Buff _defaultBuff;
-    ResourceHurtInfo _defaultHurtInfo;
-    ResourceAttackInfo _defaultAttackInfo;
+    Effect _defaultEffect;
 
-    public Buff Get(int buffId)
+    public Buff GetBuff(int buffId)
     {
         for (var i = 0; i < buffList.Length; i++)
         {
@@ -26,31 +35,17 @@ public class BuffConfig : ScriptableObject
         return _defaultBuff;
     }
 
-    public ResourceHurtInfo GetHurtInfo(int hurtId)
+    public Effect GetEffect(int effectId)
     {
-        for (var i = 0; i < hurtList.Length; i++)
+        for (var i = 0; i < effectList.Length; i++)
         {
-            var hurt = hurtList[i];
-            if (hurt.id == hurtId)
+            var effect = effectList[i];
+            if (effect.id == effectId)
             {
-                return hurt;
+                return effect;
             }
         }
 
-        return _defaultHurtInfo;
-    }
-
-    public ResourceAttackInfo GetAttackInfo(int attackId)
-    {
-        for (var i = 0; i < attackList.Length; i++)
-        {
-            var attack = attackList[i];
-            if (attack.id == attackId)
-            {
-                return attack;
-            }
-        }
-
-        return _defaultAttackInfo;
+        return _defaultEffect;
     }
 }

@@ -31,8 +31,8 @@ namespace Module
 
             var hurtData = objData.GetData<ResourceHurtData>();
 
-            var force = hurtData.hurtInfo.force;
-            if (force.y == 0 && force.x == 0 && hurtData.hurtInfo.duration == 0)
+            var force = hurtData.force;
+            if (force.y == 0 && force.x == 0)
             {
                 Stop(objData.ObjectId);
                 return;
@@ -46,17 +46,14 @@ namespace Module
 
             if ((actorData.currentState & (int)ActorStateType.Hurt) == 0)
             {
-                hurtData.hurtInfo.force = Vector3Int.zero;
-                hurtData.hurtInfo.duration = 0;
+                hurtData.force = Vector3Int.zero;
                 return;
             }
 
             var physics2DData = objData.GetData<Physics2DData>();
-            if (hurtData.hurtInfo.force.y == 0 && hurtData.hurtInfo.duration == 0)
+            if (hurtData.force.y == 0)
             {
-                hurtData.hurtInfo.force.x = 0;
-                hurtData.hurtInfo.duration = 0;
-
+                hurtData.force.x = 0;
                 physics2DData.force.x = 0;
                 physics2DData.force.y = 0;
 
@@ -65,10 +62,10 @@ namespace Module
             }
             else
             {
-                hurtData.hurtInfo.force.y = force.y - physics2DData.airFriction;
-                if (hurtData.hurtInfo.force.y < 0)
+                hurtData.force.y = force.y - physics2DData.airFriction;
+                if (hurtData.force.y < 0)
                 {
-                    hurtData.hurtInfo.force.y = 0;
+                    hurtData.force.y = 0;
                     physics2DData.force.y += -physics2DData.airFriction;
                 }
                 else
@@ -76,13 +73,7 @@ namespace Module
                     physics2DData.force.y = force.y;
                 }
 
-                if (hurtData.hurtInfo.duration > 0)
-                {
-                    var gameSystemData = WorldManager.Instance.GameCore.GetData<GameSystemData>();
-                    hurtData.hurtInfo.duration = Mathf.Max(0, hurtData.hurtInfo.duration - gameSystemData.unscaleDeltaTime);
-                }
-
-                physics2DData.force.x = hurtData.hurtInfo.force.x;
+                physics2DData.force.x = hurtData.force.x;
 
                 objData.SetDirty(physics2DData);
             }

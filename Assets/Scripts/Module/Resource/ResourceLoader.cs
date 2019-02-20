@@ -58,7 +58,14 @@ namespace Module
                 {
                     attackData.attack = transform.Find("Attack").gameObject;
                     battleData.attackDictionary.Add(attackData.attack, objData.ObjectId);
-                    attackData.attack.SetActive(attackData.attackInfo.initial);
+
+                    var attackCollider2DList = transform.GetComponentsInChildren<AttackCollider2D>();
+                    for (var i = 0; i < attackCollider2DList.Length; i++)
+                    {
+                        attackCollider2DList[i].Init(objData);
+                    }
+
+                    attackData.attack.SetActive(attackData.attackEffect.initial);
                 }
 
                 var hurtData = objData.GetData<ResourceHurtData>();
@@ -114,8 +121,8 @@ namespace Module
             objData.AddData<ResourceHurtData>();
 
             var attackData = objData.AddData<ResourceAttackData>();
-            var attackInfo = worldMgr.BuffConfig.GetAttackInfo(actorInfo.defulttSkillAttackId);
-            attackData.attackInfo = attackInfo;
+            var effect = worldMgr.BuffConfig.GetEffect(actorInfo.defulttSkillEffectId);
+            attackData.attackEffect = effect;
 
             var resourceData = objData.AddData<ResourceData>();
             resourceData.resource = actorInfo.resourceName;
@@ -157,8 +164,8 @@ namespace Module
             resourceStateData.campType = camp;
 
             var attackData = objData.AddData<ResourceAttackData>();
-            var attackInfo = worldMgr.BuffConfig.GetAttackInfo(itemInfo.attackId);
-            attackData.attackInfo = attackInfo;
+            var effect = worldMgr.BuffConfig.GetEffect(itemInfo.attackId);
+            attackData.attackEffect = effect;
 
             objData.SetDirty();
             return objData;
@@ -172,14 +179,6 @@ namespace Module
             if (resourceData.gameObject != null)
             {
                 worldMgr.PoolMgr.ReleaseGameObject(resourceData.resource, resourceData.gameObject);
-                resourceData.gameObject = null;
-            }
-
-            var controller = objData.GetData<ActorController2DData>();
-            if (controller != null)
-            {
-                controller.rigidbody2D = null;
-                controller.foot = null;
             }
 
             var battleData = worldMgr.GameCore.GetData<BattleResourceData>();

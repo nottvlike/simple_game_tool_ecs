@@ -15,8 +15,8 @@ public struct ActorInfo
     public Vector3Int jump;
     public int airFriction;
     public SkillDefaultType defaultSkill;
+    public int defulttSkillEffectId;
     public int defaultSkillDuration;
-    public int defulttSkillAttackId;
 
     public BaseAttributeInfo attributeInfo;
 }

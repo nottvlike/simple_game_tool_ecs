@@ -20,7 +20,7 @@ namespace Module
         {
         }
 
-        public static void Attack(GameObject attack, GameObject hurt, int[] attackBuffList)
+        public static void Attack(GameObject attack, GameObject hurt, Buff[] attackBuffList)
         {
             var worldMgr = WorldManager.Instance;
 
@@ -38,20 +38,13 @@ namespace Module
                 hurtData.attackObjDataId = attackObjId;
 
                 var buffData = objData.GetData<ActorBuffData>();
-
-                for (var i = 0; i < attackBuffList.Length; i++)
-                {
-                    var buffId = attackBuffList[i];
-                    var buff = worldMgr.BuffConfig.Get(buffId);
-
-                    buffData.buffList.Add(buff);
-                }
+                buffData.buffList.AddRange(attackBuffList);
 
                 objData.SetDirty(buffData);
             }
         }
 
-        public static void Clear(GameObject hurt, int[] removeBuffList)
+        public static void Clear(GameObject hurt, Buff[] removeBuffList)
         {
             var worldMgr = WorldManager.Instance;
 
@@ -64,11 +57,11 @@ namespace Module
                 var buffList = buffData.buffList;
                 for (var i = 0; i < removeBuffList.Length; i++)
                 {
-                    var buffId = removeBuffList[i];
+                    var removeBuff = removeBuffList[i];
                     for (var j = 0; j < buffList.Count; j++)
                     {
                         var buff = buffList[j];
-                        if (buff.id == buffId)
+                        if (buff.id == removeBuff.id)
                         {
                             buff.buffState = BuffState.Finished;
                             buffList[j] = buff;

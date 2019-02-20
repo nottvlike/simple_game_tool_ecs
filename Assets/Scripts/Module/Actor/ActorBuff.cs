@@ -9,7 +9,7 @@ namespace Module
     {
         public BaseAttributeInfo baseAttribute;
         public ExtraAttributeInfo extraAttribute;
-        public ResourceHurtInfo hurtInfo;
+        public Vector3Int force;
 
         protected override void InitRequiredDataType()
         {
@@ -147,8 +147,8 @@ namespace Module
             extraAttribute.atk = attributeData.extraAttribute.atk;
             extraAttribute.def = attributeData.extraAttribute.def;
 
-            hurtInfo.force = Vector3Int.zero;
-            hurtInfo.duration = 0;
+            var hurtData = objData.GetData<ResourceHurtData>();
+            force = hurtData.force;
         }
 
         public void UpdateAttributeInfo(ObjectData objData)
@@ -165,13 +165,12 @@ namespace Module
             attributeData.extraAttribute.atk = extraAttribute.atk;
             attributeData.extraAttribute.def = extraAttribute.def;
 
-            var actorHurtData = objData.GetData<ResourceHurtData>();
-            actorHurtData.hurtInfo.force = hurtInfo.force;
-            actorHurtData.hurtInfo.duration = hurtInfo.duration;
+            var hurtData = objData.GetData<ResourceHurtData>();
+            hurtData.force += force;
 
             var actorData = objData.GetData<ActorData>();
             actorData.currentState |= (int)ActorStateType.Hurt;
-            objData.SetDirty(actorData, attributeData, actorHurtData);
+            objData.SetDirty(actorData, attributeData, hurtData);
         }
 
         public void AddBuffAttribute(ObjectData objData, Buff buff)
@@ -187,7 +186,7 @@ namespace Module
             {
                 value = buff.value[buff.currentCount];
             }
-            else
+            else if (buff.value.Length > 0)
             {
                 value = buff.value[0];
             }
@@ -216,16 +215,15 @@ namespace Module
                     break;
                 case BuffType.AddForce:
                     {
-                        var hurt = worldMgr.BuffConfig.GetHurtInfo(value);
+                        var hurt = buff.forceValue;
                         if (hurtData.attackObjDataId != 0)
                         {
                             var attackObjData = worldMgr.GetObjectData(hurtData.attackObjDataId);
                             var directionData = attackObjData.GetData<DirectionData>();
-                            hurt.force.x *= directionData.direction.x;
+                            hurt.x *= directionData.direction.x;
                         }
- 
-                        hurtInfo.force += hurt.force;
-                        hurtInfo.duration += hurt.duration;
+
+                        force += hurt;
                     }
                     break;
             }
