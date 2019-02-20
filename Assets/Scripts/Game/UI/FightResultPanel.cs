@@ -28,6 +28,21 @@ public class FightResultPanel : Panel
     void OnAgainClick()
     {
         var worldMgr = WorldManager.Instance;
+        var objDataList = worldMgr.ObjectDataList;
+        for (var i = 0; i < objDataList.Count;)
+        {
+            var objData = objDataList[i];
+            var resourceData = objData.GetData<ResourceData>();
+            if (resourceData != null)
+            {
+                Module.ResourceLoader.DestroyResource(objData);
+            }
+            else
+            {
+                i++;
+            }
+        }
+
         var battleData = worldMgr.GameCore.GetData<BattleData>();
         battleData.battleInitialize.StartBattle();
 
