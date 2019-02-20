@@ -9,8 +9,6 @@ namespace Module
         public Module()
         {
             InitRequiredDataType();
-
-            Enabled = true;
         }
 
         protected List<Type> _requiredDataTypeList = new List<Type>();
