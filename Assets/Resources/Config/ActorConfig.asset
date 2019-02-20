@@ -21,8 +21,8 @@ MonoBehaviour:
     jump: {x: 10, y: 40, z: 0}
     airFriction: 3
     defaultSkill: 2
+    defulttSkillEffectId: 1
     defaultSkillDuration: 100
-    defulttSkillAttackId: 1
     attributeInfo:
       hp: 100
       mp: 100
@@ -37,8 +37,8 @@ MonoBehaviour:
     jump: {x: 10, y: 40, z: 0}
     airFriction: 3
     defaultSkill: 3
+    defulttSkillEffectId: 1
     defaultSkillDuration: 100
-    defulttSkillAttackId: 1
     attributeInfo:
       hp: 100
       mp: 100

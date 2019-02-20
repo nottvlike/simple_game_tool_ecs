@@ -16,6 +16,7 @@ MonoBehaviour:
     buffType: 0
     valueType: 0
     value: ceffffff
+    forceValue: {x: 0, y: 0, z: 0}
     delay: 5000
     time: 0
     count: 1
@@ -25,6 +26,7 @@ MonoBehaviour:
     buffType: 0
     valueType: 0
     value: f6ffffff
+    forceValue: {x: 0, y: 0, z: 0}
     delay: 0
     time: 0
     count: 11
@@ -34,6 +36,7 @@ MonoBehaviour:
     buffType: 1
     valueType: 0
     value: 64000000
+    forceValue: {x: 0, y: 0, z: 0}
     delay: 0
     time: -1
     count: 1
@@ -42,9 +45,10 @@ MonoBehaviour:
   - id: 4
     buffType: 2
     valueType: 0
-    value: 01000000
+    value: 
+    forceValue: {x: 8, y: 30, z: 0}
     delay: 0
-    time: 0
+    time: 1000
     count: 1
     interval: 0
     buffAttribute: 0
@@ -52,19 +56,22 @@ MonoBehaviour:
     buffType: 0
     valueType: 0
     value: d8ffffff
+    forceValue: {x: 0, y: 0, z: 0}
     delay: 0
-    time: 0
+    time: 1000
     count: 1
     interval: 0
     buffAttribute: 0
-  hurtList:
+  effectList:
   - id: 1
-    force: {x: 8, y: 30, z: 0}
-    duration: 0
-  attackList:
-  - id: 1
-    buffList: 0400000005000000
+    selfBuffIdList: 
+    friendBuffIdList: 
+    enemyBuffIdList: 0400000005000000
+    duration: 1000
     initial: 0
   - id: 2
-    buffList: 010000000200000003000000
+    selfBuffIdList: 
+    friendBuffIdList: 
+    enemyBuffIdList: 010000000200000003000000
+    duration: 0
     initial: 1
