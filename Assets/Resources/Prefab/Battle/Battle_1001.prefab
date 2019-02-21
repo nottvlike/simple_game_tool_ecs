@@ -767,7 +767,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   battleId: 1001
-  resourceCreatorList:
+  resourceInitializeList:
   - {fileID: 114266522249887142}
   - {fileID: 114160994817724798}
   - {fileID: 114427648045511058}
