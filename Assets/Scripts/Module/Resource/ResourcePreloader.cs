@@ -10,7 +10,6 @@ namespace Module
 
         public ResourcePreloader()
         {
-            _notificationData = new NotificationData();
             _notificationData.id = Constant.NOTIFICATION_TYPE_RESOURCE_PRELOAD;
         }
 
