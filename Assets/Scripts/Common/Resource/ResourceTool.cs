@@ -2,12 +2,6 @@
 using System.Collections;
 using System.Collections.Generic;
 
-public enum ResourceNotificationType
-{
-    None,
-    InitFinished
-}
-
 public enum ResourceLoadStateType
 {
     None,

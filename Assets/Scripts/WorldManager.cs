@@ -7,7 +7,7 @@ public class ResourcePreloadNotification : BaseNotification
     public ResourcePreloadNotification()
     {
         _id = Constant.NOTIFICATION_TYPE_RESOURCE;
-        _typeList = new int[] { (int)ResourceNotificationType.InitFinished };
+        _typeList = new int[] { (int)ResourcePreloadType.GameInit };
 
         Enabled = true;
     }
