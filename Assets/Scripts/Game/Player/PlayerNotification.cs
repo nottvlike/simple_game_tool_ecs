@@ -18,7 +18,6 @@ public class PlayerNotification : BaseNotification
         _id = Constant.NOTIFICATION_TYPE_NETWORK;
         _typeList = new int[] {(int)Protocols.ResRoleInfo, (int)Protocols.ResCreateRole };
 
-        notification = new NotificationData();
         notification.id = Constant.NOTIFICATION_TYPE_PLAYER;
 
         Enabled = true;

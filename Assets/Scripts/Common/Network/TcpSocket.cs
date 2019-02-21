@@ -36,7 +36,7 @@ public class TcpSocket : ISocketTool, IUpdateEvent
 
     Socket _socket;
 
-    NotificationData _networkNotification = new NotificationData();
+    NotificationData _networkNotification;
 
     public TcpSocket()
     {

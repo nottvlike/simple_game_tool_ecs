@@ -25,7 +25,6 @@ public class UITool : IUITool
 
     public void Init()
     {
-        _notificationData = new NotificationData();
         _notificationData.id = Constant.NOTIFICATION_TYPE_UI;
     }
 
