@@ -112,13 +112,6 @@ public class ResourceTool : MonoSingleton<ResourceTool> , IResourceTool
     /// <param name="callback">加载成功的回调</param>
 	public void LoadAsync(string resourceName, OnResourceLoadFinished callback)
 	{
-        Object resource;
-        if (_resourceDict.TryGetValue(resourceName, out resource))
-        {
-            LoadAsyncFinished(resource, callback);
-            return;
-        }
-
         for (var i = 0; i < _asyncResourceRequestList.Count; i++)
         {
             var request = _asyncResourceRequestList[i];
@@ -170,30 +163,34 @@ public class ResourceTool : MonoSingleton<ResourceTool> , IResourceTool
     {
         ResourceLoadState = ResourceLoadStateType.Loading;
 
+        yield return null;
+
         Object resource;
-
-        if (resourceInfo.isFromAssetBundle)
+        if (!_resourceDict.TryGetValue(resourceInfo.resourceName, out resource))
         {
-            var assetbundlePath = string.Format("{0}{1}/{2}{3}", Application.streamingAssetsPath, PREFIX_ASSETBUNDLE_PATH, resourceInfo.assetbundlePath, SUFFIX_ASSETBUNDLE_PATH);
-            WWW www = new WWW(assetbundlePath);
-            yield return www;
+            if (resourceInfo.isFromAssetBundle)
+            {
+                var assetbundlePath = string.Format("{0}{1}/{2}{3}", Application.streamingAssetsPath, PREFIX_ASSETBUNDLE_PATH, resourceInfo.assetbundlePath, SUFFIX_ASSETBUNDLE_PATH);
+                WWW www = new WWW(assetbundlePath);
+                yield return www;
 
-            var bundle = www.assetBundle;
-            var request = bundle.LoadAssetAsync<GameObject>(resourceInfo.resourceName);
-            yield return request;
+                var bundle = www.assetBundle;
+                var request = bundle.LoadAssetAsync<GameObject>(resourceInfo.resourceName);
+                yield return request;
 
-            resource = request.asset;
-            bundle.Unload(false);
+                resource = request.asset;
+                bundle.Unload(false);
 
+            }
+            else
+            {
+                var request = Resources.LoadAsync(resourceInfo.resourcePath);
+                yield return request;
+                resource = request.asset;
+            }
+
+            _resourceDict.Add(resourceInfo.resourceName, resource);
         }
-        else
-        {
-            var request = Resources.LoadAsync(resourceInfo.resourcePath);
-            yield return request;
-            resource = request.asset;
-        }
-
-        _resourceDict.Add(resourceInfo.resourceName, resource);
 
         LoadAsyncFinished(resource, callback);
     }
