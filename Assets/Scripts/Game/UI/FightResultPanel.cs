@@ -35,7 +35,7 @@ public class FightResultPanel : Panel
             var resourceData = objData.GetData<ResourceData>();
             if (resourceData != null)
             {
-                Module.ResourceLoader.DestroyResource(objData);
+                Module.ResourceCreator.DestroyResource(objData);
             }
             else
             {
@@ -62,7 +62,7 @@ public class FightResultPanel : Panel
             var resourceData = objData.GetData<ResourceData>();
             if (resourceData != null)
             {
-                Module.ResourceLoader.DestroyResource(objData);
+                Module.ResourceCreator.DestroyResource(objData);
             }
             else
             {

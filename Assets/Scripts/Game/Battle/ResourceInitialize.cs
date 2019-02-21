@@ -1,7 +1,7 @@
 ﻿using UnityEngine;
 using Data;
 
-public class ResourceCreator : MonoBehaviour
+public class ResourceInitialize : MonoBehaviour
 {
     public int preloadId;
 
@@ -21,10 +21,10 @@ public class ResourceCreator : MonoBehaviour
         switch (_battlePreloadResourceInfo.resourceType)
         {
             case ResourceType.Actor:
-                _objData = Module.ResourceLoader.CreateActor(_battlePreloadResourceInfo.resourceId, _battlePreloadResourceInfo.campType, transform.position);
+                _objData = Module.ResourceCreator.CreateActor(_battlePreloadResourceInfo.resourceId, _battlePreloadResourceInfo.campType, transform.position);
                 break;
             case ResourceType.BattleItem:
-                _objData = Module.ResourceLoader.CreateBattleItem(_battlePreloadResourceInfo.resourceId, _battlePreloadResourceInfo.campType, transform.position);
+                _objData = Module.ResourceCreator.CreateBattleItem(_battlePreloadResourceInfo.resourceId, _battlePreloadResourceInfo.campType, transform.position);
                 break;
         }
     }

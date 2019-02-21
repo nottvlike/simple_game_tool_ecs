@@ -6,7 +6,7 @@ using Data;
 public class BattleInitialize : MonoBehaviour
 {
     public int battleId;
-    public ResourceCreator[] resourceCreatorList;
+    public ResourceInitialize[] resourceCreatorList;
 
     BattleVictoryContidion _battleVictoryCondition;
 
