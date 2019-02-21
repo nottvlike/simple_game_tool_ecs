@@ -28,6 +28,8 @@ public class FightPanel : Panel
                 Instantiate(obj);
             });
         }
+
+        worldMgr.UIMgr.ShowPanel(PanelType.AsyncPanel);
     }
 
     void OnExitClick()

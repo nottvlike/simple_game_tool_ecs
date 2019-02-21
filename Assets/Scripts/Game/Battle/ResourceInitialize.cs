@@ -8,10 +8,17 @@ public class ResourceInitialize : MonoBehaviour
     BattlePreloadResourceInfo _battlePreloadResourceInfo;
 
     Object _resource;
-    ObjectData _objData;
+
     public ObjectData ObjData
     {
-        get { return _objData; }
+        set;
+        get;
+    }
+
+    public bool IsLoaded
+    {
+        set;
+        get;
     }
 
     public void Init(int battleId)
@@ -21,11 +28,21 @@ public class ResourceInitialize : MonoBehaviour
         switch (_battlePreloadResourceInfo.resourceType)
         {
             case ResourceType.Actor:
-                _objData = Module.ResourceCreator.CreateActor(_battlePreloadResourceInfo.resourceId, _battlePreloadResourceInfo.campType, transform.position);
+                ObjData = Module.ResourceCreator.CreateActor(_battlePreloadResourceInfo.resourceId, _battlePreloadResourceInfo.campType, transform.position);
                 break;
             case ResourceType.BattleItem:
-                _objData = Module.ResourceCreator.CreateBattleItem(_battlePreloadResourceInfo.resourceId, _battlePreloadResourceInfo.campType, transform.position);
+                ObjData = Module.ResourceCreator.CreateBattleItem(_battlePreloadResourceInfo.resourceId, _battlePreloadResourceInfo.campType, transform.position);
                 break;
+        }
+    }
+
+    public void Release()
+    {
+        if (ObjData != null)
+        {
+            Module.ResourceCreator.ReleaseResource(ObjData);
+            ObjData = null;
+            IsLoaded = false;
         }
     }
 

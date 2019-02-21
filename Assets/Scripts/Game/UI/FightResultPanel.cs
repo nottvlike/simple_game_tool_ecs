@@ -25,41 +25,20 @@ public class FightResultPanel : Panel
         loseObj.SetActive(!isVictory);
     }
 
-    void ReleaseBattleResource()
-    {
-        var objDataList = WorldManager.Instance.ObjectDataList;
-        for (var i = 0; i < objDataList.Count;)
-        {
-            var objData = objDataList[i];
-            var resourceData = objData.GetData<ResourceData>();
-            if (resourceData != null)
-            {
-                Module.ResourceCreator.DestroyResource(objData);
-            }
-            else
-            {
-                i++;
-            }
-        }
-    }
-
     void OnAgainClick()
     {
-        ReleaseBattleResource();
-
         var worldMgr = WorldManager.Instance;
-        var battleData = worldMgr.GameCore.GetData<BattleData>();
-        battleData.battleInitialize.StartBattle();
 
         var uiMgr = worldMgr.UIMgr;
         uiMgr.ShowPanel(PanelType.FightPanel);
         uiMgr.HidePanel(PanelType);
+
+        var battleData = worldMgr.GameCore.GetData<BattleData>();
+        battleData.battleInitialize.StartBattle();
     }
 
     void OnExitClick()
     {
-        ReleaseBattleResource();
-
         var worldMgr = WorldManager.Instance;
         var battleData = worldMgr.GameCore.GetData<BattleData>();
         Destroy(battleData.battleInitialize.gameObject);

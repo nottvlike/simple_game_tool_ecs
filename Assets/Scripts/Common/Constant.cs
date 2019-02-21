@@ -11,6 +11,7 @@ public partial class Constant
     public const int NOTIFICATION_TYPE_ITEM     = 1000;
     public const int NOTIFICATION_TYPE_PLAYER   = 1001;
     public const int NOTIFICATION_TYPE_GAME_CORE = 1002;
+    public const int NOTIFICATION_TYPE_RESOURCE_LOADER = 1003;
 
     public const int SECOND_TO_MILLISECOND = 1000;
     public const int JOYSTICK_DELAY_FRAME_COUNT = 5;

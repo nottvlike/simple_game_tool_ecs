@@ -77,6 +77,7 @@ namespace Module
             resourceStateData.name = actorInfo.actorName;
             resourceStateData.resourceType = ResourceType.Actor;
             resourceStateData.campType = camp;
+            resourceStateData.resourceStateType = ResourceStateType.Load;
 
             if (camp == ResourceCampType.Player)
             {
@@ -105,6 +106,7 @@ namespace Module
             resourceStateData.name = itemInfo.itemName;
             resourceStateData.resourceType = ResourceType.BattleItem;
             resourceStateData.campType = camp;
+            resourceStateData.resourceStateType = ResourceStateType.Load;
 
             var attackData = objData.AddData<ResourceAttackData>();
             var effect = worldMgr.BuffConfig.GetEffect(itemInfo.attackId);
@@ -114,30 +116,14 @@ namespace Module
             return objData;
         }
 
-        public static void DestroyResource(ObjectData objData)
+        public static void ReleaseResource(ObjectData objData)
         {
-            var worldMgr = WorldManager.Instance;
+            var resourceStateData = objData.GetData<ResourceStateData>();
+            resourceStateData.resourceStateType = ResourceStateType.Release;
 
-            var resourceData = objData.GetData<ResourceData>();
-            if (resourceData.gameObject != null)
-            {
-                worldMgr.PoolMgr.ReleaseGameObject(resourceData.resource, resourceData.gameObject);
-            }
+            objData.SetDirty(resourceStateData);
 
-            var battleData = worldMgr.GameCore.GetData<BattleResourceData>();
-            var hurtData = objData.GetData<ResourceHurtData>();
-            if (hurtData != null)
-            {
-                battleData.hurtDictionary.Remove(hurtData.hurt);
-            }
-
-            var attackData = objData.GetData<ResourceAttackData>();
-            if (attackData != null)
-            {
-                battleData.attackDictionary.Remove(attackData.attack);
-            }
-
-            worldMgr.PoolMgr.ReleaseObjData(objData);
+            WorldManager.Instance.PoolMgr.ReleaseObjData(objData);
         }
     }
 }

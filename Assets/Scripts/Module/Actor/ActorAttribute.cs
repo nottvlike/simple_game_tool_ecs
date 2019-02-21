@@ -33,10 +33,7 @@ namespace Module
 
             if (totalLeftHp <= 0)
             {
-                ResourceCreator.DestroyResource(objData);
-
-                var battleData = WorldManager.Instance.GameCore.GetData<BattleData>();
-                battleData.battleInitialize.OnActorDied(objData.ObjectId);
+                ResourceCreator.ReleaseResource(objData);
             }
         }
     }

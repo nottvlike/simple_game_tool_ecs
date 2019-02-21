@@ -3,6 +3,13 @@ using UnityEngine;
 
 namespace Data
 {
+    public enum ResourceStateType
+    {
+        None,
+        Load,
+        Release,
+    }
+
     public enum ResourceType
     {
         None,
@@ -42,6 +49,7 @@ namespace Data
         public bool isInstantiated;
         public ResourceType resourceType;
         public ResourceCampType campType;
+        public ResourceStateType resourceStateType;
 
         public override void Clear()
         {
@@ -50,6 +58,7 @@ namespace Data
             isInstantiated = false;
             resourceType = ResourceType.None;
             campType = ResourceCampType.None;
+            resourceStateType = ResourceStateType.None;
         }
     }
 

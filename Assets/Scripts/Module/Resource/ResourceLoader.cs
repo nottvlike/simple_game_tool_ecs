@@ -7,6 +7,13 @@ namespace Module
 {
     public class ResourceLoader : Module
     {
+        NotificationData _notificationData;
+
+        public ResourceLoader()
+        {
+            _notificationData.id = Constant.NOTIFICATION_TYPE_RESOURCE_LOADER;
+        }
+
         protected override void InitRequiredDataType()
         {
             _requiredDataTypeList.Add(typeof(ResourceData));
@@ -21,18 +28,20 @@ namespace Module
         public override void Refresh(ObjectData objData)
         {
             var resourceStateData = objData.GetData<ResourceStateData>();
-            var resourceData = objData.GetData<ResourceData>();
-            if (!string.IsNullOrEmpty(resourceData.resource) && resourceStateData.isGameObject)
+            if (resourceStateData.resourceStateType == ResourceStateType.Load)
             {
-                if (!resourceStateData.isInstantiated)
-                {
-                    LoadResource(objData, resourceStateData, resourceData);
-                }
+                LoadResource(objData, resourceStateData);
+            }
+            else
+            {
+                ReleaseResource(objData, resourceStateData);
             }
         }
 
-        void LoadResource(ObjectData objData, ResourceStateData resourceStateData, ResourceData resourceData)
+        void LoadResource(ObjectData objData, ResourceStateData resourceStateData)
         {
+            var resourceData = objData.GetData<ResourceData>();
+
             var worldMgr = WorldManager.Instance;
             worldMgr.ResourceMgr.LoadAsync(resourceData.resource, delegate (Object obj)
             {
@@ -74,7 +83,46 @@ namespace Module
                     hurtData.hurt = transform.Find("Hurt").gameObject;
                     battleData.hurtDictionary.Add(hurtData.hurt, objData.ObjectId);
                 }
+
+                _notificationData.mode = NotificationMode.Object;
+                _notificationData.type = (int)ResourceStateType.Load;
+                _notificationData.data1 = objData;
+
+                worldMgr.NotificationCenter.Notificate(_notificationData);
             });
+        }
+
+        void ReleaseResource(ObjectData objData, ResourceStateData resourceStateData)
+        {
+            var worldMgr = WorldManager.Instance;
+
+            var resourceData = objData.GetData<ResourceData>();
+
+            resourceStateData.isInstantiated = false;
+
+            if (resourceData.gameObject != null)
+            {
+                worldMgr.PoolMgr.ReleaseGameObject(resourceData.resource, resourceData.gameObject);
+            }
+
+            var battleData = worldMgr.GameCore.GetData<BattleResourceData>();
+            var hurtData = objData.GetData<ResourceHurtData>();
+            if (hurtData != null)
+            {
+                battleData.hurtDictionary.Remove(hurtData.hurt);
+            }
+
+            var attackData = objData.GetData<ResourceAttackData>();
+            if (attackData != null)
+            {
+                battleData.attackDictionary.Remove(attackData.attack);
+            }
+
+            _notificationData.mode = NotificationMode.Object;
+            _notificationData.type = (int)ResourceStateType.Release;
+            _notificationData.data1 = objData;
+
+            worldMgr.NotificationCenter.Notificate(_notificationData);
         }
     }
 }
