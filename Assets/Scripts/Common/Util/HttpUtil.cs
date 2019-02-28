@@ -107,7 +107,7 @@ public class HttpUtil
     {
         if (callback != null)
         {
-            WorldManager.Instance.TimerMgr.AddOnce(0, delegate ()
+            WorldManager.Instance.TimerMgr.AddOnce(WAIT_TIME, delegate ()
             {
                 callback(resultType, result);
             });
