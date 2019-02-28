@@ -13,16 +13,22 @@ unity 客户端游戏框架
 写一些自己使用某些技术搭建框架的原因（或者说添加某些代码的原因）：
 
 *   Notification 模块，作为连接各个模块的公路，降低各个模块之前的耦合；
-*   Factory 和一些接口将各个系统完全隔绝起来了，记得 ogre 好像用过这种，但是我倒没热插拔这种需求；
 *   各个系统内部通信，能用委托就用委托就行了；
-*   添加 NotificationMode 区分 Notification 是 Object 还是 ValueType， 是为了通信的装箱，拆箱操作；
+*   添加 NotificationMode 区分 Notification 是 Object 还是 ValueType， 是为了减少通信的装箱，拆箱操作，多此一举是因为通讯模块使用会很频繁；
 *   ObjectData 里通过静态成员变量，保存了添加特定 Module 的所有 BaseObject 的 Id，按照 ecs 架构 Module 作为组件不能保存数据， 所以这样虽然有点丑，但也暂时没别的好办法；
 *   Data改为 Class了，用struct没法继承的话不好写
 *   Data 类型没有 Id，因此只能通过 GetData<T>() 获取，这也产生了另一个问题，对于同一个 BaseObject，Data 不能重复；
-*   Common 存放了与具体游戏逻辑无关的代码；
+*   Common 存放了与具体游戏逻辑无关的代码，或者说暂时没打算设计成 ecs 的代码；
 *   为了可移植性，将 unity 的代码尽可能的放一个地方，尽可能少的减少 unity 的 api 对于整体框架的影响；
 
 ## 注意
 我这里的开发版本是 unity 2018.2.7，ResourceManager 里面之前用到了 litjson，后来又改成了 unity5 的 json 接口，所以低版本 unity 想要适配的话，需要自己改动下 ResourceManager 里的代码。
 
 之前的代码都是在 oschina 提交的，所以 github 没有提交日志。
+
+## 计划
+*	完善战斗模块；
+*	添加任务对话功能；
+*	重构资源 preload 模块，当前的有点鸡肋；
+*	添加 unity 编辑器辅助工具；
+*	添加内网同步功能；
