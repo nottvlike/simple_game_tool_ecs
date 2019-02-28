@@ -48,8 +48,6 @@ public class HttpUtil
         return result;
     }
 
-    const int WAIT_TIME = 4000;
-
     public static void GetAsync(string url, WebRequestResult resultCallback)
     {
         try
@@ -102,6 +100,8 @@ public class HttpUtil
             WebRequestFinished(webResult, WebRequestResultType.Unknown, string.Empty);
         }
     }
+
+    const int WAIT_TIME = 4000;
 
     static void WebRequestFinished(WebRequestResult callback, WebRequestResultType resultType, string result)
     {
