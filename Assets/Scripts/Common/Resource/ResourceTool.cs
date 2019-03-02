@@ -39,6 +39,8 @@ public class ResourceTool : MonoSingleton<ResourceTool> , IResourceTool
     Dictionary<string, Object> _resourceDict = new Dictionary<string, Object>();
     List<AsyncResourceRequest> _asyncResourceRequestList = new List<AsyncResourceRequest>();
 
+    ResourceInfo _defaultResourceInfo;
+
     NotificationData _notificationData;
 
     ResourceLoadStateType _resourceLoadState = ResourceLoadStateType.None;
@@ -211,6 +213,18 @@ public class ResourceTool : MonoSingleton<ResourceTool> , IResourceTool
         }
 
         ResourceLoadState = ResourceLoadStateType.Finished;
+    }
+
+    public ResourceInfo Get(string resourceName)
+    {
+        ResourceInfo info;
+        if (!_resourceInfoDict.TryGetValue(resourceName, out info))
+        {
+            LogUtil.I("Failed to find resource info {0}!", resourceName);
+            info = _defaultResourceInfo;
+        }
+
+        return info;
     }
 
     public void Destroy()

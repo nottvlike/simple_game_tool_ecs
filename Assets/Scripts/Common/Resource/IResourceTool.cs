@@ -10,5 +10,7 @@ public interface IResourceTool
     Object Load(string resourceName);
     void LoadAsync(string resourceName, OnResourceLoadFinished func);
 
+    ResourceInfo Get(string resourceName);
+
     void Destroy();
 }
