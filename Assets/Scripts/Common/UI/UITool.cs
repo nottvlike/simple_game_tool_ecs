@@ -8,7 +8,7 @@ public enum PanelNotificationType
     ClosePanel
 }
 
-public delegate void OnRootLoadedFinished(PanelType panelType);
+public delegate void OnRootLoadedFinished();
 
 public class UITool : IUITool
 {
@@ -28,7 +28,7 @@ public class UITool : IUITool
         _notificationData.id = Constant.NOTIFICATION_TYPE_UI;
     }
 
-    void LoadUIRoot(PanelType panelType, OnRootLoadedFinished onLoaded)
+    void LoadUIRoot(OnRootLoadedFinished onLoaded)
     {
         // 异步加载 UI
         WorldManager.Instance.ResourceMgr.LoadAsync("UI Root", delegate (Object obj)
@@ -38,7 +38,7 @@ public class UITool : IUITool
                 _uiRoot = Object.Instantiate(obj, Vector3.zero, Quaternion.identity) as GameObject;
             }
 
-            onLoaded(panelType);
+            onLoaded();
         });
     }
 
@@ -111,7 +111,7 @@ public class UITool : IUITool
     {
         if (_uiRoot == null)
         {
-            LoadUIRoot(panelType, delegate {
+            LoadUIRoot(delegate {
                 ShowPanel(panelType, args);
             });
             return;
@@ -184,11 +184,7 @@ public class UITool : IUITool
                 {
                     if (!IsPanelLoaded(panelType))
                     {
-                        var panelObject = Object.Instantiate(obj, Vector3.zero, Quaternion.identity) as GameObject;
-                        var rectTransform = panelObject.GetComponent<RectTransform>();
-                        rectTransform.SetParent(_uiRoot.transform);
-                        rectTransform.offsetMax = Vector2.zero;
-                        rectTransform.offsetMin = Vector2.zero;
+                        LoadPanel(obj);
                     }
 
                     ShowPanelImpl(panelType, args);
@@ -201,7 +197,7 @@ public class UITool : IUITool
     {
         if (_uiRoot == null)
         {
-            LoadUIRoot(panelType, delegate {
+            LoadUIRoot(delegate {
                 HidePanel(panelType);
             });
             return;
@@ -257,11 +253,29 @@ public class UITool : IUITool
         }
     }
 
+    public void LoadPanel(Object obj)
+    {
+        if (_uiRoot == null)
+        {
+            LoadUIRoot(delegate {
+                LoadPanel(obj);
+            });
+        }
+        else
+        {
+            var panelObject = Object.Instantiate(obj, Vector3.zero, Quaternion.identity) as GameObject;
+            var rectTransform = panelObject.GetComponent<RectTransform>();
+            rectTransform.SetParent(_uiRoot.transform);
+            rectTransform.offsetMax = Vector2.zero;
+            rectTransform.offsetMin = Vector2.zero;
+        }
+    }
+
     public void ShowLastShowedPanel(params object[] args)
     {
         if (_uiRoot == null)
         {
-            LoadUIRoot(_lastShowedPanelType, delegate {
+            LoadUIRoot(delegate {
                 ShowLastShowedPanel(args);
             });
             return;

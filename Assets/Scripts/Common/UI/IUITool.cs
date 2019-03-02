@@ -47,5 +47,7 @@ public interface IUITool
     void HidePanel(PanelType panelType);
     void ShowLastShowedPanel(params object[] args);
 
+    void LoadPanel(Object obj);
+
     void Destroy();
 }
