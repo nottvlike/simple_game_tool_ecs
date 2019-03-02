@@ -7,8 +7,8 @@ using Data;
 public struct BattlePreloadResourceInfo
 {
     public int preloadId;
-    public ResourceType resourceType;
-    public ResourceCampType campType;
+    public CreatureType resourceType;
+    public CreatureCampType campType;
     public int resourceId;
 }
 

@@ -18,33 +18,36 @@ namespace Module
         {
             _requiredDataTypeList.Add(typeof(ResourceData));
             _requiredDataTypeList.Add(typeof(ResourceStateData));
+            _requiredDataTypeList.Add(typeof(CreatureStateData));
         }
 
         public override bool IsUpdateRequired(Data.Data data)
         {
-            return data.GetType() == typeof(ResourceStateData) || data.GetType() == typeof(ResourceData);
+            return data.GetType() == typeof(ResourceStateData) || data.GetType() == typeof(ResourceData) 
+                       || data.GetType() == typeof(CreatureStateData);
         }
 
         public override void Refresh(ObjectData objData)
         {
-            var resourceStateData = objData.GetData<ResourceStateData>();
-            if (resourceStateData.resourceStateType == ResourceStateType.Load)
+            var creatureStateData = objData.GetData<CreatureStateData>();
+            if (creatureStateData.stateType == CreatureStateType.Load)
             {
-                LoadResource(objData, resourceStateData);
+                LoadResource(objData, creatureStateData);
             }
-            else
+            else if (creatureStateData.stateType == CreatureStateType.Release)
             {
-                ReleaseResource(objData, resourceStateData);
+                ReleaseResource(objData);
             }
         }
 
-        void LoadResource(ObjectData objData, ResourceStateData resourceStateData)
+        void LoadResource(ObjectData objData, CreatureStateData creatureStateData)
         {
             var resourceData = objData.GetData<ResourceData>();
 
             var worldMgr = WorldManager.Instance;
             worldMgr.ResourceMgr.LoadAsync(resourceData.resource, delegate (Object obj)
             {
+                var resourceStateData = objData.GetData<ResourceStateData>();
                 resourceStateData.isInstantiated = true;
                 var resource = worldMgr.PoolMgr.GetGameObject(resourceData.resource, obj);
                 var transform = resource.transform;
@@ -52,7 +55,7 @@ namespace Module
                 resource.name = resourceStateData.name;
                 resource.transform.position = resourceData.initialPosition;
 
-                if (resourceStateData.resourceType == ResourceType.Actor)
+                if (creatureStateData.type == CreatureType.Actor)
                 {
                     var controller = objData.GetData<ActorController2DData>();
                     var rigidbody2D = resource.GetComponent<Rigidbody2D>();
@@ -85,19 +88,20 @@ namespace Module
                 }
 
                 _notificationData.mode = NotificationMode.Object;
-                _notificationData.type = (int)ResourceStateType.Load;
+                _notificationData.type = (int)CreatureStateType.Load;
                 _notificationData.data1 = objData;
 
                 worldMgr.NotificationCenter.Notificate(_notificationData);
             });
         }
 
-        void ReleaseResource(ObjectData objData, ResourceStateData resourceStateData)
+        void ReleaseResource(ObjectData objData)
         {
             var worldMgr = WorldManager.Instance;
 
             var resourceData = objData.GetData<ResourceData>();
 
+            var resourceStateData = objData.GetData<ResourceStateData>();
             resourceStateData.isInstantiated = false;
 
             if (resourceData.gameObject != null)
@@ -119,7 +123,7 @@ namespace Module
             }
 
             _notificationData.mode = NotificationMode.Object;
-            _notificationData.type = (int)ResourceStateType.Release;
+            _notificationData.type = (int)CreatureStateType.Release;
             _notificationData.data1 = objData;
 
             worldMgr.NotificationCenter.Notificate(_notificationData);

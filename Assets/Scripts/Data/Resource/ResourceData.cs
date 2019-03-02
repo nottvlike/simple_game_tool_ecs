@@ -3,21 +3,21 @@ using UnityEngine;
 
 namespace Data
 {
-    public enum ResourceStateType
+    public enum CreatureStateType
     {
         None,
         Load,
         Release,
     }
 
-    public enum ResourceType
+    public enum CreatureType
     {
         None,
         Actor,
         BattleItem
     }
 
-    public enum ResourceCampType
+    public enum CreatureCampType
     {
         None,
         Player,
@@ -47,18 +47,27 @@ namespace Data
         public string name;
         public bool isGameObject;
         public bool isInstantiated;
-        public ResourceType resourceType;
-        public ResourceCampType campType;
-        public ResourceStateType resourceStateType;
 
         public override void Clear()
         {
             name = string.Empty;
             isGameObject = false;
             isInstantiated = false;
-            resourceType = ResourceType.None;
-            campType = ResourceCampType.None;
-            resourceStateType = ResourceStateType.None;
+        }
+    }
+
+    [Serializable]
+    public class CreatureStateData : Data
+    {
+        public CreatureType type;
+        public CreatureCampType campType;
+        public CreatureStateType stateType;
+
+        public override void Clear()
+        {
+            type = CreatureType.None;
+            campType = CreatureCampType.None;
+            stateType = CreatureStateType.None;
         }
     }
 

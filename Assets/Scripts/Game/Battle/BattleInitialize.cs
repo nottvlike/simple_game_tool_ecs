@@ -12,13 +12,13 @@ public class BattleNotification : BaseNotification
         _battleInitialize = battleInitialize;
 
         _id = Constant.NOTIFICATION_TYPE_RESOURCE_LOADER;
-        _typeList = new int[]{ (int)ResourceStateType.Load, (int)ResourceStateType.Release };
+        _typeList = new int[]{ (int)CreatureStateType.Load, (int)CreatureStateType.Release };
     }
 
     public override void OnReceive(int type, object notificationData)
     {
         var objData = (ObjectData)notificationData;
-        if (type == (int)ResourceStateType.Load)
+        if (type == (int)CreatureStateType.Load)
         {
             _battleInitialize.OnResourceLoaded(objData);
         }

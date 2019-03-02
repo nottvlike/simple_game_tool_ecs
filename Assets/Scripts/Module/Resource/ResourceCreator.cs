@@ -20,7 +20,7 @@ namespace Module
         {
         }
 
-        public static ObjectData CreateActor(int actorId, ResourceCampType camp, Vector3 initialPosition)
+        public static ObjectData CreateActor(int actorId, CreatureCampType camp, Vector3 initialPosition)
         {
             var worldMgr = WorldManager.Instance;
 
@@ -75,11 +75,13 @@ namespace Module
             resourceStateData.isGameObject = true;
             resourceStateData.isInstantiated = false;
             resourceStateData.name = actorInfo.actorName;
-            resourceStateData.resourceType = ResourceType.Actor;
-            resourceStateData.campType = camp;
-            resourceStateData.resourceStateType = ResourceStateType.Load;
 
-            if (camp == ResourceCampType.Player)
+            var creatureStateData = objData.AddData<CreatureStateData>();
+            creatureStateData.type = CreatureType.Actor;
+            creatureStateData.campType = camp;
+            creatureStateData.stateType = CreatureStateType.Load;
+
+            if (camp == CreatureCampType.Player)
             {
                 objData.AddData<ClientJoyStickData>();
                 objData.AddData<FollowCameraData>();
@@ -89,7 +91,7 @@ namespace Module
             return objData;
         }
 
-        public static ObjectData CreateBattleItem(int itemId, ResourceCampType camp, Vector3 initialPosition)
+        public static ObjectData CreateBattleItem(int itemId, CreatureCampType camp, Vector3 initialPosition)
         {
             var worldMgr = WorldManager.Instance;
 
@@ -104,9 +106,11 @@ namespace Module
             resourceStateData.isGameObject = true;
             resourceStateData.isInstantiated = false;
             resourceStateData.name = itemInfo.itemName;
-            resourceStateData.resourceType = ResourceType.BattleItem;
-            resourceStateData.campType = camp;
-            resourceStateData.resourceStateType = ResourceStateType.Load;
+
+            var creatureStateData = objData.AddData<CreatureStateData>();
+            creatureStateData.type = CreatureType.BattleItem;
+            creatureStateData.campType = camp;
+            creatureStateData.stateType = CreatureStateType.Load;
 
             var attackData = objData.AddData<ResourceAttackData>();
             var effect = worldMgr.BuffConfig.GetEffect(itemInfo.attackId);
@@ -118,10 +122,10 @@ namespace Module
 
         public static void ReleaseResource(ObjectData objData)
         {
-            var resourceStateData = objData.GetData<ResourceStateData>();
-            resourceStateData.resourceStateType = ResourceStateType.Release;
+            var creatureStateData = objData.GetData<CreatureStateData>();
+            creatureStateData.stateType = CreatureStateType.Release;
 
-            objData.SetDirty(resourceStateData);
+            objData.SetDirty(creatureStateData);
 
             WorldManager.Instance.PoolMgr.ReleaseObjData(objData);
         }

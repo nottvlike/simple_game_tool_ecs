@@ -27,10 +27,10 @@ public class ResourceInitialize : MonoBehaviour
         _battlePreloadResourceInfo = GetBattlePreloadResourceInfo(battleInfo);
         switch (_battlePreloadResourceInfo.resourceType)
         {
-            case ResourceType.Actor:
+            case CreatureType.Actor:
                 ObjData = Module.ResourceCreator.CreateActor(_battlePreloadResourceInfo.resourceId, _battlePreloadResourceInfo.campType, transform.position);
                 break;
-            case ResourceType.BattleItem:
+            case CreatureType.BattleItem:
                 ObjData = Module.ResourceCreator.CreateBattleItem(_battlePreloadResourceInfo.resourceId, _battlePreloadResourceInfo.campType, transform.position);
                 break;
         }

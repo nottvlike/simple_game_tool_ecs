@@ -58,8 +58,8 @@ public class JoyStickActionItem : MonoBehaviour, IPointerDownHandler, IPointerUp
         for (var i = 0; i < objectDataList.Count; i++)
         {
             var objData = objectDataList[i];
-            var resourceStateData = objData.GetData<ResourceStateData>();
-            if (resourceStateData != null && resourceStateData.campType == ResourceCampType.Player)
+            var creatureStateData = objData.GetData<CreatureStateData>();
+            if (creatureStateData != null && creatureStateData.campType == CreatureCampType.Player)
             {
                 return objData;
             }
