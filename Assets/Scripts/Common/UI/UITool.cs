@@ -161,6 +161,8 @@ public class UITool : IUITool
 
     void ShowPanelImpl(PanelType panelType, params object[] args)
     {
+        var worldMgr = WorldManager.Instance;
+
         Panel data;
         if (_panelDataDict.TryGetValue(panelType, out data))
         {
@@ -170,7 +172,7 @@ public class UITool : IUITool
             _notificationData.type = (int)PanelNotificationType.OpenPanel;
             _notificationData.mode = NotificationMode.Object;
             _notificationData.data1 = data;
-            WorldManager.Instance.NotificationCenter.Notificate(_notificationData);
+            worldMgr.NotificationCenter.Notificate(_notificationData);
         }
         else
         {
@@ -178,7 +180,7 @@ public class UITool : IUITool
             if (panelConfig.panelType != PanelType.None)
             {
                 // 异步加载 UI
-                WorldManager.Instance.ResourceMgr.LoadAsync(panelConfig.resourceName, delegate (Object obj)
+                worldMgr.ResourceMgr.LoadAsync(panelConfig.resourceName, delegate (Object obj)
                 {
                     if (!IsPanelLoaded(panelType))
                     {
