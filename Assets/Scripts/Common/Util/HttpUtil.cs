@@ -48,6 +48,8 @@ public class HttpUtil
         return result;
     }
 
+    const int WAIT_TIME = 4000;
+
     public static void GetAsync(string url, WebRequestResult resultCallback)
     {
         try
@@ -101,13 +103,11 @@ public class HttpUtil
         }
     }
 
-    const int WAIT_TIME = 4000;
-
     static void WebRequestFinished(WebRequestResult callback, WebRequestResultType resultType, string result)
     {
         if (callback != null)
         {
-            WorldManager.Instance.TimerMgr.AddOnce(WAIT_TIME, delegate ()
+            WorldManager.Instance.TimerMgr.AddOnce(0, delegate ()
             {
                 callback(resultType, result);
             });
