@@ -3,6 +3,14 @@ using UnityEngine;
 
 namespace Data
 {
+    public enum ResourceType
+    {
+        None,
+        Creature,
+        Config,
+        UI
+    }
+
     public enum CreatureStateType
     {
         None,

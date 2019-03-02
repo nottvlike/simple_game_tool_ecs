@@ -2,12 +2,14 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using Data;
 
 [Serializable]
 public struct ResourceInfo
 {
     public string resourceName;
     public string resourcePath;
+    public ResourceType type;
     public string assetbundlePath;
     public bool isFromAssetBundle;
 

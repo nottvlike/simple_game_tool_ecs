@@ -33,6 +33,12 @@ namespace Module
                 var resourceName = resourceNameList[i];
                 worldMgr.ResourceMgr.LoadAsync(resourceName, delegate (Object obj)
                 {
+                    var reourceInfo = worldMgr.ResourceMgr.Get(resourceName);
+                    if (reourceInfo.type == Data.ResourceType.UI)
+                    {
+                        worldMgr.UIMgr.LoadPanel(obj);
+                    }
+
                     resourcePreloadData.preloadCount++;
 
                     if (resourcePreloadData.preloadCount == resourceNameList.Length)
