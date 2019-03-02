@@ -14,69 +14,86 @@ MonoBehaviour:
   resourceDataList:
   - resourceName: Cube
     resourcePath: Prefab/Actor/Cube
+    type: 1
     assetbundlePath: 
     isFromAssetBundle: 0
   - resourceName: UI Root
     resourcePath: Prefab/UI/UI Root
+    type: 0
     assetbundlePath: 
     isFromAssetBundle: 0
   - resourceName: GameUpdatePanel
     resourcePath: Prefab/UI/GameUpdatePanel
+    type: 3
     assetbundlePath: 
     isFromAssetBundle: 0
   - resourceName: LoginPanel
     resourcePath: Prefab/UI/LoginPanel
+    type: 3
     assetbundlePath: 
     isFromAssetBundle: 0
   - resourceName: ServerPanel
     resourcePath: Prefab/UI/ServerPanel
+    type: 3
     assetbundlePath: 
     isFromAssetBundle: 0
   - resourceName: CreateRolePanel
     resourcePath: Prefab/UI/CreateRolePanel
+    type: 3
     assetbundlePath: 
     isFromAssetBundle: 0
   - resourceName: FightPanel
     resourcePath: Prefab/UI/FightPanel
+    type: 3
     assetbundlePath: 
     isFromAssetBundle: 0
   - resourceName: MainPanel
     resourcePath: Prefab/UI/MainPanel
+    type: 3
     assetbundlePath: 
     isFromAssetBundle: 0
   - resourceName: RoleSelectPanel
     resourcePath: Prefab/UI/RoleSelectPanel
+    type: 3
     assetbundlePath: 
     isFromAssetBundle: 0
   - resourceName: AsyncPanel
     resourcePath: Prefab/UI/AsyncPanel
+    type: 3
     assetbundlePath: 
     isFromAssetBundle: 0
   - resourceName: SimpleTipsPanel
     resourcePath: Prefab/UI/SimpleTipsPanel
+    type: 3
     assetbundlePath: 
     isFromAssetBundle: 0
   - resourceName: YesNoPanel
     resourcePath: Prefab/UI/YesNoPanel
+    type: 3
     assetbundlePath: 
     isFromAssetBundle: 0
   - resourceName: MainConfigGroup
     resourcePath: Config/MainConfigGroup
+    type: 2
     assetbundlePath: 
     isFromAssetBundle: 0
   - resourceName: PreloadConfigGroup
     resourcePath: Config/PreloadConfigGroup
+    type: 2
     assetbundlePath: 
     isFromAssetBundle: 0
   - resourceName: Attack
     resourcePath: Prefab/BattleItem/Attack
+    type: 1
     assetbundlePath: 
     isFromAssetBundle: 0
   - resourceName: Battle_1001
     resourcePath: Prefab/Battle/Battle_1001
+    type: 0
     assetbundlePath: 
     isFromAssetBundle: 0
   - resourceName: FightResultPanel
     resourcePath: Prefab/UI/FightResultPanel
+    type: 3
     assetbundlePath: 
     isFromAssetBundle: 0
