@@ -33,20 +33,22 @@ namespace Module
             }
 
             var controllerData = objData.GetData<ActorController2DData>();
-            var raycast2DHit = Physics2D.Raycast(controllerData.foot.position, -Vector2.up, Constant.ACTOR_RAYCAST_GROUND_DISTANCE, 
-                LayerMask.GetMask(Constant.LAYER_GROUND_NAME));
-            if (raycast2DHit.collider != null)
+            var collider2D = Physics2D.OverlapBox(controllerData.groundCollider2D.transform.position,
+                                                  controllerData.groundCollider2D.size, 0, LayerMask.GetMask(Constant.LAYER_GROUND_NAME));
+            if (collider2D != null)
             {
-                controllerData.groundY = Mathf.RoundToInt(raycast2DHit.point.y * Constant.UNITY_UNIT_TO_GAME_UNIT);
+                controllerData.isGround = true;
+                LogUtil.I("controllerData ground name {0}", collider2D.gameObject.name);
             }
             else
             {
-                controllerData.groundY = controllerData.positionY - 1000;
+                controllerData.isGround = false;
             }
 
+            LogUtil.I("controllerData.isGround {0}", controllerData.isGround);
+
             var physics2DData = objData.GetData<Physics2DData>();
-            var isGround = IsGround(controllerData);
-            if (IsGround(controllerData) && physics2DData.force.x == 0 && physics2DData.force.y == 0)
+            if (controllerData.isGround && physics2DData.force.x == 0 && physics2DData.force.y == 0)
             {
                 Stop(objData.ObjectId);
                 return;
@@ -65,16 +67,8 @@ namespace Module
             var deltaX = directionData.direction.x * physics2DData.force.x * gameSystemData.unscaleDeltaTime;
             var deltaY = forceY * gameSystemData.unscaleDeltaTime;
 
-            var distanceY = Mathf.Abs(controllerData.groundY - controllerData.positionY);
-            if ((isGround && deltaY < 0) || !isGround && Mathf.Abs(deltaY) > distanceY)
-            {
-                deltaY = deltaY > 0 ? distanceY : -distanceY;
-            }
-
             _movePosition.x = (float)deltaX / Constant.UNITY_UNIT_TO_GAME_UNIT;
             _movePosition.y = (float)deltaY / Constant.UNITY_UNIT_TO_GAME_UNIT;
-
-            controllerData.positionY = Mathf.RoundToInt(controllerData.foot.position.y * Constant.UNITY_UNIT_TO_GAME_UNIT);
 
             var rb2d = controllerData.rigidbody2D;
             rb2d.MovePosition(rb2d.position + _movePosition);
@@ -82,8 +76,7 @@ namespace Module
 
         public static bool IsGround(ActorController2DData controllerData)
         {
-            // unity 碰撞体之间没有完全接触，这里把误差暂时定在20以内。
-            return Mathf.Abs(controllerData.groundY - controllerData.positionY) < Constant.ACTOR_COLLIDER_MAGIC_Y;
+            return controllerData.isGround;
         }
     }
 }

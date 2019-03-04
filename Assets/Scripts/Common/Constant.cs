@@ -34,8 +34,6 @@ public partial class Constant
 
     public const int ACTOR_COLLIDER_MAGIC_Y = 20;
 
-    public const float ACTOR_RAYCAST_GROUND_DISTANCE = 0.1f;
-
     public const string LAYER_GROUND_NAME = "Ground";
 
     public const float PERCENT = 0.0001f;

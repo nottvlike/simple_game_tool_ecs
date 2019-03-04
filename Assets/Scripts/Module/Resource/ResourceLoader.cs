@@ -59,10 +59,10 @@ namespace Module
                 if (creatureStateData.type == CreatureType.Actor)
                 {
                     var controller = objData.GetData<ActorController2DData>();
-                    var rigidbody2D = resource.GetComponent<Rigidbody2D>();
-                    controller.rigidbody2D = rigidbody2D;
-                    controller.foot = transform.Find("Foot");
-                    controller.positionY = Mathf.RoundToInt(controller.foot.position.y);
+                    controller.rigidbody2D = resource.GetComponent<Rigidbody2D>();
+
+                    var ground = transform.Find("Ground");
+                    controller.groundCollider2D = ground.GetComponent<BoxCollider2D>();
 
                     var actorAttackData = objData.GetData<ActorAttackData>();
                     var attackTransform = transform.Find("DefaultAttack");

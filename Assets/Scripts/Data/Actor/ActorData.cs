@@ -29,16 +29,13 @@ namespace Data
     public class ActorController2DData : Data
     {
         public Rigidbody2D rigidbody2D;
-        public Transform foot;
-        public int groundY;
-        public int positionY;
+        public BoxCollider2D groundCollider2D;
+        public bool isGround;
 
         public override void Clear()
         {
             rigidbody2D = null;
-            foot = null;
-            groundY = 0;
-            positionY = 0;
+            isGround = false;
         }
     }
 
