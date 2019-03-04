@@ -46,7 +46,7 @@ MonoBehaviour:
     buffType: 2
     valueType: 0
     value: 
-    forceValue: {x: 8, y: 30, z: 0}
+    forceValue: {x: 12, y: 30, z: 0}
     delay: 0
     time: 1000
     count: 1
@@ -68,10 +68,8 @@ MonoBehaviour:
     friendBuffIdList: 
     enemyBuffIdList: 0400000005000000
     duration: 1000
-    initial: 0
   - id: 2
     selfBuffIdList: 
     friendBuffIdList: 
     enemyBuffIdList: 010000000200000003000000
     duration: 0
-    initial: 1
