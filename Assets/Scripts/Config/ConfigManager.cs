@@ -52,6 +52,12 @@ public partial class WorldManager : Singleton<WorldManager>
         private set;
     }
 
+    public SkillConfig SkillConfig
+    {
+        get;
+        private set;
+    }
+
     public void LoadConfig()
     {
         ResourceMgr.LoadAsync("MainConfigGroup", delegate (Object obj)
@@ -64,6 +70,7 @@ public partial class WorldManager : Singleton<WorldManager>
             BuffConfig = configGroup.Get<BuffConfig>();
             BattleConfig = configGroup.Get<BattleConfig>();
             BattleItemConfig = configGroup.Get<BattleItemConfig>();
+            SkillConfig = configGroup.Get<SkillConfig>();
         });
     }
 
