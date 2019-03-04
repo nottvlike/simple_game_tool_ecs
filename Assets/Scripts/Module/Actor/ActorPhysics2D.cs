@@ -38,14 +38,11 @@ namespace Module
             if (collider2D != null)
             {
                 controllerData.isGround = true;
-                LogUtil.I("controllerData ground name {0}", collider2D.gameObject.name);
             }
             else
             {
                 controllerData.isGround = false;
             }
-
-            LogUtil.I("controllerData.isGround {0}", controllerData.isGround);
 
             var physics2DData = objData.GetData<Physics2DData>();
             if (controllerData.isGround && physics2DData.force.x == 0 && physics2DData.force.y == 0)
