@@ -18,12 +18,15 @@ namespace Module
 
         void IFixedUpdateEvent.FixedUpdate()
         {
-            for (var i = 0; i < _objectIdList.Count; ++i)
+            for (var i = 0; i < _moduleDataList.Count; ++i)
             {
-                var objId = _objectIdList[i];
+                var moduleData = _moduleDataList[i];
 
-                var objData = WorldManager.Instance.GetObjectData(objId);
-                Refresh(objData);
+                if (!moduleData.isStop)
+                {
+                    var objData = WorldManager.Instance.GetObjectData(moduleData.objId);
+                    Refresh(objData);
+                }
             }
         }
     }
