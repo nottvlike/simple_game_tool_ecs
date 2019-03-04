@@ -112,4 +112,13 @@ public class GameConfigEditor
         AssetDatabase.CreateAsset(battleItemConfig, path);
         AssetDatabase.SaveAssets();
     }
+
+    [MenuItem("Config/Create Skill Config")]
+    static void CreateSkillConfig()
+    {
+        var skillConfig = ScriptableObject.CreateInstance<SkillConfig>();
+        string path = "Assets/Resources/Config/SkillConfig.asset";
+        AssetDatabase.CreateAsset(skillConfig, path);
+        AssetDatabase.SaveAssets();
+    }
 }
