@@ -41,7 +41,8 @@ namespace Module
                 return;
             }
 
-            if ((actorData.currentState & (int)ActorStateType.SkillDefault) == 0)
+            if ((actorData.currentState & (int)ActorStateType.SkillDefault) == 0
+                && (actorData.currentState & (int)ActorStateType.SkillCustom) == 0)
             {
                 stressData.currentDuration = stressData.duration = 0;
                 return;
@@ -56,6 +57,7 @@ namespace Module
                 physics2DData.force.y = 0;
 
                 actorData.currentState &= ~(int)ActorStateType.SkillDefault;
+                actorData.currentState &= ~(int)ActorStateType.SkillCustom;
                 objData.SetDirty(actorData);
             }
             else

@@ -4,14 +4,6 @@ using UnityEngine;
 
 namespace Data
 {
-    public enum SkillDefaultType
-    {
-        None,
-        Fly,
-        Dash,
-        Stress
-    }
-
     public enum JoyStickActionType
     {
         None = 0,
@@ -35,7 +27,6 @@ namespace Data
         public int frame;
         public JoyStickActionType actionType;
         public JoyStickActionFaceType actionParam;
-        public SkillDefaultType skillDefaultType;
 
         public bool IsInUse
         {
@@ -47,7 +38,6 @@ namespace Data
             frame = 0;
             actionType = JoyStickActionType.None;
             actionParam = JoyStickActionFaceType.None;
-            skillDefaultType = SkillDefaultType.None;
         }
     }
 

@@ -49,8 +49,6 @@ namespace Module
             else if ((actorData.currentState & (int)ActorStateType.SkillDefault) != 0)
             {
                 // play default skill animation;
-                var attackData = objData.GetData<ResourceAttackData>();
-                attackData.attack.SetActive(true);
             }
             else if ((actorData.currentState & (int)ActorStateType.Jump) != 0)
             {

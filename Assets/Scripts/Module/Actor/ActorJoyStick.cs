@@ -24,8 +24,6 @@ namespace Module
             return;
 #endif
             var joyStickData = objData.GetData<ClientJoyStickData>();
-            var actorData = objData.GetData<ActorData>();
-
             var joyStickMapDataList = WorldManager.Instance.JoyStickConfig.joyStickMapDataList;
             for (var j = 0; j < joyStickMapDataList.Length; j++)
             {
@@ -37,8 +35,7 @@ namespace Module
                     {
                         if (Input.GetKeyDown(keyCodeList[k]))
                         {
-                            var defaultSkill = joystickMapData.joyStickActionType == JoyStickActionType.SkillDefault ? actorData.defaultSkill : SkillDefaultType.None;
-                            AddJoyStickActionData(objData, joyStickData, joystickMapData.joyStickActionType, joystickMapData.joyStickActionFaceType, defaultSkill);
+                            AddJoyStickActionData(objData, joyStickData, joystickMapData.joyStickActionType, joystickMapData.joyStickActionFaceType);
                         }
                     }
                 }
@@ -56,7 +53,7 @@ namespace Module
             }
         }
 
-        public static void AddJoyStickActionData(ObjectData objData, ClientJoyStickData joyStickData, JoyStickActionType actionType, JoyStickActionFaceType faceType, SkillDefaultType skillDefaultType = SkillDefaultType.None)
+        public static void AddJoyStickActionData(ObjectData objData, ClientJoyStickData joyStickData, JoyStickActionType actionType, JoyStickActionFaceType faceType)
         {
             var gameSystemData = WorldManager.Instance.GameCore.GetData<GameSystemData>();
 
@@ -67,7 +64,6 @@ namespace Module
             joyStickActionData.frame = gameSystemData.clientFrame + Constant.JOYSTICK_DELAY_FRAME_COUNT;
             joyStickActionData.actionType = actionType;
             joyStickActionData.actionParam = faceType;
-            joyStickActionData.skillDefaultType = skillDefaultType;
             joyStickData.actionList.Add(joyStickActionData);
 
             objData.SetDirty(joyStickData);

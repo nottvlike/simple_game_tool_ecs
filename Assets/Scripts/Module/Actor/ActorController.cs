@@ -16,6 +16,7 @@ namespace Module
             _requiredDataTypeList.Add(typeof(SpeedData));
             _requiredDataTypeList.Add(typeof(ServerJoyStickData));
             _requiredDataTypeList.Add(typeof(ResourceStateData));
+            _requiredDataTypeList.Add(typeof(ActorAttackData));
         }
 
         public override bool IsUpdateRequired(Data.Data data)
@@ -50,6 +51,7 @@ namespace Module
             var speedData = objData.GetData<SpeedData>();
             var directionData = objData.GetData<DirectionData>();
             var jumpData = objData.GetData<ActorJumpData>();
+            var actorAttackData = objData.GetData<ActorAttackData>();
 
             for (var i = 0; i < serverActionList.Count;)
             {
@@ -86,30 +88,9 @@ namespace Module
                         case JoyStickActionType.SkillDefault:
                             actorData.currentState |= (int)ActorStateType.SkillDefault;
 
-                            if (serverAction.skillDefaultType == SkillDefaultType.Fly)
-                            {
-                                var flyData = objData.GetData<ActorFlyData>();
-                                flyData.duration = actorInfo.defaultSkillDuration;
-                                flyData.currentDuration = 0;
+                            actorAttackData.defaultAttack.SetActive(true);
 
-                                objData.SetDirty(flyData, physics2DData, actorData);
-                            }
-                            else if (serverAction.skillDefaultType == SkillDefaultType.Dash)
-                            {
-                                var dashData = objData.GetData<ActorDashData>();
-                                dashData.duration = actorInfo.defaultSkillDuration;
-                                dashData.currentDuration = 0;
-
-                                objData.SetDirty(dashData, physics2DData, actorData);
-                            }
-                            else if (serverAction.skillDefaultType == SkillDefaultType.Stress)
-                            {
-                                var stressData = objData.GetData<ActorStressData>();
-                                stressData.duration = actorInfo.defaultSkillDuration;
-                                stressData.currentDuration = 0;
-
-                                objData.SetDirty(stressData, physics2DData, actorData);
-                            }
+                            DoSkill(actorAttackData.defaultSkill, objData, physics2DData, actorData);
                             break;
                     }
 
@@ -120,6 +101,34 @@ namespace Module
                 {
                     i++;
                 }
+            }
+        }
+
+        void DoSkill(SkillInfo skill, ObjectData objData, Physics2DData physics2DData, ActorData actorData)
+        {
+            switch (skill.skillType)
+            {
+                case SkillType.Fly:
+                    var flyData = objData.GetData<ActorFlyData>();
+                    flyData.duration = skill.duration;
+                    flyData.currentDuration = 0;
+
+                    objData.SetDirty(flyData, physics2DData, actorData);
+                    break;
+                case SkillType.Dash:
+                    var dashData = objData.GetData<ActorDashData>();
+                    dashData.duration = skill.duration;
+                    dashData.currentDuration = 0;
+
+                    objData.SetDirty(dashData, physics2DData, actorData);
+                    break;
+                case SkillType.Stress:
+                    var stressData = objData.GetData<ActorStressData>();
+                    stressData.duration = skill.duration;
+                    stressData.currentDuration = 0;
+
+                    objData.SetDirty(stressData, physics2DData, actorData);
+                    break;
             }
         }
 

@@ -41,7 +41,8 @@ namespace Module
                 return;
             }
 
-            if ((actorData.currentState & (int)ActorStateType.SkillDefault) == 0)
+            if ((actorData.currentState & (int)ActorStateType.SkillDefault) == 0 
+                && (actorData.currentState & (int)ActorStateType.SkillCustom) == 0)
             {
                 dashData.currentDuration = dashData.duration = 0;
                 return;
@@ -54,10 +55,8 @@ namespace Module
 
                 physics2DData.force.x = 0;
 
-                var attackData = objData.GetData<ResourceAttackData>();
-                attackData.attack.SetActive(false);
-
                 actorData.currentState &= ~(int)ActorStateType.SkillDefault;
+                actorData.currentState &= ~(int)ActorStateType.SkillCustom;
                 objData.SetDirty(actorData);
             }
             else

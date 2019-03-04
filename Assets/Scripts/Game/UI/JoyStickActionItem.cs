@@ -40,14 +40,12 @@ public class JoyStickActionItem : MonoBehaviour, IPointerDownHandler, IPointerUp
         }
 
         var joyStickData = _player.GetData<Data.ClientJoyStickData>();
-        var actorData = _player.GetData<Data.ActorData>();
         for (var i = 0; i < ActionInfo.Length; i++)
         {
             var actionInfo = ActionInfo[i];
             if (actionInfo.keyStateType == keyStateType)
             {
-                var defaultSkill = actionInfo.actionType == JoyStickActionType.SkillDefault ? actorData.defaultSkill : SkillDefaultType.None;
-                Module.ActorJoyStick.AddJoyStickActionData(_player, joyStickData, actionInfo.actionType, actionInfo.faceType, defaultSkill);
+                Module.ActorJoyStick.AddJoyStickActionData(_player, joyStickData, actionInfo.actionType, actionInfo.faceType);
             }
         }
     }

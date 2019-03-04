@@ -29,19 +29,10 @@ namespace Module
             var actorInfo = worldMgr.ActorConfig.Get(actorId);
             var actorData = objData.AddData<ActorData>();
             actorData.actorId = actorId;
-            actorData.defaultSkill = actorInfo.defaultSkill;
-            if (actorData.defaultSkill == SkillDefaultType.Fly)
-            {
-                objData.AddData<ActorFlyData>();
-            }
-            else if (actorData.defaultSkill == SkillDefaultType.Dash)
-            {
-                objData.AddData<ActorDashData>();
-            }
-            else if (actorData.defaultSkill == SkillDefaultType.Stress)
-            {
-                objData.AddData<ActorStressData>();
-            }
+
+            var actorAttackData = objData.AddData<ActorAttackData>();
+            actorAttackData.defaultSkill = worldMgr.SkillConfig.GetSkillInfo(actorInfo.defaultSkillId);
+            AddSkill(objData, actorAttackData.defaultSkill);
 
             var actorAttributeData = objData.AddData<ActorAttributeData>();
             actorAttributeData.baseAttribute = actorInfo.attributeInfo;
@@ -62,10 +53,6 @@ namespace Module
             objData.AddData<ActorSyncData>();
             objData.AddData<ActorBuffData>();
             objData.AddData<ResourceHurtData>();
-
-            var attackData = objData.AddData<ResourceAttackData>();
-            var effect = worldMgr.BuffConfig.GetEffect(actorInfo.defulttSkillEffectId);
-            attackData.attackEffect = effect;
 
             var resourceData = objData.AddData<ResourceData>();
             resourceData.resource = actorInfo.resourceName;
@@ -91,6 +78,23 @@ namespace Module
             return objData;
         }
 
+        static void AddSkill(ObjectData objData, SkillInfo skill)
+        {
+            var skillType = skill.skillType;
+            switch (skillType)
+            {
+                case SkillType.Fly:
+                    objData.AddData<ActorFlyData>();
+                    break;
+                case SkillType.Dash:
+                    objData.AddData<ActorDashData>();
+                    break;
+                case SkillType.Stress:
+                    objData.AddData<ActorStressData>();
+                    break;
+            }
+        }
+
         public static ObjectData CreateBattleItem(int itemId, CreatureCampType camp, Vector3 initialPosition)
         {
             var worldMgr = WorldManager.Instance;
@@ -114,7 +118,7 @@ namespace Module
 
             var attackData = objData.AddData<ResourceAttackData>();
             var effect = worldMgr.BuffConfig.GetEffect(itemInfo.attackId);
-            attackData.attackEffect = effect;
+            attackData.effect = effect;
 
             objData.SetDirty();
             return objData;

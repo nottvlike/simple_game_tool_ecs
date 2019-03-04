@@ -11,7 +11,6 @@ public struct Effect
     public int[] friendBuffIdList;
     public int[] enemyBuffIdList;
     public int duration;
-    public bool initial;
 }
 
 public class BuffConfig : ScriptableObject

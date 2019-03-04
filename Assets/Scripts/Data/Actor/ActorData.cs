@@ -18,13 +18,11 @@ namespace Data
     {
         public int actorId;
         public int currentState;
-        public SkillDefaultType defaultSkill;
 
         public override void Clear()
         {
             actorId = 0;
             currentState = 0;
-            defaultSkill = SkillDefaultType.None;
         }
     }
 
@@ -132,6 +130,20 @@ namespace Data
             extraAttribute.mp = 0;
             extraAttribute.atk = 0;
             extraAttribute.def = 0;
+        }
+    }
+
+    public class ActorAttackData : Data
+    {
+        public GameObject defaultAttack;
+        public SkillInfo defaultSkill;
+
+        public override void Clear()
+        {
+            defaultSkill.id = 0;
+            defaultSkill.effectId = 0;
+            defaultSkill.duration = 0;
+            defaultSkill.skillType = SkillType.None;
         }
     }
 }

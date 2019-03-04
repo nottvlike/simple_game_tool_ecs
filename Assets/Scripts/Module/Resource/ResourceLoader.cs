@@ -55,6 +55,7 @@ namespace Module
                 resource.name = resourceStateData.name;
                 resource.transform.position = resourceData.initialPosition;
 
+                var battleData = worldMgr.GameCore.GetData<BattleResourceData>();
                 if (creatureStateData.type == CreatureType.Actor)
                 {
                     var controller = objData.GetData<ActorController2DData>();
@@ -62,9 +63,16 @@ namespace Module
                     controller.rigidbody2D = rigidbody2D;
                     controller.foot = transform.Find("Foot");
                     controller.positionY = Mathf.RoundToInt(controller.foot.position.y);
+
+                    var actorAttackData = objData.GetData<ActorAttackData>();
+                    var attackTransform = transform.Find("DefaultAttack");
+                    actorAttackData.defaultAttack= attackTransform.gameObject;
+                    battleData.attackDictionary.Add(attackTransform.gameObject, objData.ObjectId);
+
+                    var attackCollider2D = attackTransform.GetComponent<AttackCollider2D>();
+                    attackCollider2D.Init(worldMgr.BuffConfig.GetEffect(actorAttackData.defaultSkill.effectId));
                 }
 
-                var battleData = worldMgr.GameCore.GetData<BattleResourceData>();
                 var attackData = objData.GetData<ResourceAttackData>();
                 if (attackData != null)
                 {
@@ -74,10 +82,8 @@ namespace Module
                     var attackCollider2DList = transform.GetComponentsInChildren<AttackCollider2D>();
                     for (var i = 0; i < attackCollider2DList.Length; i++)
                     {
-                        attackCollider2DList[i].Init(objData);
+                        attackCollider2DList[i].Init(attackData.effect);
                     }
-
-                    attackData.attack.SetActive(attackData.attackEffect.initial);
                 }
 
                 var hurtData = objData.GetData<ResourceHurtData>();
@@ -110,6 +116,7 @@ namespace Module
             }
 
             var battleData = worldMgr.GameCore.GetData<BattleResourceData>();
+
             var hurtData = objData.GetData<ResourceHurtData>();
             if (hurtData != null)
             {
@@ -120,6 +127,12 @@ namespace Module
             if (attackData != null)
             {
                 battleData.attackDictionary.Remove(attackData.attack);
+            }
+
+            var actorAttackData = objData.GetData<ActorAttackData>();
+            if (actorAttackData != null)
+            {
+                battleData.attackDictionary.Remove(actorAttackData.defaultAttack);
             }
 
             _notificationData.mode = NotificationMode.Object;
