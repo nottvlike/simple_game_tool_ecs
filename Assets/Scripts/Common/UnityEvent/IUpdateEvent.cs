@@ -7,3 +7,8 @@ public interface IFixedUpdateEvent
 {
     void FixedUpdate();
 }
+
+public interface ILateUpdateEvent
+{
+    void LateUpdate();
+}

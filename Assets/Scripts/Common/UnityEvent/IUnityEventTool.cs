@@ -6,5 +6,8 @@
     void Add(IFixedUpdateEvent update);
     void Remove(IFixedUpdateEvent update);
 
+    void Add(ILateUpdateEvent update);
+    void Remove(ILateUpdateEvent update);
+
     void Destroy();
 }

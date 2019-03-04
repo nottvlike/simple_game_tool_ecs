@@ -5,7 +5,7 @@ using Data;
 
 namespace Module
 {
-    public class ActorFollowCamera : UpdateModule
+    public class ActorFollowCamera : LateUpdateModule
     {
         protected override void InitRequiredDataType()
         {
