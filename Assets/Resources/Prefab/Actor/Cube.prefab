@@ -53,12 +53,12 @@ GameObject:
   - component: {fileID: 61402425048832184}
   - component: {fileID: 114831242347534818}
   m_Layer: 10
-  m_Name: Attack
+  m_Name: DefaultAttack
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!1 &1633000495808844
 GameObject:
   m_ObjectHideFlags: 0
@@ -228,8 +228,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e120539f9089ba2409eaa9e3b55ffacd, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  buffList: 0400000005000000
-  buffRemoveWhenExitList: 
 --- !u!212 &212822322960371502
 SpriteRenderer:
   m_ObjectHideFlags: 1
