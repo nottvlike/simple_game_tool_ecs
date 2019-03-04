@@ -105,8 +105,10 @@ public class ObjectData : IPoolObject
 
     public T AddData<T>() where T : Data.Data, new()
     {
+        T data = null;
+
 #if UNITY_EDITOR
-        T data = GetData<T>();
+        data = GetData<T>();
         if (data != null)
         {
             LogUtil.W("Type {0} has been added!", typeof(T));
