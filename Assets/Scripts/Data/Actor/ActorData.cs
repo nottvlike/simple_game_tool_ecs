@@ -140,6 +140,8 @@ namespace Data
 
         public override void Clear()
         {
+            defaultAttack = null;
+
             defaultSkill.id = 0;
             defaultSkill.effectId = 0;
             defaultSkill.duration = 0;
