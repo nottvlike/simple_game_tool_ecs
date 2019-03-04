@@ -19,6 +19,7 @@ public partial class WorldManager : Singleton<WorldManager>
                 _gameCore.AddData<PlayerBaseData>();
                 _gameCore.AddData<BattleResourceData>();
                 _gameCore.AddData<BattleData>();
+                _gameCore.AddData<ItemInfoData>();
 
                 _objectDataList.Add(_gameCore);
 
@@ -45,24 +46,6 @@ public partial class WorldManager : Singleton<WorldManager>
             }
 
             return _gameServer;
-        }
-    }
-
-    ObjectData _item;
-    public ObjectData Item
-    {
-        get
-        {
-            if (_item == null)
-            {
-                _item = new ObjectData();
-                _item.AddData<ItemInfoData>();
-                _objectDataList.Add(_item);
-
-                _item.SetDirty();
-            }
-
-            return _item;
         }
     }
 }

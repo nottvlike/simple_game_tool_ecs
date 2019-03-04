@@ -16,12 +16,9 @@ public class ResourcePreloadNotification : BaseNotification
     {
         if (type == (int)ResourcePreloadType.GameInit)
         {
-            var worldMgr = WorldManager.Instance;
-            var item = worldMgr.Item;
-
             GetServerList();
 
-            worldMgr.UIMgr.ShowPanel(PanelType.GameUpdatePanel);
+            WorldManager.Instance.UIMgr.ShowPanel(PanelType.GameUpdatePanel);
         }
     }
 

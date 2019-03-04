@@ -42,7 +42,7 @@ public class ItemNotification : BaseNotification
         var byteBuffer = new ByteBuffer(msg.data);
         var allItemInfo = Protocol.Item.ResAllItemInfo.GetRootAsResAllItemInfo(byteBuffer);
 
-        var itemInfoData = WorldManager.Instance.Item.GetData<Data.ItemInfoData>();
+        var itemInfoData = WorldManager.Instance.GameCore.GetData<Data.ItemInfoData>();
         var itemInfoList = itemInfoData.itemInfoList;
 
         itemInfoList.Clear();
@@ -65,7 +65,7 @@ public class ItemNotification : BaseNotification
 
         var worldMgr = WorldManager.Instance;
         var notificationCenter = worldMgr.NotificationCenter;
-        var itemInfoData = worldMgr.Item.GetData<Data.ItemInfoData>();
+        var itemInfoData = worldMgr.GameCore.GetData<Data.ItemInfoData>();
         var itemInfoList = itemInfoData.itemInfoList;
 
         var updateItemInfo = updateItemInfoMsg.ItemInfo;
