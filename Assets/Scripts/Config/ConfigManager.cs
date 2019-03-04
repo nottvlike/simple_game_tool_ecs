@@ -4,53 +4,52 @@ using UnityEngine;
 
 public partial class WorldManager : Singleton<WorldManager>
 {
-    ActorConfig _actorConfig;
-    JoyStickConfig _joyStickConfig;
-    PanelConfig _panelConfig;
-    ResourcePreloadConfig _resourcePreloadConfig;
-    LocalizationConfigGroup _localizationConfigGroup;
-    BuffConfig _buffConfig;
-    BattleConfig _battleConfig;
-    BattleItemConfig _battleItemConfig;
-
     public ActorConfig ActorConfig
     {
-        get { return _actorConfig; }
+        get;
+        private set;
     }
 
     public JoyStickConfig JoyStickConfig
     {
-        get { return _joyStickConfig; }
+        get;
+        private set;
     }
 
     public PanelConfig PanelConfig
     {
-        get { return _panelConfig; }
+        get;
+        private set;
     }
 
     public ResourcePreloadConfig ResourcePreloadConfig
     {
-        get { return _resourcePreloadConfig; }
+        get;
+        private set;
     }
 
     public LocalizationConfigGroup LocalizationConfigGroup
     {
-        get { return _localizationConfigGroup; }
+        get;
+        private set;
     }
 
     public BuffConfig BuffConfig
     {
-        get { return _buffConfig; }
+        get;
+        private set;
     }
 
     public BattleConfig BattleConfig
     {
-        get { return _battleConfig; }
+        get;
+        private set;
     }
 
     public BattleItemConfig BattleItemConfig
     {
-        get { return _battleItemConfig; }
+        get;
+        private set;
     }
 
     public void LoadConfig()
@@ -59,12 +58,12 @@ public partial class WorldManager : Singleton<WorldManager>
         {
             var configGroup = obj as ConfigGroup;
 
-            _actorConfig = configGroup.Get<ActorConfig>();
-            _joyStickConfig = configGroup.Get<JoyStickConfig>();
-            _localizationConfigGroup = configGroup.Get<LocalizationConfigGroup>();
-            _buffConfig = configGroup.Get<BuffConfig>();
-            _battleConfig = configGroup.Get<BattleConfig>();
-            _battleItemConfig = configGroup.Get<BattleItemConfig>();
+            ActorConfig = configGroup.Get<ActorConfig>();
+            JoyStickConfig = configGroup.Get<JoyStickConfig>();
+            LocalizationConfigGroup = configGroup.Get<LocalizationConfigGroup>();
+            BuffConfig = configGroup.Get<BuffConfig>();
+            BattleConfig = configGroup.Get<BattleConfig>();
+            BattleItemConfig = configGroup.Get<BattleItemConfig>();
         });
     }
 
@@ -73,8 +72,8 @@ public partial class WorldManager : Singleton<WorldManager>
         ResourceMgr.LoadAsync("PreloadConfigGroup", delegate(Object obj)
         {
             var configGroup = obj as ConfigGroup;
-            _resourcePreloadConfig = configGroup.Get<ResourcePreloadConfig>();
-            _panelConfig = configGroup.Get<PanelConfig>();
+            ResourcePreloadConfig = configGroup.Get<ResourcePreloadConfig>();
+            PanelConfig = configGroup.Get<PanelConfig>();
 
             var resourcePreloadData = GameCore.GetData<Data.ResourcePreloadData>();
             resourcePreloadData.preloadType = ResourcePreloadType.GameInit;
