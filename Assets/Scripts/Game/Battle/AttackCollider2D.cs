@@ -5,15 +5,14 @@ using Data;
 
 public class AttackCollider2D : MonoBehaviour
 {
-    Effect _attackEffect;
+    Effect _effect;
     int _lastEnterTime;
 
     List<Buff> _buffList = new List<Buff>();
 
-    public void Init(ObjectData objData)
+    public void Init(Effect effect)
     {
-        var attackData = objData.GetData<ResourceAttackData>();
-        _attackEffect = attackData.attackEffect;
+        _effect = effect;
     }
 
     private void OnTriggerEnter2D(Collider2D collision)
@@ -21,13 +20,13 @@ public class AttackCollider2D : MonoBehaviour
         var worldMgr = WorldManager.Instance;
         var gameSystemTime = worldMgr.GameCore.GetData<GameSystemData>();
 
-        if (_lastEnterTime + _attackEffect.duration < gameSystemTime.unscaleTime)
+        if (_lastEnterTime + _effect.duration < gameSystemTime.unscaleTime)
         {
             _lastEnterTime = gameSystemTime.unscaleTime;
 
             _buffList.Clear();
 
-            var enemyBuffIdList = _attackEffect.enemyBuffIdList;
+            var enemyBuffIdList = _effect.enemyBuffIdList;
             for (var i = 0; i < enemyBuffIdList.Length; i++)
             {
                 var buffId = enemyBuffIdList[i];
@@ -49,7 +48,7 @@ public class AttackCollider2D : MonoBehaviour
         var buffConfig = WorldManager.Instance.BuffConfig;
         _buffList.Clear();
 
-        var enemyBuffIdList = _attackEffect.enemyBuffIdList;
+        var enemyBuffIdList = _effect.enemyBuffIdList;
         for (var i = 0; i < enemyBuffIdList.Length; i++)
         {
             var buffId = enemyBuffIdList[i];

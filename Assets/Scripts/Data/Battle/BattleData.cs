@@ -107,6 +107,7 @@ namespace Data
         public override void Clear()
         {
             attackObjDataId = 0;
+            force = Vector3Int.zero;
             hurt = null;
         }
     }
@@ -114,17 +115,16 @@ namespace Data
     public class ResourceAttackData : Data
     {
         public GameObject attack;
-        public Effect attackEffect;
+        public Effect effect;
 
         public override void Clear()
         {
             attack = null;
-            attackEffect.id = 0;
-            attackEffect.selfBuffIdList = null;
-            attackEffect.friendBuffIdList = null;
-            attackEffect.enemyBuffIdList = null;
-            attackEffect.initial = false;
-
+            effect.id = 0;
+            effect.selfBuffIdList = null;
+            effect.friendBuffIdList = null;
+            effect.enemyBuffIdList = null;
+            effect.duration = 0;
         }
     }
 }
