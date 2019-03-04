@@ -56,6 +56,8 @@ namespace Module
                 speedData.speed = 0;
                 physics2DData.force.x = 0;
 
+                ActorAnimator.Stop(objData, ActorStateType.Move);
+
                 actorData.currentState &= ~(int)ActorStateType.Move;
                 objData.SetDirty(actorData);
             }

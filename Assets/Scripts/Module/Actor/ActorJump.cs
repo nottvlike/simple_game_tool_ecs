@@ -59,6 +59,9 @@ namespace Module
                 physics2DData.force.x = 0;
                 physics2DData.force.y = 0;
 
+                ActorAnimator.JumpGround(objData);
+                ActorAnimator.Stop(objData, ActorStateType.Jump);
+
                 actorData.currentState &= ~(int)ActorStateType.Jump;
                 objData.SetDirty(actorData);
             }

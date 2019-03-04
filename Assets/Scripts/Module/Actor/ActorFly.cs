@@ -56,6 +56,15 @@ namespace Module
                 physics2DData.force.x = 0;
                 physics2DData.force.y = 0;
 
+                if ((actorData.currentState & (int)ActorStateType.SkillDefault) != 0)
+                {
+                    ActorAnimator.Stop(objData, ActorStateType.SkillDefault);
+                }
+                else if ((actorData.currentState & (int)ActorStateType.SkillDefault) != 0)
+                {
+                    ActorAnimator.Stop(objData, ActorStateType.SkillCustom);
+                }
+
                 actorData.currentState &= ~(int)ActorStateType.SkillDefault;
                 actorData.currentState &= ~(int)ActorStateType.SkillCustom;
                 objData.SetDirty(actorData);

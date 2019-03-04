@@ -88,8 +88,6 @@ namespace Module
                         case JoyStickActionType.SkillDefault:
                             actorData.currentState |= (int)ActorStateType.SkillDefault;
 
-                            actorAttackData.defaultAttack.SetActive(true);
-
                             DoSkill(actorAttackData.defaultSkill, objData, physics2DData, actorData);
                             break;
                     }

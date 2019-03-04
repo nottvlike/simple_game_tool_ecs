@@ -49,6 +49,8 @@ namespace Module
             else if ((actorData.currentState & (int)ActorStateType.SkillDefault) != 0)
             {
                 // play default skill animation;
+                var attackData = objData.GetData<ActorAttackData>();
+                attackData.defaultAttack.SetActive(true);
             }
             else if ((actorData.currentState & (int)ActorStateType.Jump) != 0)
             {
@@ -61,6 +63,32 @@ namespace Module
             else
             {
                 // play idle animation;
+            }
+        }
+
+        public static void JumpGround(ObjectData objData)
+        {
+        }
+
+        public static void Stop(ObjectData objData, ActorStateType stateType)
+        {
+            if (stateType == ActorStateType.Hurt)
+            {
+            }
+            else if (stateType == ActorStateType.SkillCustom)
+            {
+
+            }
+            else if (stateType == ActorStateType.SkillDefault)
+            {
+                var attackData = objData.GetData<ActorAttackData>();
+                attackData.defaultAttack.SetActive(false);
+            }
+            else if (stateType == ActorStateType.Jump)
+            {
+            }
+            else if (stateType == ActorStateType.Move)
+            {
             }
         }
     }
