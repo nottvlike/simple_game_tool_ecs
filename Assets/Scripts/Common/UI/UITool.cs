@@ -42,7 +42,7 @@ public class UITool : IUITool
         });
     }
 
-    public PanelInfo GetPanelConfig(PanelType panelType)
+    public PanelInfo? GetPanelConfig(PanelType panelType)
     {
         PanelInfo config;
         var panelConfigDict = WorldManager.Instance.PanelConfig.PanelConfigDict;
@@ -55,7 +55,7 @@ public class UITool : IUITool
             LogUtil.W("Could not find PanelConfig {0}!", panelType.ToString());
         }
 
-        return _defaultPanelConfig;
+        return null;
     }
 
     public void AddPanel(Panel data)
@@ -124,7 +124,7 @@ public class UITool : IUITool
         }
 
         var panelConfig = GetPanelConfig(panelType);
-        if (panelConfig.panelMode == PanelMode.Popover)
+        if (panelConfig.Value.panelMode == PanelMode.Popover)
         {
             ShowPanelImpl(panelType, args);
             return;
@@ -133,11 +133,11 @@ public class UITool : IUITool
         // 保存最后打开面板
         UpdateLastShowedPanel();
 
-        if (panelConfig.panelMode == PanelMode.Child)
+        if (panelConfig.Value.panelMode == PanelMode.Child)
         {
-            if (!IsPanelShowed(panelConfig.rootPanelType))
+            if (!IsPanelShowed(panelConfig.Value.rootPanelType))
             {
-                ShowPanelImpl(panelConfig.rootPanelType);
+                ShowPanelImpl(panelConfig.Value.rootPanelType);
             }
 
             // 关闭相同根面板的其它子面板
@@ -145,7 +145,7 @@ public class UITool : IUITool
             {
                 var showedPanelType = _showedPanelList[i];
                 var showedPanelConfig = GetPanelConfig(showedPanelType);
-                if (showedPanelConfig.rootPanelType == panelConfig.rootPanelType)
+                if (showedPanelConfig.Value.rootPanelType == panelConfig.Value.rootPanelType)
                 {
                     HidePanelImpl(showedPanelType);
                 }
@@ -177,10 +177,10 @@ public class UITool : IUITool
         else
         {
             var panelConfig = GetPanelConfig(panelType);
-            if (panelConfig.panelType != PanelType.None)
+            if (panelConfig.Value.panelType != PanelType.None)
             {
                 // 异步加载 UI
-                worldMgr.ResourceMgr.LoadAsync(panelConfig.resourceName, delegate (Object obj)
+                worldMgr.ResourceMgr.LoadAsync(panelConfig.Value.resourceName, delegate (Object obj)
                 {
                     if (!IsPanelLoaded(panelType))
                     {
@@ -210,7 +210,7 @@ public class UITool : IUITool
         }
 
         var panelConfig = GetPanelConfig(panelType);
-        if (panelConfig.panelMode == PanelMode.Popover)
+        if (panelConfig.Value.panelMode == PanelMode.Popover)
         {
             HidePanelImpl(panelType);
             return;
@@ -221,7 +221,7 @@ public class UITool : IUITool
         {
             var showedPanelType = _showedPanelList[i];
             var showedPanelConfig = GetPanelConfig(showedPanelType);
-            if (showedPanelConfig.rootPanelType == panelType)
+            if (showedPanelConfig.Value.rootPanelType == panelType)
             {
                 HidePanelImpl(showedPanelType);
             }
@@ -297,14 +297,14 @@ public class UITool : IUITool
         {
             var showedPanelType = _showedPanelList[i];
             var panelConfig = GetPanelConfig(showedPanelType);
-            if (panelConfig.panelMode == PanelMode.Alone)
+            if (panelConfig.Value.panelMode == PanelMode.Alone)
             {
-                rootPanelType = panelConfig.panelType;
+                rootPanelType = panelConfig.Value.panelType;
             }
 
-            if (panelConfig.panelMode == PanelMode.Child)
+            if (panelConfig.Value.panelMode == PanelMode.Child)
             {
-                _lastShowedPanelType = panelConfig.panelType;
+                _lastShowedPanelType = panelConfig.Value.panelType;
             }
         }
 
