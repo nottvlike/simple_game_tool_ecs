@@ -70,7 +70,8 @@ namespace Module
                     battleData.attackDictionary.Add(attackTransform.gameObject, objData.ObjectId);
 
                     var attackCollider2D = attackTransform.GetComponent<AttackCollider2D>();
-                    attackCollider2D.Init(worldMgr.BuffConfig.GetEffect(actorAttackData.defaultSkill.effectId));
+                    var effect = worldMgr.BuffConfig.GetEffect(actorAttackData.defaultSkill.effectId);
+                    attackCollider2D.Init(effect.Value);
                 }
 
                 var attackData = objData.GetData<ResourceAttackData>();

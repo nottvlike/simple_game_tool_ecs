@@ -18,10 +18,7 @@ public class BuffConfig : ScriptableObject
     public Buff[] buffList;
     public Effect[] effectList;
 
-    Buff _defaultBuff;
-    Effect _defaultEffect;
-
-    public Buff GetBuff(int buffId)
+    public Buff? GetBuff(int buffId)
     {
         for (var i = 0; i < buffList.Length; i++)
         {
@@ -31,10 +28,10 @@ public class BuffConfig : ScriptableObject
                 return buff;
             }
         }
-        return _defaultBuff;
+        return null;
     }
 
-    public Effect GetEffect(int effectId)
+    public Effect? GetEffect(int effectId)
     {
         for (var i = 0; i < effectList.Length; i++)
         {
@@ -45,6 +42,6 @@ public class BuffConfig : ScriptableObject
             }
         }
 
-        return _defaultEffect;
+        return null;
     }
 }

@@ -23,9 +23,7 @@ public class SkillConfig : ScriptableObject
 {
     public SkillInfo[] skillInfoList;
 
-    SkillInfo _defaultSkillInfo;
-
-    public SkillInfo GetSkillInfo(int skillId)
+    public SkillInfo? GetSkillInfo(int skillId)
     {
         for (var i = 0; i < skillInfoList.Length; i++)
         {
@@ -36,6 +34,6 @@ public class SkillConfig : ScriptableObject
             }
         }
 
-        return _defaultSkillInfo;
+        return null;
     }
 }

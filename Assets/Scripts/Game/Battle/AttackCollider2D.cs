@@ -31,7 +31,7 @@ public class AttackCollider2D : MonoBehaviour
             {
                 var buffId = enemyBuffIdList[i];
                 var buff = worldMgr.BuffConfig.GetBuff(buffId);
-                _buffList.Add(buff);
+                _buffList.Add(buff.Value);
             }
 
             Module.ActorAttack.Attack(gameObject, collision.gameObject, _buffList.ToArray());
@@ -53,9 +53,9 @@ public class AttackCollider2D : MonoBehaviour
         {
             var buffId = enemyBuffIdList[i];
             var buff = buffConfig.GetBuff(buffId);
-            if ((buff.buffAttribute & (int)BuffAttribute.NeedRemove) != 0)
+            if ((buff.Value.buffAttribute & (int)BuffAttribute.NeedRemove) != 0)
             {
-                _buffList.Add(buff);
+                _buffList.Add(buff.Value);
             }
         }
 

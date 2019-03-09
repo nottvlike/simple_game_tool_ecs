@@ -31,16 +31,17 @@ namespace Module
             actorData.actorId = actorId;
 
             var actorAttackData = objData.AddData<ActorAttackData>();
-            actorAttackData.defaultSkill = worldMgr.SkillConfig.GetSkillInfo(actorInfo.defaultSkillId);
+            var skillInfo = worldMgr.SkillConfig.GetSkillInfo(actorInfo.Value.defaultSkillId);
+            actorAttackData.defaultSkill = skillInfo.Value;
             AddSkill(objData, actorAttackData.defaultSkill);
 
             var actorAttributeData = objData.AddData<ActorAttributeData>();
-            actorAttributeData.baseAttribute = actorInfo.attributeInfo;
+            actorAttributeData.baseAttribute = actorInfo.Value.attributeInfo;
 
             var physics2DData = objData.AddData<Physics2DData>();
             physics2DData.gravity = 10;
-            physics2DData.airFriction = actorInfo.airFriction;
-            physics2DData.mass = actorInfo.mass;
+            physics2DData.airFriction = actorInfo.Value.airFriction;
+            physics2DData.mass = actorInfo.Value.mass;
 
             var directionData = objData.AddData<DirectionData>();
             directionData.direction.x = 1;
@@ -55,13 +56,13 @@ namespace Module
             objData.AddData<ResourceHurtData>();
 
             var resourceData = objData.AddData<ResourceData>();
-            resourceData.resource = actorInfo.resourceName;
+            resourceData.resource = actorInfo.Value.resourceName;
             resourceData.initialPosition = initialPosition;
 
             var resourceStateData = objData.AddData<ResourceStateData>();
             resourceStateData.isGameObject = true;
             resourceStateData.isInstantiated = false;
-            resourceStateData.name = actorInfo.actorName;
+            resourceStateData.name = actorInfo.Value.actorName;
 
             var creatureStateData = objData.AddData<CreatureStateData>();
             creatureStateData.type = CreatureType.Actor;
@@ -103,13 +104,13 @@ namespace Module
 
             var itemInfo = worldMgr.BattleItemConfig.Get(itemId);
             var resourceData = objData.AddData<ResourceData>();
-            resourceData.resource = itemInfo.resource;
+            resourceData.resource = itemInfo.Value.resource;
             resourceData.initialPosition = initialPosition;
 
             var resourceStateData = objData.AddData<ResourceStateData>();
             resourceStateData.isGameObject = true;
             resourceStateData.isInstantiated = false;
-            resourceStateData.name = itemInfo.itemName;
+            resourceStateData.name = itemInfo.Value.itemName;
 
             var creatureStateData = objData.AddData<CreatureStateData>();
             creatureStateData.type = CreatureType.BattleItem;
@@ -117,8 +118,8 @@ namespace Module
             creatureStateData.stateType = CreatureStateType.Load;
 
             var attackData = objData.AddData<ResourceAttackData>();
-            var effect = worldMgr.BuffConfig.GetEffect(itemInfo.attackId);
-            attackData.effect = effect;
+            var effect = worldMgr.BuffConfig.GetEffect(itemInfo.Value.attackId);
+            attackData.effect = effect.Value;
 
             objData.SetDirty();
             return objData;

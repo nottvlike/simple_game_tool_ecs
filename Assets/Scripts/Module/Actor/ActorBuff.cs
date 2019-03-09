@@ -209,7 +209,7 @@ namespace Module
                         var actorInfo = worldMgr.ActorConfig.Get(actorData.actorId);
                         extraAttribute.hpMax += value;
 
-                        var extraHp = (float)value / (actorInfo.attributeInfo.hp + attributeData.extraAttribute.hpMax) * attributeData.baseAttribute.hp;
+                        var extraHp = (float)value / (actorInfo.Value.attributeInfo.hp + attributeData.extraAttribute.hpMax) * attributeData.baseAttribute.hp;
                         baseAttribute.hp += Mathf.FloorToInt(extraHp);
                     }
                     break;
@@ -249,7 +249,7 @@ namespace Module
             {
                 case BuffType.ChangeHpMax:
                     {
-                        var extraHp = (float)value / (actorInfo.attributeInfo.hp + attributeData.extraAttribute.hpMax) * attributeData.baseAttribute.hp;
+                        var extraHp = (float)value / (actorInfo.Value.attributeInfo.hp + attributeData.extraAttribute.hpMax) * attributeData.baseAttribute.hp;
                         baseAttribute.hp -= Mathf.FloorToInt(extraHp);
                         extraAttribute.hpMax -= value;
                     }

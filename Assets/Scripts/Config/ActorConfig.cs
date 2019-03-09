@@ -26,7 +26,7 @@ public class ActorConfig : ScriptableObject
 
     ActorInfo _defaultActorInfo;
 
-    public ActorInfo Get(int actorId)
+    public ActorInfo? Get(int actorId)
     {
         for (var i = 0; i < actorInfoList.Length; i++)
         {
@@ -38,6 +38,6 @@ public class ActorConfig : ScriptableObject
         }
 
         LogUtil.E("Failed to find ActorInfo " + actorId);
-        return _defaultActorInfo;
+        return null;
     }
 }

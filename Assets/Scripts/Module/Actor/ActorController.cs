@@ -66,7 +66,7 @@ namespace Module
                     {
                         case JoyStickActionType.Move:
                             physics2DData.friction = 0;
-                            speedData.speed = actorInfo.speed;
+                            speedData.speed = actorInfo.Value.speed;
                             directionData.direction.x = serverAction.actionParam == JoyStickActionFaceType.Right ? 1 : -1;
 
                             actorData.currentState |= (int)ActorStateType.Move;
@@ -74,12 +74,12 @@ namespace Module
                             objData.SetDirty(speedData, directionData, physics2DData, actorData);
                             break;
                         case JoyStickActionType.CancelMove:
-                            physics2DData.friction = actorInfo.friction;
+                            physics2DData.friction = actorInfo.Value.friction;
 
                             objData.SetDirty(speedData, physics2DData);
                             break;
                         case JoyStickActionType.Jump:
-                            jumpData.currentJump = actorInfo.jump;
+                            jumpData.currentJump = actorInfo.Value.jump;
 
                             actorData.currentState |= (int)ActorStateType.Jump;
 
