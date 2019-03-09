@@ -24,7 +24,7 @@ public class FightPanel : Panel
         var battleData = worldMgr.GameCore.GetData<BattleData>();
         if (battleData.battleInitialize == null)
         {
-            worldMgr.ResourceMgr.LoadAsync(battleInfo.battleResource, delegate (Object obj) {
+            worldMgr.ResourceMgr.LoadAsync(battleInfo.Value.battleResource, delegate (Object obj) {
                 Instantiate(obj);
             });
         }

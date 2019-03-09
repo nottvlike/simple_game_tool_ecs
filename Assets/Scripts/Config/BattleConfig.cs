@@ -34,10 +34,7 @@ public class BattleConfig : ScriptableObject
 {
     public ChapterInfo[] chapterInfoList;
 
-    ChapterInfo _defaultChapterInfo;
-    BattleInfo _defaultBattleInfo;
-
-    public ChapterInfo GetChapterInfo(int chapterId)
+    public ChapterInfo? GetChapterInfo(int chapterId)
     {
         for (var i = 0; i < chapterInfoList.Length; i++)
         {
@@ -49,10 +46,10 @@ public class BattleConfig : ScriptableObject
         }
 
         LogUtil.E("Failed to find chapterInfo with chapterId {0}!", chapterId);
-        return _defaultChapterInfo;
+        return null;
     }
 
-    public BattleInfo GetBattleInfo(int battleId)
+    public BattleInfo? GetBattleInfo(int battleId)
     {
         var chapterId = GetChapterId(battleId);
         for (var i = 0; i < chapterInfoList.Length; i++)
@@ -73,7 +70,7 @@ public class BattleConfig : ScriptableObject
         }
 
         LogUtil.E("Failed to find battleInfo with chapterId {0}, battleId {1}!", chapterId, battleId);
-        return _defaultBattleInfo;
+        return null;
     }
 
     public int GetFirstBattleId()

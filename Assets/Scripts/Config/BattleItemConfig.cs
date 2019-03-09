@@ -15,8 +15,7 @@ public class BattleItemConfig : ScriptableObject
 {
     public BattleItemInfo[] battleItemInfoList;
 
-    BattleItemInfo _defaultBattleItemInfo;
-    public BattleItemInfo Get(int battleItemId)
+    public BattleItemInfo? Get(int battleItemId)
     {
         for (var i = 0; i < battleItemInfoList.Length; i++)
         {
@@ -28,6 +27,6 @@ public class BattleItemConfig : ScriptableObject
         }
 
         LogUtil.E("Failed to find BattleItemInfo " + battleItemId);
-        return _defaultBattleItemInfo;
+        return null;
     }
 }

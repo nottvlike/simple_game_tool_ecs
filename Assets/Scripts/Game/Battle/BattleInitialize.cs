@@ -53,7 +53,7 @@ public class BattleInitialize : MonoBehaviour
         _battleNotification.Enabled = true;
 
         var battleInfo = WorldManager.Instance.BattleConfig.GetBattleInfo(battleId);
-        _battleVictoryCondition = battleInfo.battleVictoryCondition;
+        _battleVictoryCondition = battleInfo.Value.battleVictoryCondition;
 
         for (var i = 0; i < resourceInitializeList.Length; i++)
         {

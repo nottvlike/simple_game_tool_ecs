@@ -24,7 +24,8 @@ public class ResourceInitialize : MonoBehaviour
     public void Init(int battleId)
     {
         var battleInfo = WorldManager.Instance.BattleConfig.GetBattleInfo(battleId);
-        _battlePreloadResourceInfo = GetBattlePreloadResourceInfo(battleInfo);
+        var battlePreloadResourceInfo = GetBattlePreloadResourceInfo(battleInfo.Value);
+        _battlePreloadResourceInfo = battlePreloadResourceInfo.Value;
         switch (_battlePreloadResourceInfo.resourceType)
         {
             case CreatureType.Actor:
@@ -46,8 +47,7 @@ public class ResourceInitialize : MonoBehaviour
         }
     }
 
-    BattlePreloadResourceInfo _defaultBattlePreloadResourceInfo;
-    BattlePreloadResourceInfo GetBattlePreloadResourceInfo(BattleInfo battleInfo)
+    BattlePreloadResourceInfo? GetBattlePreloadResourceInfo(BattleInfo battleInfo)
     {
         var preloadList = battleInfo.battlePreloadResourceInfoList;
         for (var i = 0; i < preloadList.Length; i++)
@@ -60,6 +60,6 @@ public class ResourceInitialize : MonoBehaviour
         }
 
         LogUtil.E("Failed to find BattlePreloadResourceInfo with preloadId {0}!", preloadId);
-        return _defaultBattlePreloadResourceInfo;
+        return null;
     }
 }
