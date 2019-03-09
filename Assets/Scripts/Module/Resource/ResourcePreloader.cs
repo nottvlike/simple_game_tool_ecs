@@ -34,7 +34,7 @@ namespace Module
                 worldMgr.ResourceMgr.LoadAsync(resourceName, delegate (Object obj)
                 {
                     var reourceInfo = worldMgr.ResourceMgr.Get(resourceName);
-                    if (reourceInfo.type == Data.ResourceType.UI)
+                    if (reourceInfo.Value.type == Data.ResourceType.UI)
                     {
                         worldMgr.UIMgr.LoadPanel(obj);
                     }

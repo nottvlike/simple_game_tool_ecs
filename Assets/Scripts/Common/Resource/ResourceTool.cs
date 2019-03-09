@@ -215,16 +215,15 @@ public class ResourceTool : MonoSingleton<ResourceTool> , IResourceTool
         ResourceLoadState = ResourceLoadStateType.Finished;
     }
 
-    public ResourceInfo Get(string resourceName)
+    public ResourceInfo? Get(string resourceName)
     {
         ResourceInfo info;
         if (!_resourceInfoDict.TryGetValue(resourceName, out info))
         {
             LogUtil.I("Failed to find resource info {0}!", resourceName);
-            info = _defaultResourceInfo;
         }
 
-        return info;
+        return null;
     }
 
     public void Destroy()
