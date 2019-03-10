@@ -223,7 +223,7 @@ public class ResourceTool : MonoSingleton<ResourceTool> , IResourceTool
             LogUtil.I("Failed to find resource info {0}!", resourceName);
         }
 
-        return null;
+        return info;
     }
 
     public void Destroy()
