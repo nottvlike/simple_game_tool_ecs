@@ -8,14 +8,14 @@ public class ResourcePreloadNotification : BaseNotification
     {
         _id = Constant.NOTIFICATION_TYPE_RESOURCE_PRELOAD;
         _typeList = new int[] { (int)ResourcePreloadType.GameInit };
-
-        Enabled = true;
     }
 
     public override void OnReceive(int type, ValueType notificationData)
     {
         if (type == (int)ResourcePreloadType.GameInit)
         {
+            Enabled = false;
+
             GetServerList();
 
             WorldManager.Instance.UIMgr.ShowPanel(PanelType.GameUpdatePanel);
@@ -87,6 +87,7 @@ public partial class WorldManager : Singleton<WorldManager>
     public void LaunchGame()
     {
         _resourcePreloadNotification = new ResourcePreloadNotification();
+        _resourcePreloadNotification.Enabled = true;
 
         ResourceMgr.Init();
 
