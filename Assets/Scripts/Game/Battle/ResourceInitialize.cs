@@ -7,8 +7,6 @@ public class ResourceInitialize : MonoBehaviour
 
     BattlePreloadResourceInfo _battlePreloadResourceInfo;
 
-    Object _resource;
-
     public ObjectData ObjData
     {
         set;

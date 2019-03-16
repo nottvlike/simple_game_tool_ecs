@@ -39,10 +39,6 @@ public class ResourceTool : MonoSingleton<ResourceTool> , IResourceTool
     Dictionary<string, Object> _resourceDict = new Dictionary<string, Object>();
     List<AsyncResourceRequest> _asyncResourceRequestList = new List<AsyncResourceRequest>();
 
-    ResourceInfo _defaultResourceInfo;
-
-    NotificationData _notificationData;
-
     ResourceLoadStateType _resourceLoadState = ResourceLoadStateType.None;
     ResourceLoadStateType ResourceLoadState 
     {

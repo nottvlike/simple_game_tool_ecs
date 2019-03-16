@@ -15,8 +15,6 @@ public class UITool : IUITool
     Dictionary<PanelType, Panel> _panelDataDict = new Dictionary<PanelType, Panel>();
     List<PanelType> _showedPanelList = new List<PanelType>();
 
-    PanelInfo _defaultPanelConfig;
-
     GameObject _uiRoot;
 
     PanelType _lastShowedPanelType = PanelType.None;

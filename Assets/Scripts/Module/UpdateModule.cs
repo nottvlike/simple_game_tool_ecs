@@ -15,11 +15,8 @@ namespace Module
 
         protected List<ModuleData> _moduleDataList = new List<ModuleData>();
 
-        ModuleData _defaultModuleData;
-
         public BaseUpdateModule()
         {
-            _defaultModuleData.objId = -1;
         }
 
         public override void Add(int objectDataId)

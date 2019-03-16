@@ -10,8 +10,6 @@ public class Panel : MonoBehaviour
     [SerializeField]
     int _order;
 
-    Canvas _canvas;
-
     public bool IsOpen
     {
         get { return gameObject.activeSelf; }

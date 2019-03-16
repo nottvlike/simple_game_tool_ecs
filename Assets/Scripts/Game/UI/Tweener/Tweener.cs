@@ -280,7 +280,6 @@ public class Fade : Tweener
     public float to;
 
     CanvasGroup _canvas;
-    Graphics _graphic;
 
     public Fade()
     {

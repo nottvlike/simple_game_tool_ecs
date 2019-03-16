@@ -24,8 +24,6 @@ public class ActorConfig : ScriptableObject
 {
     public ActorInfo[] actorInfoList;
 
-    ActorInfo _defaultActorInfo;
-
     public ActorInfo? Get(int actorId)
     {
         for (var i = 0; i < actorInfoList.Length; i++)
